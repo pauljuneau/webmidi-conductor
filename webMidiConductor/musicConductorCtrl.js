@@ -157,13 +157,16 @@ function convertKeyToRelativeMajorFromMinor() {
 
 var musicConductor = {
     performanceString : '',
-    scaleRule : new RestrictToScaleRule(currentKey + '-' + scaleType)
+    scaleRule : new RestrictToScaleRule(currentKey + '-' + scaleType),
+    chordsPlaying : []
 };
 /**
  * @returns string of musical performance: 
  * i.e. note letter, instrumental note position, scaleDegree, chords playing  
  */
 function setMusicalPerformanceString() {
+    musicConductor.chordsPlaying = [];
+    
     musicConductor.scaleRule.scaleDegreeByLetterASC = musicConductor.scaleRule.scaleDegreeByLetterASC.size != 0 ? musicConductor.scaleRule.scaleDegreeByLetterASC 
         : musicConductor.scaleRule.getScaleDegreeByLetter(musicConductor.scaleRule.restrictedMidiNoteNumbers);
     musicConductor.scaleRule.scaleDegreeByLetterDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.size != 0 ? musicConductor.scaleRule.scaleDegreeByLetterDESC 
@@ -192,6 +195,7 @@ function setMusicalPerformanceString() {
                 if(isMatch) chordsPlaying.push(chordName);
             }
         }
+        musicConductor.chordsPlaying = chordsPlaying;
         if(lettersPlaying.size >0 )
         musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ');
     }

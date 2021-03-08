@@ -317,6 +317,13 @@ function loop() {
         leftPaddle.width = 0;
         leftPaddle.x = 0;
     }
+    if(musicConductor.chordsPlaying.length  > 0) {
+        var rightPaddleColorKey = musicConductor.chordsPlaying[0].split(' ')[0];
+        red = leftPaddleColorByKeyMap.get(rightPaddleColorKey)[0];
+        green = leftPaddleColorByKeyMap.get(rightPaddleColorKey)[1];
+        blue = leftPaddleColorByKeyMap.get(rightPaddleColorKey)[2];
+        alpha = 1;
+    }
     context.fillStyle = 'white';
     context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
 
