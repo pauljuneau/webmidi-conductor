@@ -1,0 +1,52 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>webmidi-conductor wall ball game demo</title>
+  <meta name="description" content="webmidi-conductor wall ball game demo">
+  <meta name="author" content="Paul Juneau">
+  <meta name="version" content="1.0.0">
+  <script src="../../webMidiConductor/midiChlorianController.js"></script>
+  <!-- TODO change pitch js to get delivered when repo is public <script src="https://cdn.jsdelivr.net/gh/pauljuneau/PitchDetectMirror@v1.1.0/js/pitchdetect.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/gh/pauljuneau/PitchDetectMirror@v1.1.0/js/pitchdetect.js"></script>
+  <!-- <script src="../../../../src/main/default/staticresources/PitchDetect/PitchDetect/js/pitchdetect.js"></script> -->
+  <script src="../../webMidiConductor/musicConductorCtrl.js"></script>
+  <link rel="stylesheet"type="text/css" href="game.css">
+
+</head>
+
+<body>
+  <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()"></canvas>
+  <script>
+    alert(
+      "Welcome! After clicking OK, click or touch game arena to get started! \n"+
+      "Play within the scale or your paddle shrinks! \n" +
+      "Break that wall down!"
+    );
+    var gamePaused = true;
+  </script>
+  <script src="game.js"></script>
+  <div id="liveAudioPanel" style="display:none;">
+      <!--TODO idea: amplify noise from phone mic?-->
+      <button onclick="this.innerText = togglePlayback()" id="demo" style="display:none;">use demo audio</button>
+      <button onclick="toggleLiveInput()" id="liveAudio" style="display:none;">use live input</button>
+      <button onclick="toggleOscillator()" style="display:none;">use oscillator</button>
+      <!--<button onclick="updatePitch(0);">sample</button>-->
+      <div id="detector" class="vague" style="display:none;">
+          <div class="pitch"><span id="pitch">--</span>Hz</div>
+          <div class="note"><span id="note">--</span></div>   
+          <canvas id="output" width="300" height="42"></canvas>
+          <div id="detune"><span id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents &#9839;</span></div>
+      </div>
+      <!-- just used for debugging 
+      <canvas id="waveform" width="512" height="256"></canvas>-->
+      <script>
+          canPublishPitchEvents = true;
+      </script>
+  </div>
+  <div id="redirectPanel" style="display:none;">
+    <a id="redirectToBuyMeCoffee" href="https://www.buymeacoffee.com/classicantique" target="_blank">Buy me a coffee</a>
+  </div>
+</body>
+</html>
