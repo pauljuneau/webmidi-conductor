@@ -323,9 +323,14 @@ function loop() {
         green = leftPaddleColorByKeyMap.get(rightPaddleColorKey)[1];
         blue = leftPaddleColorByKeyMap.get(rightPaddleColorKey)[2];
         alpha = 1;
+        context.fillStyle = "rgba("+red+","+green+","+blue+","+alpha+")";
+        context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
+    } else {
+        context.fillStyle = 'white';
+        context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
     }
+    //put back to white for ball to fill white
     context.fillStyle = 'white';
-    context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
 
     // move ball by its velocity
     if(!gamePaused) {
