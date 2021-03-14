@@ -1,0 +1,58 @@
+<!-- 
+  Anticipated © Copyright 2021 Paul Juneau <pauljuneauengineer@gmail.com> code prepped for copyright application
+-->
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>webmidi-conductor wall ball game demo</title>
+  <meta name="description" content="webmidi-conductor wall ball game demo">
+  <meta name="author" content="Paul Juneau">
+  <meta name="version" content="1.0.0">
+  <script src="../../webMidiConductor/midiChlorianController.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/pauljuneau/PitchDetectMirror@v1.1.0/js/pitchdetect.js"></script>
+  <script src="../../webMidiConductor/musicConductorCtrl.js"></script>
+  <link rel="stylesheet"type="text/css" href="game.css">
+
+</head>
+
+<body>
+  <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()"></canvas>
+  <script>
+    alert(
+      "Welcome! Click OK then click or touch game arena to get started! \n"+
+      "The game screen will resize on mobile after rotating the screen back and forth. \n"+
+      "WATCH OUT!!! Play within the scale or your paddle shrinks! \n" +
+      "Goals are 10 points! Triad chords are 3 points & 7ths are 4! \n"+
+      "Wall color is based on the defined key's position on a RGB Circle of 5ths Color Wheel. \n"+
+      "In the major key: C is red, E is green, and G# (Ab) is blue. \n"+
+      "Playing chords changes your paddle color based on the chord's key mapped to the RGB Circle of 5ths Color Wheel. \n"+
+      "BREAK DOWN THAT WALL!"
+    );
+    var gamePaused = true;
+  </script>
+  <script src="game.js"></script>
+  <div id="liveAudioPanel" style="display:none;">
+      <!--TODO idea: amplify noise from phone mic?-->
+      <button onclick="this.innerText = togglePlayback()" id="demo" style="display:none;">use demo audio</button>
+      <button onclick="toggleLiveInput()" id="liveAudio" style="display:none;">use live input</button>
+      <button onclick="toggleOscillator()" style="display:none;">use oscillator</button>
+      <!--<button onclick="updatePitch(0);">sample</button>-->
+      <div id="detector" class="vague" style="display:none;">
+          <div class="pitch"><span id="pitch">--</span>Hz</div>
+          <div class="note"><span id="note">--</span></div>   
+          <canvas id="output" width="300" height="42"></canvas>
+          <div id="detune"><span id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents &#9839;</span></div>
+      </div>
+      <!-- just used for debugging 
+      <canvas id="waveform" width="512" height="256"></canvas>-->
+      <script>
+          canPublishPitchEvents = true;
+      </script>
+  </div>
+  <div id="redirectPanel" style="display:none;">
+    <a id="redirectToBuyMeCoffee" href="https://www.buymeacoffee.com/classicantique" target="_blank">Buy me a coffee</a>
+  </div>
+</body>
+</html>
