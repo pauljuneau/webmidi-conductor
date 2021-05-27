@@ -18,9 +18,25 @@
 </head>
 
 <body>
-  <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()"></canvas>
+  <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()" style="display:none;"></canvas>
+  
+  <div style="background-color: lightblue;" >
+    <pre id="welcomeMessage" onclick="alert('Hello!');">
+      Welcome! Click or touch here to get started!
+      The game arena will resize on mobile after rotating the screen back and forth.
+      WATCH OUT!!! Play within the scale or your paddle shrinks!
+      Goals are 10 points! Triad chords are 3 points & 7ths are 4! 
+      Wall color is based on the defined key's position on a RGB Circle of 5ths Color Wheel.
+      In the major key: C is red, E is green, and G# (Ab) is blue.
+      Playing chords changes your paddle color based on the chord's key mapped to the RGB Circle of 5ths Color Wheel.
+      BREAK DOWN THAT WALL!
+    </pre>
+    <footer style="background-color: white">
+      Copyright &copy; 2021 Paul Juneau All Rights Reserved.
+    </footer>
+  </div>
   <script>
-    alert(
+    /*alert(
       "Welcome! Click OK then click or touch game arena to get started! \n"+
       "The game screen will resize on mobile after rotating the screen back and forth. \n"+
       "WATCH OUT!!! Play within the scale or your paddle shrinks! \n" +
@@ -29,7 +45,7 @@
       "In the major key: C is red, E is green, and G# (Ab) is blue. \n"+
       "Playing chords changes your paddle color based on the chord's key mapped to the RGB Circle of 5ths Color Wheel. \n"+
       "BREAK DOWN THAT WALL!"
-    );
+    );*/
     var gamePaused = true;
   </script>
   <script src="game.js"></script>
