@@ -1,5 +1,5 @@
 /** 
-  Anticipated © Copyright 2021 Paul Juneau <pauljuneauengineer@gmail.com> code prepped for copyright application
+    Copyright © 2021 Paul Juneau All Rights Reserved.
 **/
 
 function resize() {
@@ -84,6 +84,9 @@ var currentAlphaValue = paddleColorByKeyMap.get(currentKey)[3];
 var wallLifeDrain;
 
 function gameSetup() {
+    document.getElementById("welcomeScreen").style.display="none";
+    document.getElementById("game").style.display="inline";
+    
     //TODO idea: add disableLiveAudio?
     try {
         //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js

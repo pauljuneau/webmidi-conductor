@@ -1,5 +1,5 @@
 /** 
-  Anticipated © Copyright 2021 Paul Juneau <pauljuneauengineer@gmail.com> code prepped for copyright application
+    Copyright © 2021 Paul Juneau All Rights Reserved.
 **/
 
 var isDiagnosticsOn = false;
