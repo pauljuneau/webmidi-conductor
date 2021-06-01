@@ -26,7 +26,7 @@ It comes with a free demo wall ball pong-esque game.
 * Cross platform compatible (Android, PC, Mac, iPhone)
    * iOS devices have not been tested yet. Please feel free to submit an issue to let me know if it does not work.
 * Resizes to fit mobile screen
-* Compatible with any midi instrument that works with the https://developer.mozilla.org/en-US/docs/Web/API/MIDIAccess
+* Compatible with any midi instrument and browser that works with the https://developer.mozilla.org/en-US/docs/Web/API/MIDIAccess
 * Can choose to enable Live audio to interpret sound as pitch events increasing or decreasing to move paddle up or down.
 * Real-time scale detection based on desired scale
    * Prints: note name played, scale degree ascending/descending
