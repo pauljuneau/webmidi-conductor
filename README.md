@@ -30,6 +30,7 @@ It comes with a free demo wall ball pong-esque game.
 * Resizes to fit mobile screen.
 * Compatible with any midi instrument and browser that works with the https://developer.mozilla.org/en-US/docs/Web/API/MIDIAccess.
 * Can choose to enable Live audio to interpret sound as pitch events increasing or decreasing to move paddle up or down.
+   * Consumes pitch JavaScript events produced by [PitchDetectMirror](https://github.com/pauljuneau/PitchDetectMirror).
 * Real-time scale detection based on desired scale.
    * Prints note name played, scale degree ascending/descending, and chord being played.
    * Compatible Scales:
