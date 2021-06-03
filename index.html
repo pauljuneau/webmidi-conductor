@@ -21,7 +21,7 @@
   <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()" style="display:none;"></canvas>
   
   <div id="welcomeScreen" style="background-color: lightblue;" >
-    <pre onclick="gameSetup()">
+    <pre id="welcomeMessage" onclick="gameSetup()">
       Welcome! Click or touch here to get started!
       The game arena will resize on mobile after rotating the screen back and forth.
       WATCH OUT!!! Play within the scale or your paddle shrinks!
@@ -31,10 +31,33 @@
       Playing chords changes your paddle color based on the chord's key mapped to the RGB Circle of 5ths Color Wheel.
       BREAK DOWN THAT WALL!
     </pre>
+    <div id="thanksAndLinksScreen" style="background-color: lightblue; display:none;">
+      <h1>Thanks</h1>
+      <dl>
+        <dt>Danté Harrell, MM</dt>
+        <dd>Music Consultant</dd>
+        <dd>NYC Based Teaching Artist</dd>
+        <dd><a href="mailto:carpenterproductions2019@gmail.com">Email Danté</a></dd>
+        <dt>Steven Lambert</dt>
+        <dd><a href="https://gist.github.com/straker/81b59eecf70da93af396f963596dfdc5" target="_blank">Basic Pong HTML Game</a></dd>
+        <dt>Original Inspiration for making webmidi-conductor</dt>
+        <dd><a href="https://youtu.be/iamRkSsnIS0" target="_blank">Web MIDI API demo video at Node+JS Interactive seminar Dec 2019</a></dd>
+      </dl>
+      <h1>Additional Links</h1>
+        <ul>
+          <li><a href="https://github.com/pauljuneau/webmidi-conductor" target="_blank">webmidi-conductor github repo</a></li>
+        </ul>
+        <ul>
+          <li><a href="https://www.buymeacoffee.com/classicantique" target="_blank">Buy me a coffee if you enjoyed this free game!</a></li>
+        </ul>
+    </div>
     <footer style="background-color: white">
-      Copyright &copy; 2021 Paul Juneau All Rights Reserved.
+      Copyright &copy; 2021 Paul Juneau All Rights Reserved. | 
+      <button onclick="document.getElementById('thanksAndLinksScreen').style.display='none'; document.getElementById('welcomeMessage').style.display='inline'">Show Welcome Message</button>
+      <button onclick="document.getElementById('welcomeMessage').style.display='none'; document.getElementById('thanksAndLinksScreen').style.display='inline'">Show Thanks and Additional Links</button>
     </footer>
   </div>
+  
   <script>
     var gamePaused = true;
   </script>
