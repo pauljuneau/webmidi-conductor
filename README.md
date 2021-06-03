@@ -16,12 +16,14 @@ It comes with a free demo wall ball pong-esque game.
 * Playing up or down in pitch causes paddle to move up or down.
 * Paddle will shrink if not playing within the designated scale.
 * Goals are 10 points 
+   * Wall must be hit enough times to make the wall disappear in order to score a goal.
 * Triad chords are 3 points & 7ths are 4.
-* Wall color is based on the defined key's position on a RGB Circle of 5ths Color Wheel.
-   * In the major key: C is red, E is green, and G# (Ab) is blue.
-* When chord is played, paddle will change color to related chord's key mapped to RGB Circle of 5ths Color where C chords are red, E chords are green, and G# (Ab) chords are blue.
-
-<!-- TODO imbed image of Wall color assignment based on circle of fifths -->
+* Wall color is based on the defined key's position on the Circle of 5ths mapped to the corresponding color position on a RGB Color Wheel.
+   * C Major/A Minor is Red, E Major/C# Minor is Green, and G# (Ab) Major/F Minor is blue.
+   * ![RGB Color Wheel](https://www.w3schools.com/colors/pic_rgb_wheel.gif)
+   * ![Circle of Fifths](https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Circle_of_fifths_deluxe_4.svg/600px-Circle_of_fifths_deluxe_4.svg.png)
+* When chord is played, paddle will change color to related chord's key mapped to RGB Color Wheel based on the key's position on the Circle of 5ths.
+   * C chords are red, E chords are green, and G# (Ab) chords are blue.
 
 ## Development Features
 
@@ -32,7 +34,7 @@ It comes with a free demo wall ball pong-esque game.
 * Can choose to enable Live audio to interpret sound as pitch events increasing or decreasing to move paddle up or down.
    * Consumes pitch JavaScript events produced by [PitchDetectMirror](https://github.com/pauljuneau/PitchDetectMirror).
 * Real-time scale detection based on desired scale.
-   * Prints note name played, scale degree ascending/descending, and chord being played.
+   * Prints note name played, scale degree ascending/descending, and chord being played (chord detection not enabled for live audio).
    * Compatible Scales:
       *  major, natural minor, melodic minor, harmonic minor
    * Compatible Chords:
