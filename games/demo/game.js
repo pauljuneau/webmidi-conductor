@@ -86,13 +86,10 @@ var wallLifeDrain;
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
     document.getElementById("game").style.display="inline";
-    //default userMediaAccessError variable to '' if undeclared.
-    var userMediaAccessError = userMediaAccessError || ''; 
-    userMediaAccessError = 'Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.';
     //TODO idea: add disableLiveAudio?
     try {
         //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
-        enableLiveAudioInput();
+        enableLiveAudioInput('Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.');
     } catch(err) {
         console.log(err);
     }
