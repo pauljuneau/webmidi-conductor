@@ -83,6 +83,12 @@ loadPaddleColorMap();
 var currentAlphaValue = paddleColorByKeyMap.get(currentKey)[3];
 var wallLifeDrain;
 
+var gameSetupPreferences = {
+    key : 'C',
+    scaleType : 'major',
+    performanceStringFont : '10px monospace',
+    wallLifeSpan : 10
+};
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
     document.getElementById("game").style.display="inline";
@@ -100,14 +106,18 @@ function gameSetup() {
         var key = prompt(
             "Please enter the key to restrict to.\n" +
             "Acceptable entries: C, C#, D, D#, E, F, F#, G, G#, A, A#, B"
-            ,"C");
-        currentKey = key;
+            ,gameSetupPreferences.key
+        );
+        currentKey = (key == null || key == '') ? gameSetupPreferences.key : key;
+        gameSetupPreferences.key = currentKey;
         //scaleType should be defined in musicConductorCtrl.js which should run before game.js
         scaleType = prompt(
             "Please enter the scale to restrict to.\n "+
             "Acceptable entries: major, natural minor, melodic minor, harmonic minor",
-            "major"
+            gameSetupPreferences.scaleType
         );
+        scaleType = (scaleType == null || scaleType == '') ? gameSetupPreferences.scaleType : scaleType;
+        gameSetupPreferences.scaleType = scaleType;
         var scaleShorthandName = key + '-' + scaleType;
         var rule = new RestrictToScaleRule(scaleShorthandName);
         musicConductor.scaleRule = rule;
@@ -117,16 +127,18 @@ function gameSetup() {
     var fontChange = prompt(
         "Please enter the font you would like to for your music performance diagnostics.\n"+
         "It defaults to 10px monospace.",
-        "10px monospace"
+        gameSetupPreferences.performanceStringFont
     );
-    fontChange = fontChange || paddlePerfomanceFont.width + " " + paddlePerfomanceFont.height; 
+    fontChange = fontChange || paddlePerfomanceFont.width + " " + paddlePerfomanceFont.height;
+    gameSetupPreferences.performanceStringFont = fontChange;
     paddlePerfomanceFont.setFont(fontChange);
     var wallHitSpan = prompt(
         "Please enter how many hits it should take to break down that wall! \n"+
         "It defaults to 10 hits.",
-        "10"
+        gameSetupPreferences.wallLifeSpan
     );
-    wallHitSpan = wallHitSpan || 10;
+    wallHitSpan = wallHitSpan || gameSetupPreferences.wallLifeSpan;
+    gameSetupPreferences.wallLifeSpan = wallHitSpan;
     wallLifeDrain = 1/Number(wallHitSpan);
 
     setTimeout(() => {
