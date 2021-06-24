@@ -357,11 +357,17 @@ if(init !== "done") {
     tempCache.set(MidiInstrumentationEvents.NOTELASTPLAYED,undf);
     init = "done";
 }
+
+var midiInputHistory = [];
 /**                                    MAIN FUNC                                        */
 function main(midiInput) {
     let diagnostics = 'Command: ' + midiInput.command +' , NoteNumb: ' + midiInput.note + 
         ' , Velocity: ' + midiInput.velocity + ' , NoteLetter: ' + midiInput.noteName +
         ' , TimeStamp: '+ midiInput.timeStamp;
+    if(isDiagnosticsOn & midiInput.command != 248 && midiInput.command != 254) {
+        console.log(midiInput);
+        midiInputHistory.push(midiInput);
+    }
     switch (midiInput.command) {
         case 144: // noteOn
             // LOAD SESSION CACHE FOR USE BY UI COMPONENT SUBSCRIBERS
@@ -441,7 +447,12 @@ function main(midiInput) {
                 }
             }
             break;
-        }
+        case 176:
+            if(midiInput.velocity > 0) 
+                midiChlorianCtrlr.isDamperOn = true;
+            else midiChlorianCtrlr.isDamperOn = false;
+            console.log(midiChlorianCtrlr.isDamperOn);
+    }
 }
 
 var midiChlorianCtrlr = {
@@ -452,7 +463,8 @@ var midiChlorianCtrlr = {
     countSame: false,
     frequencyIncreased : false,
     midiInputPlayedLast : undefined,
-    midiInputPlaying : undefined
+    midiInputPlaying : undefined,
+    isDamperOn : false
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
