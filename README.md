@@ -1,38 +1,22 @@
 # webmidi-conductor
 JavaScript library for interpreting midi messages and audits live performance. Determines if notes being played are in the desired scale along with indicating each note's scale degree. It also indicates what chords are being played.
 
-It comes with a free demo wall ball pong-esque game.
+It comes with a free demo wallball pong-esque game. [Click Here to Play!](https://www.pauljuneauengineer.com/webmidi-conductor/)
 
-[Click Here to Play!](https://www.pauljuneauengineer.com/webmidi-conductor/)
+[wallball game demo intro blog post](https://www.pauljuneauengineer.com/blog/webmidi-conductor/wmc-wallball-intro.html)
 
-# Wall Ball Game Demo Overview
+[webmidi-conductor blog home page](https://www.pauljuneauengineer.com/blog/webmidi-conductor/home.html)
 
-## Setup 
-
-* Plug in your midi instrument (e.g. piano) to your computer or smartphone prior to accessing the game demo site via link above.  
-
-## Rules
-
-* Playing up or down in pitch causes paddle to move up or down.
-* Paddle will shrink if not playing within the designated scale.
-* Goals are 10 points 
-   * Wall must be hit enough times to make the wall disappear in order to score a goal.
-* Triad chords are 3 points & 7ths are 4.
-* Wall color is based on the defined key's position on the Circle of 5ths mapped to the corresponding color position on a RGB Color Wheel.
-   * C Major/A Minor is Red, E Major/C# Minor is Green, and G# (Ab) Major/F Minor is blue.
-   * ![RGB Color Wheel](https://www.w3schools.com/colors/pic_rgb_wheel.gif)
-   * ![Circle of Fifths](https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Circle_of_fifths_deluxe_4.svg/600px-Circle_of_fifths_deluxe_4.svg.png)
-* When chord is played, paddle will change color to related chord's key mapped to RGB Color Wheel based on the key's position on the Circle of 5ths.
-   * C chords are red, E chords are green, and G# (Ab) chords are blue.
-
-## Development Features
-
+# Development Features
+## wallball game demo features
 * Cross platform compatible (Android, PC, Mac, iPhone).
-   * iOS devices have not been tested yet. Please feel free to submit an issue to let me know if it does not work.
+   * iPhones are unable to use the live audio feature. Please connect a midi device or a computer keyboard instead. 
+      * midi input devices such as a digital piano have yet to tested on iPhones. Please submit an issue if there is a midi input device compatibility problem and please provide details about the phone's iOS and model. Thank you!  
 * Resizes to fit mobile screen.
-* Compatible with any midi instrument and browser that works with the https://developer.mozilla.org/en-US/docs/Web/API/MIDIAccess.
 * Can choose to enable Live audio to interpret sound as pitch events increasing or decreasing to move paddle up or down.
    * Consumes pitch JavaScript events produced by [PitchDetectMirror](https://github.com/pauljuneau/PitchDetectMirror).
+## webmidi-conductor JavaScript repo features
+* Compatible with any midi instrument and browser that works with the https://developer.mozilla.org/en-US/docs/Web/API/MIDIAccess.
 * Real-time scale detection based on desired scale.
    * Prints note name played, scale degree ascending/descending, and chord being played (chord detection not enabled for live audio).
    * Compatible Scales:
