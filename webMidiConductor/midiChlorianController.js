@@ -289,7 +289,8 @@ function getMIDIMessage(message) {
 
 /**
  * @description mocks midi message input from key event, and passes to main method
- * @param {KeyboardEvent} keyEvent 
+ * @param {KeyboardEvent} keyEvent
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
  */
 function onKeyEventMockMIDIMessage(keyEvent) {
     var mockMidi = new OnKeyEventMidiMessageMock(keyEvent);
