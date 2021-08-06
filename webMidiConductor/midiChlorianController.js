@@ -170,16 +170,34 @@ class OnKeyEventMidiMessageMock {
         this.keyCode = ke.code;
         this.command = 144;
         this.note = KEYBOARD_KEY_TO_MIDI_NUMBER.get(this.keyCode);
+        this.isRepeatNote = isRepeatNote(this);
         this.velocity = this.mockVelocity();
         this.noteName = assignNoteName(this);
         this.timeStamp = ke.timeStamp;
+        this.isEmulatingDamper = this.isEmulatingDamper();
     }
     mockVelocity() {
-        if(isRepeatNote(this)) return 0;
+        if(this.isRepeatNote) return 0;
         if(this.ke.type == "keydown") {
             return this.ke.shiftKey === true ? 51 : 1;
         }
         return 0;
+    }
+    isEmulatingDamper() {
+        var isEmulatingDamper = false;
+        if(this.keyCode == "Space") {
+            this.command = 176;
+            if(this.ke.type == "keydown" && this.isRepeatNote == false) {
+                this.velocity = 51;
+                isEmulatingDamper = true; 
+            }
+            if(this.ke.type == "keyup") {
+                this.velocity = 0;
+                isEmulatingDamper = true; 
+            }
+        }
+        
+        return isEmulatingDamper;
     }
 }
 
