@@ -170,16 +170,34 @@ class OnKeyEventMidiMessageMock {
         this.keyCode = ke.code;
         this.command = 144;
         this.note = KEYBOARD_KEY_TO_MIDI_NUMBER.get(this.keyCode);
+        this.isRepeatNote = isRepeatNote(this);
         this.velocity = this.mockVelocity();
         this.noteName = assignNoteName(this);
         this.timeStamp = ke.timeStamp;
+        this.isEmulatingDamper = this.isEmulatingDamper();
     }
     mockVelocity() {
-        if(isRepeatNote(this)) return 0;
+        if(this.isRepeatNote) return 0;
         if(this.ke.type == "keydown") {
             return this.ke.shiftKey === true ? 51 : 1;
         }
         return 0;
+    }
+    isEmulatingDamper() {
+        var isEmulatingDamper = false;
+        if(this.keyCode == "Space") {
+            this.command = 176;
+            if(this.ke.type == "keydown" && this.isRepeatNote == false) {
+                this.velocity = 51;
+                isEmulatingDamper = true; 
+            }
+            if(this.ke.type == "keyup") {
+                this.velocity = 0;
+                isEmulatingDamper = true; 
+            }
+        }
+        
+        return isEmulatingDamper;
     }
 }
 
@@ -289,7 +307,8 @@ function getMIDIMessage(message) {
 
 /**
  * @description mocks midi message input from key event, and passes to main method
- * @param {KeyboardEvent} keyEvent 
+ * @param {KeyboardEvent} keyEvent
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
  */
 function onKeyEventMockMIDIMessage(keyEvent) {
     var mockMidi = new OnKeyEventMidiMessageMock(keyEvent);
@@ -357,11 +376,17 @@ if(init !== "done") {
     tempCache.set(MidiInstrumentationEvents.NOTELASTPLAYED,undf);
     init = "done";
 }
+
+var midiInputHistory = [];
 /**                                    MAIN FUNC                                        */
 function main(midiInput) {
     let diagnostics = 'Command: ' + midiInput.command +' , NoteNumb: ' + midiInput.note + 
         ' , Velocity: ' + midiInput.velocity + ' , NoteLetter: ' + midiInput.noteName +
         ' , TimeStamp: '+ midiInput.timeStamp;
+    if(isDiagnosticsOn & midiInput.command != 248 && midiInput.command != 254) {
+        console.log(midiInput);
+        midiInputHistory.push(midiInput);
+    }
     switch (midiInput.command) {
         case 144: // noteOn
             // LOAD SESSION CACHE FOR USE BY UI COMPONENT SUBSCRIBERS
@@ -441,7 +466,11 @@ function main(midiInput) {
                 }
             }
             break;
-        }
+        case 176:
+            if(midiInput.velocity > 0) 
+                midiChlorianCtrlr.isDamperOn = true;
+            else midiChlorianCtrlr.isDamperOn = false;
+    }
 }
 
 var midiChlorianCtrlr = {
@@ -452,7 +481,8 @@ var midiChlorianCtrlr = {
     countSame: false,
     frequencyIncreased : false,
     midiInputPlayedLast : undefined,
-    midiInputPlaying : undefined
+    midiInputPlaying : undefined,
+    isDamperOn : false
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////

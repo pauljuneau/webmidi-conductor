@@ -47,7 +47,7 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
    ; | E | 76
    ' | F | 77
    ] | F#/Gb | 78  
-
+   Spacebar | Sustain Pedal | N/A 
 # Sponsorship:
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/classicantique)
