@@ -368,8 +368,16 @@ function loop() {
 
     // move ball by its velocity
     if(!gamePaused) {
-        ball.x += ball.dx;
-        ball.y += ball.dy;
+        if(!midiChlorianCtrlr.isDamperOn) {
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+        } else {
+           let halfSpeedX = ball.dx/2;
+           let halfSpeedY = ball.dy/2;
+           ball.x += halfSpeedX;
+           ball.y += halfSpeedY;
+        }
+        
     }
 
     // prevent ball from going through walls by changing its velocity

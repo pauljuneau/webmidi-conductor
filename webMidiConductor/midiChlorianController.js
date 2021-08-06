@@ -470,7 +470,6 @@ function main(midiInput) {
             if(midiInput.velocity > 0) 
                 midiChlorianCtrlr.isDamperOn = true;
             else midiChlorianCtrlr.isDamperOn = false;
-            console.log(midiChlorianCtrlr.isDamperOn);
     }
 }
 
