@@ -59,9 +59,12 @@ function RestrictToScaleRule(scaleShorthandName) {
         if(oneMidiChlorianCtrlrEvent.countDecreased) {
             return this.restrictedLettersDownscale.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
         } 
-        if (oneMidiChlorianCtrlrEvent.countIncreased) {
+        //If same note played, then evaulate against restricted letters designated when pitch is increasing.
+        //Fail scenario may occur when same note of melodic minor scale is played after having starting going down the scale. 
+        //E.g. Note F in A melodic minor would be correct if having just played G, but if F was replayed then it would evaluate against the ascending scale notes which should be F#.
+        //if (oneMidiChlorianCtrlrEvent.countIncreased) {
             return this.restrictedLetters.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
-        }
+        //}
     };
 }
 
