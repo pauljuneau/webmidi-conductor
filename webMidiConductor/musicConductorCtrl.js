@@ -9,12 +9,14 @@
 var currentKey = 'C';
 var scaleType = 'major';
 
-//assumes heptatonic (seven-note) scales that with scale degrees 1->7
 let scaleToHalfStepAlgorithm = new Map();
 scaleToHalfStepAlgorithm.set('major',2212221);
 scaleToHalfStepAlgorithm.set('natural minor',2122122);
 scaleToHalfStepAlgorithm.set('harmonic minor',2122131);
 scaleToHalfStepAlgorithm.set('melodic minor', 2122221);
+scaleToHalfStepAlgorithm.set('minor pentatonic', 32232);
+scaleToHalfStepAlgorithm.set('major pentatonic', 22323);
+scaleToHalfStepAlgorithm.set('dorian', 2122212);
 
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
@@ -28,6 +30,7 @@ function RestrictToScaleRule(scaleShorthandName) {
     //scaleShorthandNames: C-Major, C-Minor, etc. 
     this.restrictToScaleArray = scaleShorthandName.split('-');
     this.restrictedMusicKey = this.restrictToScaleArray[0];
+    this.retrictedScale = this.restrictToScaleArray[1];
     //midi note numbers in ascending order that are in the given scale
     this.restrictedMidiNoteNumbers = setRestrictedMidiNoteNumbers(this.restrictToScaleArray);
     //midi note numbers in descending order that are in the given scale
@@ -43,7 +46,7 @@ function RestrictToScaleRule(scaleShorthandName) {
         var returnMap = new Map();
         for (let i = 0; i < midiNoteNumbers.length; i++) {
             var oneMidiNoteNumber = midiNoteNumbers[i];
-            if(scaleDegree > 7) break;
+            if(scaleDegree > scaleToHalfStepAlgorithm.get(this.retrictedScale).toString().length) break;
             returnMap.set(getNoteNameFromNumber(oneMidiNoteNumber).trim(), scaleDegree);
             scaleDegree++;
         }
@@ -56,15 +59,14 @@ function RestrictToScaleRule(scaleShorthandName) {
     this.evaluateRule = function(oneMidiChlorianCtrlrEvent) {
         //return true if oneMidiChlorianCtrlrEvent.midiInputPlaying is in restrictedMidiNoteNumbers
         let midiNoteNumberToCheck = oneMidiChlorianCtrlrEvent.midiInputPlaying.note;
+        //Useful for evaluating note in scale when playing melodic minor in its classical representation
         if(oneMidiChlorianCtrlrEvent.countDecreased) {
             return this.restrictedLettersDownscale.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
         } 
         //If same note played, then evaulate against restricted letters designated when pitch is increasing.
         //Fail scenario may occur when same note of melodic minor scale is played after having starting going down the scale. 
         //E.g. Note F in A melodic minor would be correct if having just played G, but if F was replayed then it would evaluate against the ascending scale notes which should be F#.
-        //if (oneMidiChlorianCtrlrEvent.countIncreased) {
-            return this.restrictedLetters.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
-        //}
+        return this.restrictedLetters.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
     };
 }
 
@@ -173,7 +175,7 @@ var musicConductor = {
  */
 function setMusicalPerformanceString() {
     musicConductor.chordsPlaying = [];
-    
+    //lazy load scale degree letters ascending and descending
     musicConductor.scaleRule.scaleDegreeByLetterASC = musicConductor.scaleRule.scaleDegreeByLetterASC.size != 0 ? musicConductor.scaleRule.scaleDegreeByLetterASC 
         : musicConductor.scaleRule.getScaleDegreeByLetter(musicConductor.scaleRule.restrictedMidiNoteNumbers);
     musicConductor.scaleRule.scaleDegreeByLetterDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.size != 0 ? musicConductor.scaleRule.scaleDegreeByLetterDESC 

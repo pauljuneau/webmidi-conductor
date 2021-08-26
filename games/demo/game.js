@@ -113,7 +113,7 @@ function gameSetup() {
         //scaleType should be defined in musicConductorCtrl.js which should run before game.js
         scaleType = prompt(
             "Please enter the scale to restrict to.\n "+
-            "Acceptable entries: major, natural minor, melodic minor, harmonic minor",
+            "Acceptable entries: major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, dorian",
             gameSetupPreferences.scaleType
         );
         scaleType = (scaleType == null || scaleType == '') ? gameSetupPreferences.scaleType : scaleType;
