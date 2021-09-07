@@ -87,7 +87,8 @@ var gameSetupPreferences = {
     key : 'C',
     scaleType : 'major',
     performanceStringFont : '10px monospace',
-    wallLifeSpan : 10
+    wallLifeSpan : 10,
+    cannonBallBounceOffWalls : false
 };
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
@@ -140,7 +141,9 @@ function gameSetup() {
     wallHitSpan = wallHitSpan || gameSetupPreferences.wallLifeSpan;
     gameSetupPreferences.wallLifeSpan = wallHitSpan;
     wallLifeDrain = 1/Number(wallHitSpan);
-
+    gameSetupPreferences.cannonBallBounceOffWalls = confirm(
+        "Would you like the colored shots produced when chords are played to bounce of the walls?"
+    );
     setTimeout(() => {
         gamePaused = false;
     }, 3000);
@@ -323,7 +326,7 @@ function loop() {
     if (rightPaddle.cannonReloadTime > 0) {
         rightPaddle.cannonReloadTime--;
         cannonReloadTimeElapsed = performance.now() - cannonReloadTimeStartTime;
-        console.log('cannonReloadTime: '+cannonReloadTimeElapsed);
+        //console.log('cannonReloadTime: '+cannonReloadTimeElapsed);
     }
 
     // move paddles by their velocity
@@ -384,7 +387,7 @@ function loop() {
         }
         if(rightPaddle.cannonReloadTime === 0) {
             // load cannon ball to shoot
-            var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - grid, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
+            var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - rightPaddle.width, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
             //chordColorCannon.cannonBalls.push(cannonBall);
             var chordLetterCounter = 1;
             var completedPhase = false;
@@ -393,7 +396,7 @@ function loop() {
                     case 1:
                         if(completedPhase) {
                             var cannonBall_straightShot2 = new ChordColorCannonShell(
-                                cannonBall_straightShot.x+1.5*grid,
+                                cannonBall_straightShot.x+1.5*rightPaddle.width,
                                 cannonBall_straightShot.y,
                                 cannonBall_straightShot.width,
                                 cannonBall_straightShot.height,
@@ -477,9 +480,21 @@ function loop() {
             if (cannonBall.x < 0 || cannonBall.x > canvas.width) {
                 chordColorCannon.cannonBalls.splice(index, 1);
             }
+            if(gameSetupPreferences.cannonBallBounceOffWalls) {
+                if(cannonBall.y < grid) {
+                    cannonBall.y = grid;
+                    cannonBall.dy *= -1;
+                } else if (cannonBall.y + grid > canvas.height - grid) {
+                    cannonBall.y = canvas.height - grid * 2;
+                    cannonBall.dy *= -1;
+                }
+            } else {
+                if(cannonBall.y < grid || cannonBall.y + grid > canvas.height - grid){
+                    chordColorCannon.cannonBalls.splice(index, 1); 
+                }
+            } 
         });
     }
-    
 
     //put back to white for ball to fill white
     context.fillStyle = 'white';
