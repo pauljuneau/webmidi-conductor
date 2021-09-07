@@ -323,7 +323,7 @@ function loop() {
     if (rightPaddle.cannonReloadTime > 0) {
         rightPaddle.cannonReloadTime--;
         cannonReloadTimeElapsed = performance.now() - cannonReloadTimeStartTime;
-        //console.log('cannonReloadTime: '+cannonReloadTimeElapsed);
+        console.log('cannonReloadTime: '+cannonReloadTimeElapsed);
     }
 
     // move paddles by their velocity
@@ -384,13 +384,61 @@ function loop() {
         }
         if(rightPaddle.cannonReloadTime === 0) {
             // load cannon ball to shoot
-            var cannonBall = new ChordColorCannonShell(rightPaddle.x - grid, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
-            chordColorCannon.cannonBalls.push(cannonBall);
-            // cannonReloadTime of 30 Approximates to 600 milliseconds. 
-            // 30 will last longer or shorter than 600 milliseconds based on additional processing introduced or removed.
+            var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - grid, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
+            //chordColorCannon.cannonBalls.push(cannonBall);
+            var chordLetterCounter = 1;
+            var completedPhase = false;
+            for(let oneLetterInChord of oneChordLetterSetByChordNameEntry) {
+                switch (chordLetterCounter) {
+                    case 1:
+                        if(completedPhase) {
+                            var cannonBall_straightShot2 = new ChordColorCannonShell(
+                                cannonBall_straightShot.x+1.5*grid,
+                                cannonBall_straightShot.y,
+                                cannonBall_straightShot.width,
+                                cannonBall_straightShot.height,
+                                cannonBall_straightShot.dx,
+                                0
+                            );
+                            chordColorCannon.cannonBalls.push(cannonBall_straightShot2);
+                        } else {
+                            chordColorCannon.cannonBalls.push(cannonBall_straightShot);
+                        }    
+                        break;
+                    case 2:
+                        var cannonBall_downLeft = new ChordColorCannonShell(
+                            cannonBall_straightShot.x,
+                            cannonBall_straightShot.y,
+                            cannonBall_straightShot.width,
+                            cannonBall_straightShot.height,
+                            cannonBall_straightShot.dx,
+                            chordColorCannon.speed
+                        );
+                        chordColorCannon.cannonBalls.push(cannonBall_downLeft);
+                        break;
+                    case 3:
+                        var cannonBall_upRight = new ChordColorCannonShell(
+                            cannonBall_straightShot.x,
+                            cannonBall_straightShot.y,
+                            cannonBall_straightShot.width,
+                            cannonBall_straightShot.height,
+                            cannonBall_straightShot.dx,
+                            -chordColorCannon.speed
+                        );
+                        chordColorCannon.cannonBalls.push(cannonBall_upRight);
+                        chordLetterCounter = 0;
+                        completedPhase = !completedPhase;
+                        break;
+                    default:
+                        break;
+                }
+                chordLetterCounter++;
+            }
+            // cannonReloadTime of 50 Approximates to 1000 milliseconds. 
+            // 50 will last longer or shorter than 1000 milliseconds based on additional processing introduced or removed.
             // debug cannonReloadTimeElapsed to find desired cannonReloadTime.
             //TODO make cannonReloadTime a config setting
-            rightPaddle.cannonReloadTime = 30; 
+            rightPaddle.cannonReloadTime = 50; 
             cannonReloadTimeStartTime = performance.now();
         }
     } else {
