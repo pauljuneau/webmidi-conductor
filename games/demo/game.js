@@ -89,7 +89,8 @@ var gameSetupPreferences = {
     performanceStringFont : '10px monospace',
     wallLifeSpan : 10,
     cannonBallBounceOffWalls : false,
-    cannonFireOnNewChord : false
+    cannonFireOnNewChord : false,
+    shrinkPaddleWhenOutOfScale : false
 };
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
@@ -126,9 +127,15 @@ function gameSetup() {
     } else {
         //TODO idea: disable rule?
     }
+    gameSetupPreferences.shrinkPaddleWhenOutOfScale = confirm(
+        "Would you like the paddle to shrink in half when you play out of the restricted scale?"
+    );
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        gameSetupPreferences.performanceStringFont = '18px monospace';
+    }
     var fontChange = prompt(
         "Please enter the font you would like to for your music performance diagnostics.\n"+
-        "It defaults to 10px monospace.",
+        "It defaults to 10px monospace on desktop and 18px monospace on mobile.",
         gameSetupPreferences.performanceStringFont
     );
     fontChange = fontChange || paddlePerfomanceFont.width + " " + paddlePerfomanceFont.height;
@@ -388,7 +395,7 @@ function loop() {
         var differentChordPlayed = false;
         if(oldChordLetterSetByChordNameEntry != oneChordLetterSetByChordNameEntry) {
             //TODO allow chord scoring to be turned on/off
-            rightPaddleScore.text += oneChordLetterSetByChordNameEntry.size;
+            // rightPaddleScore.text += oneChordLetterSetByChordNameEntry.size;
             oldChordLetterSetByChordNameEntry = oneChordLetterSetByChordNameEntry;
             differentChordPlayed = true;
         }
@@ -480,6 +487,7 @@ function loop() {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
                 currentAlphaValue -= wallLifeDrain;
+                rightPaddleScore.text += 1;
             }
             // remove cannon ball if it hits the ball then reset ball
             else if (collides(cannonBall, ball)) {
@@ -546,7 +554,7 @@ function loop() {
             leftPaddleScore.text += 10;
         }
         if(ball.x < 0 ) {
-            rightPaddleScore.text += 1;
+            rightPaddleScore.text += 10;
             gameOver();
         }
         resetBall(false);
@@ -602,7 +610,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         rightPaddle.dy = 0;
     }
 
-    if(!musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent)) {
+    if(gameSetupPreferences.shrinkPaddleWhenOutOfScale && !musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent)) {
         var tempHeight = rightPaddle.height/2;
         rightPaddle.height = tempHeight;
     }
