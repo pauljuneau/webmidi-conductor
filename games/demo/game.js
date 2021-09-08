@@ -88,7 +88,9 @@ var gameSetupPreferences = {
     scaleType : 'major',
     performanceStringFont : '10px monospace',
     wallLifeSpan : 10,
-    cannonBallBounceOffWalls : false
+    cannonBallBounceOffWalls : false,
+    cannonFireOnNewChord : false,
+    shrinkPaddleWhenOutOfScale : false
 };
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
@@ -125,9 +127,15 @@ function gameSetup() {
     } else {
         //TODO idea: disable rule?
     }
+    gameSetupPreferences.shrinkPaddleWhenOutOfScale = confirm(
+        "Would you like the paddle to shrink in half when you play out of the restricted scale?"
+    );
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        gameSetupPreferences.performanceStringFont = '18px monospace';
+    }
     var fontChange = prompt(
         "Please enter the font you would like to for your music performance diagnostics.\n"+
-        "It defaults to 10px monospace.",
+        "It defaults to 10px monospace on desktop and 18px monospace on mobile.",
         gameSetupPreferences.performanceStringFont
     );
     fontChange = fontChange || paddlePerfomanceFont.width + " " + paddlePerfomanceFont.height;
@@ -143,6 +151,9 @@ function gameSetup() {
     wallLifeDrain = 1/Number(wallHitSpan);
     gameSetupPreferences.cannonBallBounceOffWalls = confirm(
         "Would you like the colored shots produced when chords are played to bounce of the walls?"
+    );
+    gameSetupPreferences.cannonFireOnNewChord = confirm(
+        "Would you like the Chord Cannon to fire only when a new chord is played?"
     );
     setTimeout(() => {
         gamePaused = false;
@@ -312,6 +323,7 @@ var musicPerformanceTimerVar = setInterval(setMusicalPerformanceString ,100);
 
 var oldChordLetterSetByChordNameEntry;
 var cannonReloadTimeStartTime, cannonReloadTimeElapsed;
+var oldRightPaddleColorKey;
 // game loop
 function loop() {    
     //requestAnimationFrame(loop);
@@ -380,15 +392,24 @@ function loop() {
         context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
 
         oneChordLetterSetByChordNameEntry = chordLetterSetByChordName.get(chordName);
+        var differentChordPlayed = false;
         if(oldChordLetterSetByChordNameEntry != oneChordLetterSetByChordNameEntry) {
             //TODO allow chord scoring to be turned on/off
-            rightPaddleScore.text += oneChordLetterSetByChordNameEntry.size;
+            // rightPaddleScore.text += oneChordLetterSetByChordNameEntry.size;
             oldChordLetterSetByChordNameEntry = oneChordLetterSetByChordNameEntry;
+            differentChordPlayed = true;
         }
-        if(rightPaddle.cannonReloadTime === 0) {
+        var cannonReadyToLoad = true;
+        if(gameSetupPreferences.cannonFireOnNewChord == true) {
+            if(differentChordPlayed) 
+                cannonReadyToLoad = true;
+            else
+                cannonReadyToLoad = false;
+        }
+        cannonReadyToLoad = rightPaddle.cannonReloadTime === 0 && cannonReadyToLoad;
+        if(cannonReadyToLoad) {
             // load cannon ball to shoot
             var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - rightPaddle.width, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
-            //chordColorCannon.cannonBalls.push(cannonBall);
             var chordLetterCounter = 1;
             var completedPhase = false;
             for(let oneLetterInChord of oneChordLetterSetByChordNameEntry) {
@@ -448,24 +469,27 @@ function loop() {
         context.fillStyle = 'white';
         context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
     }
+    if(oldRightPaddleColorKey != rightPaddleColorKey && rightPaddleColorKey != undefined)
+        oldRightPaddleColorKey = rightPaddleColorKey;
 
     // draw cannon balls
-    if(rightPaddleColorKey != undefined) {
+    if(oldRightPaddleColorKey != undefined) {
         context.fillStyle = "rgba("+
-            paddleColorByKeyMap.get(rightPaddleColorKey)[0]+","+
-            paddleColorByKeyMap.get(rightPaddleColorKey)[1]+","+
-            paddleColorByKeyMap.get(rightPaddleColorKey)[2]+","+
+            paddleColorByKeyMap.get(oldRightPaddleColorKey)[0]+","+
+            paddleColorByKeyMap.get(oldRightPaddleColorKey)[1]+","+
+            paddleColorByKeyMap.get(oldRightPaddleColorKey)[2]+","+
             "1)";
         chordColorCannon.cannonBalls.forEach(function(cannonBall, index) {
             context.fillRect(cannonBall.x, cannonBall.y, cannonBall.width, cannonBall.height);
 
-            // check if the cannon ball hits the wall
+            // remove cannon ball if it hits the wall
             if (collides(cannonBall, leftPaddle)) {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
                 currentAlphaValue -= wallLifeDrain;
+                rightPaddleScore.text += 1;
             }
-            // check if the cannon ball hits the ball
+            // remove cannon ball if it hits the ball then reset ball
             else if (collides(cannonBall, ball)) {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
@@ -530,7 +554,7 @@ function loop() {
             leftPaddleScore.text += 10;
         }
         if(ball.x < 0 ) {
-            rightPaddleScore.text += 1;
+            rightPaddleScore.text += 10;
             gameOver();
         }
         resetBall(false);
@@ -586,7 +610,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         rightPaddle.dy = 0;
     }
 
-    if(!musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent)) {
+    if(gameSetupPreferences.shrinkPaddleWhenOutOfScale && !musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent)) {
         var tempHeight = rightPaddle.height/2;
         rightPaddle.height = tempHeight;
     }
