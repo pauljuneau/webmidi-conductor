@@ -312,6 +312,7 @@ var musicPerformanceTimerVar = setInterval(setMusicalPerformanceString ,100);
 
 var oldChordLetterSetByChordNameEntry;
 var cannonReloadTimeStartTime, cannonReloadTimeElapsed;
+var oldRightPaddleColorKey;
 // game loop
 function loop() {    
     //requestAnimationFrame(loop);
@@ -388,7 +389,6 @@ function loop() {
         if(rightPaddle.cannonReloadTime === 0) {
             // load cannon ball to shoot
             var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - rightPaddle.width, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
-            //chordColorCannon.cannonBalls.push(cannonBall);
             var chordLetterCounter = 1;
             var completedPhase = false;
             for(let oneLetterInChord of oneChordLetterSetByChordNameEntry) {
@@ -448,24 +448,26 @@ function loop() {
         context.fillStyle = 'white';
         context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
     }
+    if(oldRightPaddleColorKey != rightPaddleColorKey && rightPaddleColorKey != undefined)
+        oldRightPaddleColorKey = rightPaddleColorKey;
 
     // draw cannon balls
-    if(rightPaddleColorKey != undefined) {
+    if(oldRightPaddleColorKey != undefined) {
         context.fillStyle = "rgba("+
-            paddleColorByKeyMap.get(rightPaddleColorKey)[0]+","+
-            paddleColorByKeyMap.get(rightPaddleColorKey)[1]+","+
-            paddleColorByKeyMap.get(rightPaddleColorKey)[2]+","+
+            paddleColorByKeyMap.get(oldRightPaddleColorKey)[0]+","+
+            paddleColorByKeyMap.get(oldRightPaddleColorKey)[1]+","+
+            paddleColorByKeyMap.get(oldRightPaddleColorKey)[2]+","+
             "1)";
         chordColorCannon.cannonBalls.forEach(function(cannonBall, index) {
             context.fillRect(cannonBall.x, cannonBall.y, cannonBall.width, cannonBall.height);
 
-            // check if the cannon ball hits the wall
+            // remove cannon ball if it hits the wall
             if (collides(cannonBall, leftPaddle)) {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
                 currentAlphaValue -= wallLifeDrain;
             }
-            // check if the cannon ball hits the ball
+            // remove cannon ball if it hits the ball then reset ball
             else if (collides(cannonBall, ball)) {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
