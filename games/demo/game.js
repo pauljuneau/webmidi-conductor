@@ -88,7 +88,8 @@ var gameSetupPreferences = {
     scaleType : 'major',
     performanceStringFont : '10px monospace',
     wallLifeSpan : 10,
-    cannonBallBounceOffWalls : false
+    cannonBallBounceOffWalls : false,
+    cannonFireOnNewChord : false
 };
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
@@ -143,6 +144,9 @@ function gameSetup() {
     wallLifeDrain = 1/Number(wallHitSpan);
     gameSetupPreferences.cannonBallBounceOffWalls = confirm(
         "Would you like the colored shots produced when chords are played to bounce of the walls?"
+    );
+    gameSetupPreferences.cannonFireOnNewChord = confirm(
+        "Would you like the Chord Cannon to fire only when a new chord is played?"
     );
     setTimeout(() => {
         gamePaused = false;
@@ -381,12 +385,22 @@ function loop() {
         context.fillRect(rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height);
 
         oneChordLetterSetByChordNameEntry = chordLetterSetByChordName.get(chordName);
+        var differentChordPlayed = false;
         if(oldChordLetterSetByChordNameEntry != oneChordLetterSetByChordNameEntry) {
             //TODO allow chord scoring to be turned on/off
             rightPaddleScore.text += oneChordLetterSetByChordNameEntry.size;
             oldChordLetterSetByChordNameEntry = oneChordLetterSetByChordNameEntry;
+            differentChordPlayed = true;
         }
-        if(rightPaddle.cannonReloadTime === 0) {
+        var cannonReadyToLoad = true;
+        if(gameSetupPreferences.cannonFireOnNewChord == true) {
+            if(differentChordPlayed) 
+                cannonReadyToLoad = true;
+            else
+                cannonReadyToLoad = false;
+        }
+        cannonReadyToLoad = rightPaddle.cannonReloadTime === 0 && cannonReadyToLoad;
+        if(cannonReadyToLoad) {
             // load cannon ball to shoot
             var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - rightPaddle.width, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
             var chordLetterCounter = 1;
