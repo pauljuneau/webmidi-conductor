@@ -378,7 +378,14 @@ if(init !== "done") {
 }
 
 var midiInputHistory = [];
-/**                                    MAIN FUNC                                        */
+/**                                    MAIN FUNC                                              */
+/**
+ * @description receives Pitch, Keyboard, or Midi message data that shares a common model.
+ *  - Updates related note in global map to be on/off.
+ *  - Tracks note last played and note playing in enhanced session cache.
+ * @param {Object} midiInput - Pitch, Keyboard, or Midi message data
+ * @fires MidiInstrumentationEvents NOTELASTPLAYED & NOTEBEINGPLAYED
+ */
 function main(midiInput) {
     let diagnostics = 'Command: ' + midiInput.command +' , NoteNumb: ' + midiInput.note + 
         ' , Velocity: ' + midiInput.velocity + ' , NoteLetter: ' + midiInput.noteName +
@@ -489,9 +496,11 @@ var midiChlorianCtrlr = {
 //                         MIDI-CHLORIAN CONTROLLER EVENT HUB                         //
 ////////////////////////////////////////////////////////////////////////////////////////
 /** 
- * @description listens to midi input events to translate into midi-chlorian controller
- * events. Does not process note until first note played has completed.
- * @param noteBeingPlayed event relates to midiInput published from main function.
+ * @description listens to note being played event, updates midi-chlorian controller,
+ *  stringifies it, and publishes midi-chlorian controller event.
+ * @listens MidiInstrumentationEvents.NOTEBEINGPLAYED - published from main function.
+ * @param e.value - stringified midiInput 
+ * @fires MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT - stringified midiChlorianCtrlr
  */
 
 document.addEventListener(MidiInstrumentationEvents.NOTEBEINGPLAYED, function(e) {
@@ -503,7 +512,7 @@ document.addEventListener(MidiInstrumentationEvents.NOTEBEINGPLAYED, function(e)
         console.log('noteBeingPlayed');
         console.log(midiInput);
     }
-
+    //default condition
     if(midiChlorianCtrlr.countByNoteLastFullyPlayed == false) {
         if(midiChlorianCtrlr.midiInputPlaying != undefined) {
             if ( midiInput.note > midiChlorianCtrlr.midiInputPlaying.note ) {

@@ -599,7 +599,15 @@ function loop() {
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   PLAYER PADDLES                                   //
 ////////////////////////////////////////////////////////////////////////////////////////
-
+/** 
+ * @description listens to midi-chlorian controller event 
+ * - moves player's paddle up or down if the player went up or down the register. 
+ * - shrinks player paddle in half if shrink-when-out-of-scale rule turned on
+ * @listens MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT - published from
+ *  midiChlorianController.js' MidiInstrumentationEvents.NOTEBEINGPLAYED event listener.
+ * @param e.value - stringified midiChlorianCtrlr 
+ * @returns void
+ */
 document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, function(e) {
     const oneMidiChlorianCtrlrEvent = JSON.parse(e.value);
     if (oneMidiChlorianCtrlrEvent.countIncreased ) {
