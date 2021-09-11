@@ -167,7 +167,7 @@ function convertKeyToRelativeMajorFromMinor() {
  * @description reassigns the current key scale type. 
  * Regenerates the music conductor's RestrictToScale rule.
  * @param {String} key [key=currentKey] - new desired key to play in
- * @param {*} scale [scale=scaleType] - new desired scale to play in
+ * @param {String} scale [scale=scaleType] - new desired scale to play in
  * @returns void
  */
 function changeKeyAndScale(key, scale) {
