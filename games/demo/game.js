@@ -90,7 +90,8 @@ var gameSetupPreferences = {
     wallLifeSpan : 10,
     cannonBallBounceOffWalls : false,
     cannonFireOnNewChord : false,
-    shrinkPaddleWhenOutOfScale : false
+    shrinkPaddleWhenOutOfScale : false,
+    changeKeyOnLowestKey : false
 };
 function gameSetup() {
     document.getElementById("welcomeScreen").style.display="none";
@@ -111,24 +112,22 @@ function gameSetup() {
             "Acceptable entries: C, C#, D, D#, E, F, F#, G, G#, A, A#, B"
             ,gameSetupPreferences.key
         );
-        currentKey = (key == null || key == '') ? gameSetupPreferences.key : key;
-        gameSetupPreferences.key = currentKey;
-        //scaleType should be defined in musicConductorCtrl.js which should run before game.js
-        scaleType = prompt(
+        gameSetupPreferences.key = !key ? gameSetupPreferences.key : key;
+        var scale = prompt(
             "Please enter the scale to restrict to.\n "+
             "Acceptable entries: major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, dorian",
             gameSetupPreferences.scaleType
         );
-        scaleType = (scaleType == null || scaleType == '') ? gameSetupPreferences.scaleType : scaleType;
-        gameSetupPreferences.scaleType = scaleType;
-        var scaleShorthandName = key + '-' + scaleType;
-        var rule = new RestrictToScaleRule(scaleShorthandName);
-        musicConductor.scaleRule = rule;
+        gameSetupPreferences.scaleType = !scale ? gameSetupPreferences.scaleType : scale;
+        changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     } else {
         //TODO idea: disable rule?
     }
     gameSetupPreferences.shrinkPaddleWhenOutOfScale = confirm(
         "Would you like the paddle to shrink in half when you play out of the restricted scale?"
+    );
+    gameSetupPreferences.changeKeyOnLowestKey = confirm(
+        "Would you like the key to change based on the lowest note last played?"
     );
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         gameSetupPreferences.performanceStringFont = '18px monospace';
@@ -599,6 +598,7 @@ function loop() {
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   PLAYER PADDLES                                   //
 ////////////////////////////////////////////////////////////////////////////////////////
+var lowestMidiNotePlayed = midiChlorianCtrlr.highestMidiNoteNumber;
 /** 
  * @description listens to midi-chlorian controller event 
  * - moves player's paddle up or down if the player went up or down the register. 
@@ -630,6 +630,14 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         //TODO idea: use beat duration instead to cause affect on object to persist while note was held down
         250
     );
+    
+    var midiNumberPlaying = parseInt(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
+    if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
+        lowestMidiNotePlayed = midiNumberPlaying;
+        var key = getNoteNameFromNumber(midiNumberPlaying, true);
+        gameSetupPreferences.key = key;
+        changeKeyAndScale(key,gameSetupPreferences.scaleType);
+    }
 });
 /* END player paddle controls*/
 

@@ -276,14 +276,23 @@ function indexOfNoteLetter(value, index, array) {
 }
 var noteLetterToFindIndexOf = 'C';
 
-function getNoteNameFromNumber(noteNum) {
+/**
+ * @description converts midi number to a note name.
+ * @param {Integer} noteNum - midi number
+ * @param {Boolean} [doTrim=false] - will trim white spaces from note name if true is provided  
+ * @returns note name
+ * @see https://stackoverflow.com/questions/712679/convert-midi-note-numbers-to-name-and-octave
+ */
+function getNoteNameFromNumber(noteNum, doTrim) {
     var notes = ACCEPTABLE_NOTE_NAMES;
     var octave;
     var note;
 
     octave = Math.floor(noteNum / 12 - 1);
     note = notes.substring((noteNum % 12) * 2, (noteNum % 12) * 2 + 2);
-
+    if(doTrim) {
+        note = note.trim()
+    }
    return note;
 
 }
@@ -483,13 +492,17 @@ function main(midiInput) {
 var midiChlorianCtrlr = {
     //countByNoteLastFullyPlayed measures count based on note previously played fully (press + release) instead of seeing if new note played has changed regardless of previous note's release 
     countByNoteLastFullyPlayed : false,
-    countIncreased: false,
-    countDecreased: false,
-    countSame: false,
+    countIncreased : false,
+    countDecreased : false,
+    countSame : false,
     frequencyIncreased : false,
     midiInputPlayedLast : undefined,
     midiInputPlaying : undefined,
-    isDamperOn : false
+    isDamperOn : false,
+    //MIDI_NOTE_NUMBER_MAPPING_INDEX[0].midiNoteNumber = 128 (G#9/Ab9) high up piano
+    highestMidiNoteNumber : parseInt(MIDI_NOTE_NUMBER_MAPPING_INDEX[0].midiNoteNumber),
+    //MIDI_NOTE_NUMBER_MAPPING_INDEX[128].midiNoteNumber = 0 (null) lowest in piano
+    lowestMidiNoteNumber : parseInt(MIDI_NOTE_NUMBER_MAPPING_INDEX[MIDI_NOTE_NUMBER_MAPPING_INDEX.length - 1].midiNoteNumber)
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////
