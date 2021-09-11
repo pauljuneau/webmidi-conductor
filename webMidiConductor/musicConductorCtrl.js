@@ -163,6 +163,23 @@ function convertKeyToRelativeMajorFromMinor() {
     return noteNameArray[tempNoteLetterArrayIndex];
 }
 
+/**
+ * @description reassigns the current key scale type. 
+ * Regenerates the music conductor's RestrictToScale rule.
+ * @param {String} key [key=currentKey] - new desired key to play in
+ * @param {*} scale [scale=scaleType] - new desired scale to play in
+ * @returns void
+ */
+function changeKeyAndScale(key, scale) {
+    currentKey = !key ? currentKey: key;
+    scaleType = !scale ? scaleType : scale;
+    var scaleShorthandName = currentKey + '-' + scaleType;
+    var rule = new RestrictToScaleRule(scaleShorthandName);
+    musicConductor.scaleRule = rule;
+    // console.log('changeKeyAndScale currentKey: '+currentKey);
+    // console.log('changeKeyAndScale scaleType: '+ scaleType);
+    // console.log('changeKeyAndScale RestrictToScaleRule: '+ rule.scaleShorthandName);
+}
 
 var musicConductor = {
     performanceString : '',

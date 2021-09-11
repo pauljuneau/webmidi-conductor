@@ -111,19 +111,14 @@ function gameSetup() {
             "Acceptable entries: C, C#, D, D#, E, F, F#, G, G#, A, A#, B"
             ,gameSetupPreferences.key
         );
-        currentKey = (key == null || key == '') ? gameSetupPreferences.key : key;
-        gameSetupPreferences.key = currentKey;
-        //scaleType should be defined in musicConductorCtrl.js which should run before game.js
-        scaleType = prompt(
+        gameSetupPreferences.key = !key ? gameSetupPreferences.key : key;
+        var scale = prompt(
             "Please enter the scale to restrict to.\n "+
             "Acceptable entries: major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, dorian",
             gameSetupPreferences.scaleType
         );
-        scaleType = (scaleType == null || scaleType == '') ? gameSetupPreferences.scaleType : scaleType;
-        gameSetupPreferences.scaleType = scaleType;
-        var scaleShorthandName = key + '-' + scaleType;
-        var rule = new RestrictToScaleRule(scaleShorthandName);
-        musicConductor.scaleRule = rule;
+        gameSetupPreferences.scaleType = !scale ? gameSetupPreferences.scaleType : scale;
+        changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     } else {
         //TODO idea: disable rule?
     }
