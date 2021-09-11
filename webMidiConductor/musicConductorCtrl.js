@@ -176,9 +176,6 @@ function changeKeyAndScale(key, scale) {
     var scaleShorthandName = currentKey + '-' + scaleType;
     var rule = new RestrictToScaleRule(scaleShorthandName);
     musicConductor.scaleRule = rule;
-    // console.log('changeKeyAndScale currentKey: '+currentKey);
-    // console.log('changeKeyAndScale scaleType: '+ scaleType);
-    // console.log('changeKeyAndScale RestrictToScaleRule: '+ rule.scaleShorthandName);
 }
 
 var musicConductor = {
