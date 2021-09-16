@@ -22,6 +22,41 @@ function resize() {
 };
 
 window.addEventListener('resize', resize, false);
+
+///////////////////////
+// GAME SETUP DIALOG //
+///////////////////////
+var gameSetupDialog = document.getElementById('gameSetupDialog');
+var confirmBtn = document.getElementById('confirmBtn');
+
+function showGameSetupModal() {
+    document.getElementById("welcomeScreen").style.display="none";
+    document.getElementById("game").style.display="inline";
+    if (typeof gameSetupDialog.showModal === "function") {
+        gameSetupDialog.showModal();
+    } else {
+        alert("The <dialog> API is not supported by this browser");
+    }
+    return;
+}
+
+// "Confirm" button of form triggers "close" on dialog because of [method="dialog"]
+gameSetupDialog.addEventListener('close', function onClose() {
+    setTimeout(() => {
+        gamePaused = false;
+    }, 3000);
+});
+
+function enablePitchDetect() {
+    try {
+        //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
+        enableLiveAudioInput('Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.');
+    } catch(err) {
+        console.log(err);
+    }
+    return;
+}
+
 ////////////////////
 // GAME CHALLENGE //
 ////////////////////
@@ -658,7 +693,8 @@ function gameOver() {
     } else {
         resetBall(true);
         setTimeout(() => {
-            gameSetup();
+            //gameSetup();
+            showGameSetupModal();
         }, 1000);
         
     }

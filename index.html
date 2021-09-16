@@ -18,10 +18,10 @@
 </head>
 
 <body>
-  <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()" style="display:none;"></canvas>
+  <canvas width="750" height="585" id="game" onclick="showGameSetupModal()" onmouseover="focus()" style="display:none;"></canvas>
   
   <div id="welcomeScreen" style="background-color: lightblue;" >
-    <pre id="welcomeMessage" onclick="gameSetup()">
+    <pre id="welcomeMessage" onclick="showGameSetupModal()">
       Welcome! Click or touch here to get started!
       The game arena will resize on mobile after rotating the screen back and forth.
       You can set your paddle to shrink when you play outside of the current scale. 
@@ -64,7 +64,15 @@
       <button onclick="document.getElementById('welcomeMessage').style.display='none'; document.getElementById('thanksAndLinksScreen').style.display='inline';">Show Thanks and Additional Links</button>
     </footer>
   </div>
-  
+  <dialog id="gameSetupDialog">
+    <form method="dialog" >
+      <input type="button" id="enableLiveAudioBtn" name="enableLiveAudioBtn" value="Enable live audio input?" onclick="enablePitchDetect()"><br>
+      <menu>
+        <button value="cancel">Cancel</button>
+        <button id="confirmBtn" value="default">Confirm</button>
+      </menu>
+    </form>
+  </dialog>
   <script>
     var gamePaused = true;
   </script>
