@@ -30,6 +30,7 @@ var gameSetupDialog = document.getElementById('gameSetupDialog');
 var confirmBtn = document.getElementById('confirmBtn');
 
 function showGameSetupModal() {
+    gamePaused = true;
     document.getElementById("welcomeScreen").style.display="none";
     document.getElementById("game").style.display="inline";
     if (typeof gameSetupDialog.showModal === "function") {
@@ -42,6 +43,9 @@ function showGameSetupModal() {
 
 // "Confirm" button of form triggers "close" on dialog because of [method="dialog"]
 gameSetupDialog.addEventListener('close', function onClose() {
+    var gameSetupForm = document.forms["gameSetupForm"];
+    gameSetupPreferences.key = gameSetupForm["keys"].value;
+    changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     setTimeout(() => {
         gamePaused = false;
     }, 3000);

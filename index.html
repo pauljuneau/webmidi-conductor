@@ -65,10 +65,24 @@
     </footer>
   </div>
   <dialog id="gameSetupDialog">
-    <form method="dialog" >
+    <form id="gameSetupForm" name="gameSetupForm" method="dialog" >
       <input type="button" id="enableLiveAudioBtn" name="enableLiveAudioBtn" value="Enable live audio input?" onclick="enablePitchDetect()"><br>
+      <label for="key-select">Choose a key:</label>
+      <select name="keys" id="key-select">
+          <option value="C">C</option>
+          <option value="C#">C#/Db</option>
+          <option value="D">D</option>
+          <option value="D#">D#/Eb</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F#/Gb</option>
+          <option value="G">G</option>
+          <option value="G#">G#/Ab</option>
+          <option value="A">A</option>
+          <option value="A#">A#/Bb</option>
+          <option value="B">B</option>
+      </select>
       <menu>
-        <button value="cancel">Cancel</button>
         <button id="confirmBtn" value="default">Confirm</button>
       </menu>
     </form>
