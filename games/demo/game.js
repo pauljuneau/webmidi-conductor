@@ -47,6 +47,7 @@ gameSetupDialog.addEventListener('close', function onClose() {
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
     changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
+    gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
     setTimeout(() => {
         gamePaused = false;
     }, 3000);
