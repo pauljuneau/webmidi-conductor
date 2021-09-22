@@ -45,6 +45,7 @@ function showGameSetupModal() {
 gameSetupDialog.addEventListener('close', function onClose() {
     var gameSetupForm = document.forms["gameSetupForm"];
     gameSetupPreferences.key = gameSetupForm["keys"].value;
+    gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
     changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     setTimeout(() => {
         gamePaused = false;
