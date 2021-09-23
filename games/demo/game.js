@@ -55,6 +55,10 @@ gameSetupDialog.addEventListener('close', function onClose() {
     gameSetupPreferences.performanceStringFontSize = gameSetupForm["performanceStringFontSize"].value;
     gameSetupPreferences.performanceStringFont = gameSetupPreferences.performanceStringFontSize+'px '+gameSetupPreferences.performanceStringFontType;
     paddlePerfomanceFont.setFont(gameSetupPreferences.performanceStringFont);
+    gameSetupPreferences.wallLifeSpan = gameSetupForm["wallLifeSpan"].value;
+    wallLifeDrain = 1/Number(gameSetupPreferences.wallLifeSpan);
+    gameSetupPreferences.cannonBallBounceOffWalls = gameSetupForm["cannonBallBounceOffWalls"].checked;
+    gameSetupPreferences.cannonFireOnNewChord = gameSetupForm["cannonFireOnNewChord"].checked;
     setTimeout(() => {
         gamePaused = false;
     }, 3000);

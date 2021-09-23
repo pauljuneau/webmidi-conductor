@@ -94,10 +94,16 @@
       </select><br>
       <label for="shrinkPaddleWhenOutOfScale">Shrink paddle when out of scale</label>
       <input type="checkbox" id="shrinkPaddleWhenOutOfScale" name="shrinkPaddleWhenOutOfScale"><br>
-      <label for="changeKeyOnLowestKey">Key changes based on the lowest note last played</label>
+      <label for="changeKeyOnLowestKey">Key changes by lowest note played</label>
       <input type="checkbox" id="changeKeyOnLowestKey" name="changeKeyOnLowestKey"><br>
-      <label for="performanceStringFontSize">Font Size (between 1 and 40):</label>
-      <input type="number" id="performanceStringFontSize" name="performanceStringFontSize" min="1" max="40" value="10" required="true">
+      <label for="performanceStringFontSize">Font Size:</label>
+      <input type="number" id="performanceStringFontSize" name="performanceStringFontSize" min="1" max="40" value="10" required="true"><br>
+      <label for="wallLifeSpan">Hits to remove wall:</label>
+      <input type="number" id="wallLifeSpan" name="wallLifeSpan" min="10" max="1000000" value="10" required="true"><br>
+      <label for="cannonBallBounceOffWalls">Color coded chord cannon balls bounce off walls</label>
+      <input type="checkbox" id="cannonBallBounceOffWalls" name="cannonBallBounceOffWalls"><br>
+      <label for="cannonFireOnNewChord">Chord cannon fires on new chords only</label>
+      <input type="checkbox" id="cannonFireOnNewChord" name="cannonFireOnNewChord"><br>
       <menu>
         <button id="confirmBtn" value="default">Confirm</button>
       </menu>
