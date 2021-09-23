@@ -36,6 +36,7 @@ function showGameSetupModal() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         document.getElementById("performanceStringFontSize").defaultValue = "18";
     }
+    gameSetupForm["keys"].value = gameSetupPreferences.key;
     if (typeof gameSetupDialog.showModal === "function") {
         gameSetupDialog.showModal();
     } else {
