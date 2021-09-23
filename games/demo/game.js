@@ -33,6 +33,9 @@ function showGameSetupModal() {
     gamePaused = true;
     document.getElementById("welcomeScreen").style.display="none";
     document.getElementById("game").style.display="inline";
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        document.getElementById("performanceStringFontSize").defaultValue = "18";
+    }
     if (typeof gameSetupDialog.showModal === "function") {
         gameSetupDialog.showModal();
     } else {
@@ -48,6 +51,10 @@ gameSetupDialog.addEventListener('close', function onClose() {
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
     changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
+    gameSetupPreferences.changeKeyOnLowestKey = gameSetupForm["changeKeyOnLowestKey"].checked;
+    gameSetupPreferences.performanceStringFontSize = gameSetupForm["performanceStringFontSize"].value;
+    gameSetupPreferences.performanceStringFont = gameSetupPreferences.performanceStringFontSize+'px '+gameSetupPreferences.performanceStringFontType;
+    paddlePerfomanceFont.setFont(gameSetupPreferences.performanceStringFont);
     setTimeout(() => {
         gamePaused = false;
     }, 3000);
@@ -127,6 +134,8 @@ var wallLifeDrain;
 var gameSetupPreferences = {
     key : 'C',
     scaleType : 'major',
+    performanceStringFontSize: 10,
+    performanceStringFontType: 'monospace',
     performanceStringFont : '10px monospace',
     wallLifeSpan : 10,
     cannonBallBounceOffWalls : false,
