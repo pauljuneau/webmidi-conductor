@@ -148,7 +148,10 @@ var gameSetupPreferences = {
     cannonBallBounceOffWalls : false,
     cannonFireOnNewChord : false,
     shrinkPaddleWhenOutOfScale : false,
-    changeKeyOnLowestKey : false
+    changeKeyOnLowestKey : false,
+    changeToHighestKeyAfterLowestPlayed : false,
+    lowestMidiNumber : 21, //A0
+    highestMidiNumber : 108 //C8
 };
 
 const canvas = document.getElementById('game');
@@ -624,6 +627,15 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     
     var midiNumberPlaying = parseInt(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
     if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
+        lowestMidiNotePlayed = midiNumberPlaying;
+        var key = getNoteNameFromNumber(midiNumberPlaying, true);
+        gameSetupPreferences.key = key;
+        changeKeyAndScale(key,gameSetupPreferences.scaleType);
+    }
+    if(gameSetupPreferences.changeToHighestKeyAfterLowestPlayed && 
+        midiNumberPlaying == gameSetupPreferences.highestMidiNumber && 
+        lowestMidiNotePlayed == gameSetupPreferences.lowestMidiNumber)
+    {
         lowestMidiNotePlayed = midiNumberPlaying;
         var key = getNoteNameFromNumber(midiNumberPlaying, true);
         gameSetupPreferences.key = key;
