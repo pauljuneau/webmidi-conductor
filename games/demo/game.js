@@ -55,6 +55,7 @@ gameSetupDialog.addEventListener('close', function onClose() {
     changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
     gameSetupPreferences.changeKeyOnLowestKey = gameSetupForm["changeKeyOnLowestKey"].checked;
+    gameSetupPreferences.changeToHighestKeyAfterLowestPlayed = gameSetupForm["changeToHighestKeyAfterLowestPlayed"].checked;
     gameSetupPreferences.performanceStringFontSize = gameSetupForm["performanceStringFontSize"].value;
     gameSetupPreferences.performanceStringFont = gameSetupPreferences.performanceStringFontSize+'px '+gameSetupPreferences.performanceStringFontType;
     paddlePerfomanceFont.setFont(gameSetupPreferences.performanceStringFont);
