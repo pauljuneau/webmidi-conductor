@@ -22,6 +22,61 @@ function resize() {
 };
 
 window.addEventListener('resize', resize, false);
+
+///////////////////////
+// GAME SETUP DIALOG //
+///////////////////////
+var gameSetupDialog = document.getElementById('gameSetupDialog');
+
+function showGameSetupModal() {
+    gamePaused = true;
+    document.getElementById("welcomeScreen").style.display="none";
+    document.getElementById("game").style.display="inline";
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        document.getElementById("performanceStringFontSize").defaultValue = "18";
+    }
+    gameSetupForm["keys"].value = gameSetupPreferences.key;
+    if (typeof gameSetupDialog.showModal === "function") {
+        gameSetupDialog.showModal();
+    } else {
+        alert("The <dialog> API is not supported by this browser");
+    }
+    return;
+}
+
+/**
+ * @description "Confirm" button of form triggers "close" on dialog because of [method="dialog"]
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
+ */
+gameSetupDialog.addEventListener('close', function onClose() {
+    var gameSetupForm = document.forms["gameSetupForm"];
+    gameSetupPreferences.key = gameSetupForm["keys"].value;
+    gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
+    changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
+    gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
+    gameSetupPreferences.changeKeyOnLowestKey = gameSetupForm["changeKeyOnLowestKey"].checked;
+    gameSetupPreferences.performanceStringFontSize = gameSetupForm["performanceStringFontSize"].value;
+    gameSetupPreferences.performanceStringFont = gameSetupPreferences.performanceStringFontSize+'px '+gameSetupPreferences.performanceStringFontType;
+    paddlePerfomanceFont.setFont(gameSetupPreferences.performanceStringFont);
+    gameSetupPreferences.wallLifeSpan = gameSetupForm["wallLifeSpan"].value;
+    wallLifeDrain = 1/Number(gameSetupPreferences.wallLifeSpan);
+    gameSetupPreferences.cannonBallBounceOffWalls = gameSetupForm["cannonBallBounceOffWalls"].checked;
+    gameSetupPreferences.cannonFireOnNewChord = gameSetupForm["cannonFireOnNewChord"].checked;
+    setTimeout(() => {
+        gamePaused = false;
+    }, 3000);
+});
+
+function enablePitchDetect() {
+    try {
+        //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
+        enableLiveAudioInput('Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.');
+    } catch(err) {
+        console.log(err);
+    }
+    return;
+}
+
 ////////////////////
 // GAME CHALLENGE //
 ////////////////////
@@ -86,6 +141,8 @@ var wallLifeDrain;
 var gameSetupPreferences = {
     key : 'C',
     scaleType : 'major',
+    performanceStringFontSize: 10,
+    performanceStringFontType: 'monospace',
     performanceStringFont : '10px monospace',
     wallLifeSpan : 10,
     cannonBallBounceOffWalls : false,
@@ -93,72 +150,6 @@ var gameSetupPreferences = {
     shrinkPaddleWhenOutOfScale : false,
     changeKeyOnLowestKey : false
 };
-function gameSetup() {
-    document.getElementById("welcomeScreen").style.display="none";
-    document.getElementById("game").style.display="inline";
-    //TODO idea: add disableLiveAudio?
-    try {
-        //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
-        enableLiveAudioInput('Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.');
-    } catch(err) {
-        console.log(err);
-    }
-    var confirmScaleRestriction = confirm(
-        "Would you like to set a scale to play in?\n"+
-        "It defaults to C major scale.");
-    if(confirmScaleRestriction == true) {
-        var key = prompt(
-            "Please enter the key to restrict to.\n" +
-            "Acceptable entries: C, C#, D, D#, E, F, F#, G, G#, A, A#, B"
-            ,gameSetupPreferences.key
-        );
-        gameSetupPreferences.key = !key ? gameSetupPreferences.key : key;
-        var scale = prompt(
-            "Please enter the scale to restrict to.\n "+
-            "Acceptable entries: major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, dorian",
-            gameSetupPreferences.scaleType
-        );
-        gameSetupPreferences.scaleType = !scale ? gameSetupPreferences.scaleType : scale;
-        changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
-    } else {
-        //TODO idea: disable rule?
-    }
-    gameSetupPreferences.shrinkPaddleWhenOutOfScale = confirm(
-        "Would you like the paddle to shrink in half when you play out of the restricted scale?"
-    );
-    gameSetupPreferences.changeKeyOnLowestKey = confirm(
-        "Would you like the key to change based on the lowest note last played?"
-    );
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        gameSetupPreferences.performanceStringFont = '18px monospace';
-    }
-    var fontChange = prompt(
-        "Please enter the font you would like to for your music performance diagnostics.\n"+
-        "It defaults to 10px monospace on desktop and 18px monospace on mobile.",
-        gameSetupPreferences.performanceStringFont
-    );
-    fontChange = fontChange || paddlePerfomanceFont.width + " " + paddlePerfomanceFont.height;
-    gameSetupPreferences.performanceStringFont = fontChange;
-    paddlePerfomanceFont.setFont(fontChange);
-    var wallHitSpan = prompt(
-        "Please enter how many hits it should take to break down that wall! \n"+
-        "It defaults to 10 hits.",
-        gameSetupPreferences.wallLifeSpan
-    );
-    wallHitSpan = wallHitSpan || gameSetupPreferences.wallLifeSpan;
-    gameSetupPreferences.wallLifeSpan = wallHitSpan;
-    wallLifeDrain = 1/Number(wallHitSpan);
-    gameSetupPreferences.cannonBallBounceOffWalls = confirm(
-        "Would you like the colored shots produced when chords are played to bounce of the walls?"
-    );
-    gameSetupPreferences.cannonFireOnNewChord = confirm(
-        "Would you like the Chord Cannon to fire only when a new chord is played?"
-    );
-    setTimeout(() => {
-        gamePaused = false;
-    }, 3000);
-    return;
-}
 
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
@@ -241,7 +232,7 @@ function collides(obj1, obj2) {
     return collisionDetected;
 }
 
-//TODO idea: 1P vs 2P wallball vs middle-c split via gameSetup()
+//TODO idea: 1P vs 2P wallball vs middle-c split via game setup modal
 var isWallBall = true;
 const wallBallDimensions = {
     y : grid*3,
@@ -658,7 +649,7 @@ function gameOver() {
     } else {
         resetBall(true);
         setTimeout(() => {
-            gameSetup();
+            showGameSetupModal();
         }, 1000);
         
     }

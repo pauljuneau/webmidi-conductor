@@ -18,19 +18,16 @@
 </head>
 
 <body>
-  <canvas width="750" height="585" id="game" onclick="gameSetup()" onmouseover="focus()" style="display:none;"></canvas>
+  <canvas width="750" height="585" id="game" onclick="showGameSetupModal()" onmouseover="focus()" style="display:none;"></canvas>
   
   <div id="welcomeScreen" style="background-color: lightblue;" >
-    <pre id="welcomeMessage" onclick="gameSetup()">
+    <pre id="welcomeMessage" onclick="showGameSetupModal()">
       Welcome! Click or touch here to get started!
       The game arena will resize on mobile after rotating the screen back and forth.
-      You can set your paddle to shrink when you play outside of the current scale. 
-      Wall color is based on the defined key's position on a RGB Circle of 5ths Color Wheel.
-      In the major key: C is red, E is green, and G# (Ab) is blue.
-      Playing chords changes your paddle color and shoots colored cannon balls
-      based on the chord's key mapped to the RGB Circle of 5ths Color Wheel.
-      Goals are 10 points! Hitting the wall with a cannon ball is 1 point! 
-      BREAK DOWN THAT WALL!
+      
+      Wall color is based on the current key's position on a RGB Circle of 5ths Color Wheel.
+      Chord colors are based on the chord's key mapped to the color wheel.
+      Refer to <a href="https://www.pauljuneauengineer.com/blog/webmidi-conductor/wmc-wallball-intro.html" target="_blank">Webmidi-conductor game intro blog</a> for more details.
     </pre>
     <div id="thanksAndLinksScreen" style="background-color: lightblue; display:none;">
       <pre style="visibility:hidden;">
@@ -52,7 +49,7 @@
           <li><a href="https://github.com/pauljuneau/webmidi-conductor" target="_blank">webmidi-conductor github repo</a></li>
         </ul>
         <ul>
-          <li><a href="https://www.pauljuneauengineer.com/blog/webmidi-conductor/home.html" target="_blank">Official webmidi-conductor blog</a></li>
+          <li><a href="https://www.pauljuneauengineer.com/blog/webmidi-conductor/wmc-wallball-intro.html" target="_blank">Webmidi-conductor game intro blog</a></li>
         </ul>
         <ul>
           <li><a href="https://www.buymeacoffee.com/classicantique" target="_blank">Buy me a coffee! Provide support to help me keep these creative works alive and free!</a></li>
@@ -64,7 +61,51 @@
       <button onclick="document.getElementById('welcomeMessage').style.display='none'; document.getElementById('thanksAndLinksScreen').style.display='inline';">Show Thanks and Additional Links</button>
     </footer>
   </div>
-  
+  <dialog id="gameSetupDialog">
+    <form id="gameSetupForm" name="gameSetupForm" method="dialog" >
+      <input type="button" id="enableLiveAudioBtn" name="enableLiveAudioBtn" value="Click to enable live audio input!" onclick="enablePitchDetect()"><br>
+      <label for="key-select">Choose a key:</label>
+      <select name="keys" id="key-select">
+          <option value="C">C</option>
+          <option value="C#">C#/Db</option>
+          <option value="D">D</option>
+          <option value="D#">D#/Eb</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F#/Gb</option>
+          <option value="G">G</option>
+          <option value="G#">G#/Ab</option>
+          <option value="A">A</option>
+          <option value="A#">A#/Bb</option>
+          <option value="B">B</option>
+      </select><br>
+      <label for="scale-select">Choose a scale:</label>
+      <select name="scales" id="scale-select">
+          <option value="major">major</option>
+          <option value="natural minor">natural minor</option>
+          <option value="melodic minor">melodic minor</option>
+          <option value="harmonic minor">harmonic minor</option>
+          <option value="minor pentatonic">minor pentatonic</option>
+          <option value="major pentatonic">major pentatonic</option>
+          <option value="dorian">dorian</option>
+      </select><br>
+      <label for="shrinkPaddleWhenOutOfScale">Shrink paddle when out of scale</label>
+      <input type="checkbox" id="shrinkPaddleWhenOutOfScale" name="shrinkPaddleWhenOutOfScale"><br>
+      <label for="changeKeyOnLowestKey">Key changes by lowest note played</label>
+      <input type="checkbox" id="changeKeyOnLowestKey" name="changeKeyOnLowestKey"><br>
+      <label for="performanceStringFontSize">Font Size:</label>
+      <input type="number" id="performanceStringFontSize" name="performanceStringFontSize" min="1" max="40" value="10" required="true"><br>
+      <label for="wallLifeSpan">Hits to remove wall:</label>
+      <input type="number" id="wallLifeSpan" name="wallLifeSpan" min="10" max="1000000" value="10" required="true"><br>
+      <label for="cannonBallBounceOffWalls">Color coded chord cannon balls bounce off walls</label>
+      <input type="checkbox" id="cannonBallBounceOffWalls" name="cannonBallBounceOffWalls"><br>
+      <label for="cannonFireOnNewChord">Chord cannon fires on new chords only</label>
+      <input type="checkbox" id="cannonFireOnNewChord" name="cannonFireOnNewChord"><br>
+      <menu>
+        <button id="confirmBtn" value="default">Confirm</button>
+      </menu>
+    </form>
+  </dialog>
   <script>
     var gamePaused = true;
   </script>
