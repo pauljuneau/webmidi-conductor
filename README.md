@@ -9,7 +9,7 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
 
 # Development Features
 ## wallball game demo features
-* Cross platform compatible (Android, PC, Mac, iPhone).
+* Cross platform compatible (Android, PC, Mac).
    * iPhones are unable to use the live audio feature. Please connect a midi device or a computer keyboard instead. 
       * midi input devices such as a digital piano have yet to tested on iPhones. Please submit an issue if there is a midi input device compatibility problem and please provide details about the phone's iOS and model. Thank you!  
 * Resizes to fit mobile screen.
@@ -20,7 +20,7 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
 * Real-time scale detection based on desired scale.
    * Prints note name played, scale degree ascending/descending, and chord being played (chord detection not enabled for live audio).
    * Compatible Scales:
-      *  major, natural minor, melodic minor, harmonic minor
+      *  major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, dorian
    * Compatible Chords:
       * Triads: Major, Minor, Augmented, Diminished
       * 7ths: Major, Minor, Dominant, Minor 7th flat 5, Diminished, Minor-major 
