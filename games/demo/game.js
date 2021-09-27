@@ -36,6 +36,8 @@ function showGameSetupModal() {
         document.getElementById("performanceStringFontSize").defaultValue = "18";
     }
     gameSetupForm["keys"].value = gameSetupPreferences.key;
+    gameSetupForm["lowestNotes"].value = gameSetupPreferences.lowestMidiNumber;
+    gameSetupForm["highestNotes"].value = gameSetupPreferences.highestMidiNumber;
     if (typeof gameSetupDialog.showModal === "function") {
         gameSetupDialog.showModal();
     } else {
@@ -63,6 +65,8 @@ gameSetupDialog.addEventListener('close', function onClose() {
     wallLifeDrain = 1/Number(gameSetupPreferences.wallLifeSpan);
     gameSetupPreferences.cannonBallBounceOffWalls = gameSetupForm["cannonBallBounceOffWalls"].checked;
     gameSetupPreferences.cannonFireOnNewChord = gameSetupForm["cannonFireOnNewChord"].checked;
+    gameSetupPreferences.lowestMidiNumber = gameSetupForm["lowestNotes"].value;
+    gameSetupPreferences.highestMidiNumber = gameSetupForm["highestNotes"].value;
     setTimeout(() => {
         gamePaused = false;
     }, 3000);
