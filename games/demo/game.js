@@ -44,7 +44,10 @@ function showGameSetupModal() {
     return;
 }
 
-// "Confirm" button of form triggers "close" on dialog because of [method="dialog"]
+/**
+ * @description "Confirm" button of form triggers "close" on dialog because of [method="dialog"]
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
+ */
 gameSetupDialog.addEventListener('close', function onClose() {
     var gameSetupForm = document.forms["gameSetupForm"];
     gameSetupPreferences.key = gameSetupForm["keys"].value;
