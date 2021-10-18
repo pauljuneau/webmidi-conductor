@@ -4,11 +4,28 @@
 html, body {
     height: 100%;
     margin: 0;
-  }
+}
 
-  body {
-    background: black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+body {
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form.form-table-alignment {
+  display: table;
+}
+
+div.form-input-row {
+    display: table-row;
+}
+
+label, input, select {
+    display: table-cell;
+    margin-bottom: 10px;
+}
+
+label {
+    padding-right: 10px;
+}
