@@ -34,8 +34,13 @@ function showGameSetupModal() {
     document.getElementById("game").style.display="inline";
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         document.getElementById("performanceStringFontSize").defaultValue = "18";
+    } else {
+        document.getElementById("performanceStringFontSize").defaultValue = gameSetupPreferences.performanceStringFontSize;
     }
+    gameSetupForm["wallLifeSpan"].value = gameSetupPreferences.wallLifeSpan;
     gameSetupForm["keys"].value = gameSetupPreferences.key;
+    gameSetupForm["cannonBallBounceOffWalls"].checked = gameSetupPreferences.cannonBallBounceOffWalls;
+    gameSetupForm["fireCannonWhenChordDisengaged"].checked = gameSetupPreferences.fireCannonWhenChordDisengaged;
     gameSetupForm["lowestNotes"].value = gameSetupPreferences.lowestMidiNumber;
     gameSetupForm["highestNotes"].value = gameSetupPreferences.highestMidiNumber;
     if (typeof gameSetupDialog.showModal === "function") {
@@ -147,18 +152,18 @@ var wallLifeDrain;
 var gameSetupPreferences = {
     key : 'C',
     scaleType : 'major',
-    performanceStringFontSize: 10,
+    performanceStringFontSize: 14,
     performanceStringFontType: 'monospace',
     performanceStringFont : '10px monospace',
-    wallLifeSpan : 10,
-    cannonBallBounceOffWalls : false,
+    wallLifeSpan : 50,
+    cannonBallBounceOffWalls : true,
     cannonFireOnNewChord : false,
     shrinkPaddleWhenOutOfScale : false,
     changeKeyOnLowestKey : false,
     changeToHighestKeyAfterLowestPlayed : false,
     lowestMidiNumber : 21, //A0
     highestMidiNumber : 108, //C8
-    fireCannonWhenChordDisengaged : false
+    fireCannonWhenChordDisengaged : true
 };
 
 const canvas = document.getElementById('game');
