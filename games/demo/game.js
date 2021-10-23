@@ -65,6 +65,7 @@ gameSetupDialog.addEventListener('close', function onClose() {
     wallLifeDrain = 1/Number(gameSetupPreferences.wallLifeSpan);
     gameSetupPreferences.cannonBallBounceOffWalls = gameSetupForm["cannonBallBounceOffWalls"].checked;
     gameSetupPreferences.cannonFireOnNewChord = gameSetupForm["cannonFireOnNewChord"].checked;
+    gameSetupPreferences.fireCannonWhenChordDisengaged = gameSetupForm["fireCannonWhenChordDisengaged"].checked;
     gameSetupPreferences.lowestMidiNumber = gameSetupForm["lowestNotes"].value;
     gameSetupPreferences.highestMidiNumber = gameSetupForm["highestNotes"].value;
     setTimeout(() => {
@@ -156,7 +157,8 @@ var gameSetupPreferences = {
     changeKeyOnLowestKey : false,
     changeToHighestKeyAfterLowestPlayed : false,
     lowestMidiNumber : 21, //A0
-    highestMidiNumber : 108 //C8
+    highestMidiNumber : 108, //C8
+    fireCannonWhenChordDisengaged : false
 };
 
 const canvas = document.getElementById('game');
@@ -190,7 +192,8 @@ const rightPaddle = {
 };
 const chordColorCannon = {
     speed: ballSpeed,
-    cannonBalls: []
+    cannonBalls: [],
+    chordsEngaged : new Set()
 }
 
 function ChordColorCannonShell(x,y,width,height,dx,dy) {
@@ -315,9 +318,18 @@ rightPaddleScore.text = 0;
 var rightPaddlePerfomance = new CanvasObject(paddlePerfomanceFont.width, paddlePerfomanceFont.height, "white", wallBallDimensions.leftWall_x+100, 70, "text", 15);
 rightPaddlePerfomance.text = '';
 
-//TODO idea: add clearInterval(musicPerformanceTimerVar) to start stop timmer accordingly 
-//start timer to measure music performance very 100 milliseconds (1/10th second)
+//TODO idea: add clearInterval(musicPerformanceTimerVar) to start stop interval
+//start cron job to measure music performance every 100 milliseconds (1/10th second)
 var musicPerformanceTimerVar = setInterval(setMusicalPerformanceString ,100);
+//start cron job to disengage chords in chordColorCannon every 100 milliseconds (1/10th second)
+var disengageChords = setInterval(function(){
+    for(let chordName of chordColorCannon.chordsEngaged) {
+        if(musicConductor.chordsPlaying.includes(chordName) == false) {
+            chordColorCannon.chordsEngaged.delete(chordName);
+        }
+    }    
+}, 100);
+
 
 var oldChordLetterSetByChordNameEntry;
 var cannonReloadTimeStartTime, cannonReloadTimeElapsed;
@@ -378,8 +390,10 @@ function loop() {
         leftPaddle.x = 0;
     }
     var rightPaddleColorKey;
+    var chordName;
+    //load chordColorCannon
     if(musicConductor.chordsPlaying.length  > 0) {
-        var chordName = musicConductor.chordsPlaying[0];
+        chordName = musicConductor.chordsPlaying[0];
         rightPaddleColorKey = chordName.split(' ')[0];
         red = paddleColorByKeyMap.get(rightPaddleColorKey)[0];
         green = paddleColorByKeyMap.get(rightPaddleColorKey)[1];
@@ -398,6 +412,13 @@ function loop() {
             differentChordPlayed = true;
         }
         var cannonReadyToLoad = true;
+        if(gameSetupPreferences.fireCannonWhenChordDisengaged == true) {
+            if(chordColorCannon.chordsEngaged.has(chordName) == false) {
+                cannonReadyToLoad = true;
+            } else {
+                cannonReadyToLoad = false;
+            }
+        }
         if(gameSetupPreferences.cannonFireOnNewChord == true) {
             if(differentChordPlayed) 
                 cannonReadyToLoad = true;
@@ -406,6 +427,7 @@ function loop() {
         }
         cannonReadyToLoad = rightPaddle.cannonReloadTime === 0 && cannonReadyToLoad;
         if(cannonReadyToLoad) {
+            chordColorCannon.chordsEngaged.add(chordName);
             // load cannon ball to shoot
             var cannonBall_straightShot = new ChordColorCannonShell(rightPaddle.x - rightPaddle.width, rightPaddle.y + (paddleHeight/2), ball.width/2, ball.height/2, -chordColorCannon.speed,0);
             var chordLetterCounter = 1;
