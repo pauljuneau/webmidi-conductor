@@ -1,4 +1,4 @@
-# webmidi-conductor
+# ![wmc-logo](webMidiConductor/favicon.ico) webmidi-conductor
 JavaScript library for interpreting midi messages and audits live performance. Determines if notes being played are in the desired scale along with indicating each note's scale degree. It also indicates what chords are being played.
 
 It comes with a free demo wallball pong-esque game. [Click Here to Play!](https://www.pauljuneauengineer.com/webmidi-conductor/)
