@@ -16,8 +16,18 @@ scaleToHalfStepAlgorithm.set('harmonic minor',2122131);
 scaleToHalfStepAlgorithm.set('melodic minor', 2122221);
 scaleToHalfStepAlgorithm.set('minor pentatonic', 32232);
 scaleToHalfStepAlgorithm.set('major pentatonic', 22323);
+scaleToHalfStepAlgorithm.set('major blues', 211323);
+scaleToHalfStepAlgorithm.set('minor blues', 321132);
+scaleToHalfStepAlgorithm.set('major bebop', 22121121);
+scaleToHalfStepAlgorithm.set('minor bebop', 21112212);
+//modal scales:
+scaleToHalfStepAlgorithm.set('ionian', 2212221);
 scaleToHalfStepAlgorithm.set('dorian', 2122212);
-
+scaleToHalfStepAlgorithm.set('phrygian', 1222122);
+scaleToHalfStepAlgorithm.set('lydian', 2221221);
+scaleToHalfStepAlgorithm.set('mixolydian', 2212212);
+scaleToHalfStepAlgorithm.set('aeolian', 2122122);
+scaleToHalfStepAlgorithm.set('locrian', 1221222);
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
