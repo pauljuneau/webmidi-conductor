@@ -409,9 +409,6 @@ function main(midiInput) {
             var dataInputCache = new SessionCache();
             
             var midiInputJson = JSON.stringify(midiInput);
-            //SET UP EVENT MONITORING IN UI COMPONENTS
-            const canvas = document.getElementById('game');
-            canvas.focus();
             if(isDiagnosticsOn) {
                 console.log(diagnostics);
             }
