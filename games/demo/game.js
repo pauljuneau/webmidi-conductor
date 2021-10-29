@@ -32,6 +32,7 @@ function showGameSetupModal() {
     gamePaused = true;
     document.getElementById("welcomeScreen").style.display="none";
     document.getElementById("game").style.display="inline";
+    gameSetupForm["drawBall"].checked = gameSetupPreferences.drawBall;
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
         document.getElementById("performanceStringFontSize").defaultValue = "18";
     } else {
@@ -59,6 +60,7 @@ gameSetupDialog.addEventListener('close', function onClose() {
     var gameSetupForm = document.forms["gameSetupForm"];
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
+    gameSetupPreferences.drawBall = gameSetupForm["drawBall"].checked;
     changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
     gameSetupPreferences.changeKeyOnLowestKey = gameSetupForm["changeKeyOnLowestKey"].checked;
@@ -152,6 +154,7 @@ var wallLifeDrain;
 var gameSetupPreferences = {
     key : 'C',
     scaleType : 'major',
+    drawBall : true,
     performanceStringFontSize: 14,
     performanceStringFontType: 'monospace',
     performanceStringFont : '10px monospace',
@@ -603,7 +606,9 @@ function loop() {
     }
 
     // draw ball
-    context.fillRect(ball.x, ball.y, ball.width, ball.height);
+    if(gameSetupPreferences.drawBall == true) {
+        context.fillRect(ball.x, ball.y, ball.width, ball.height);
+    }
 
     // draw walls
     context.fillStyle = 'lightgrey';
