@@ -29,3 +29,13 @@ label, input, select {
 label {
     padding-right: 10px;
 }
+
+#welcomeScreen {
+  background-color: lightblue; 
+  width:100%;
+}
+
+#thanksAndLinksScreen {
+  background-color: lightblue; 
+  display:none;
+}
