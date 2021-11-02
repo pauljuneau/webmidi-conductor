@@ -27,6 +27,24 @@ window.addEventListener('resize', resize, false);
 // GAME SETUP DIALOG //
 ///////////////////////
 var gameSetupDialog = document.getElementById('gameSetupDialog');
+var gameSetupPreferences = {
+    key : 'C',
+    scaleType : 'major',
+    drawBall : true,
+    ballCollisionEffect : 'reset',
+    performanceStringFontSize: 14,
+    performanceStringFontType: 'monospace',
+    performanceStringFont : '10px monospace',
+    wallLifeSpan : 50,
+    cannonBallBounceOffWalls : true,
+    cannonFireOnNewChord : false,
+    shrinkPaddleWhenOutOfScale : false,
+    changeKeyOnLowestKey : false,
+    changeToHighestKeyAfterLowestPlayed : false,
+    lowestMidiNumber : 21, //A0
+    highestMidiNumber : 108, //C8
+    fireCannonWhenChordDisengaged : true
+};
 
 function showGameSetupModal() {
     gamePaused = true;
@@ -34,9 +52,9 @@ function showGameSetupModal() {
     document.getElementById("game").style.display="inline";
     gameSetupForm["drawBall"].checked = gameSetupPreferences.drawBall;
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        document.getElementById("performanceStringFontSize").defaultValue = "18";
+        gameSetupForm["performanceStringFontSize"].defaultValue = "18";
     } else {
-        document.getElementById("performanceStringFontSize").defaultValue = gameSetupPreferences.performanceStringFontSize;
+        gameSetupForm["performanceStringFontSize"].defaultValue = gameSetupPreferences.performanceStringFontSize;
     }
     gameSetupForm["wallLifeSpan"].value = gameSetupPreferences.wallLifeSpan;
     gameSetupForm["keys"].value = gameSetupPreferences.key;
@@ -44,6 +62,7 @@ function showGameSetupModal() {
     gameSetupForm["fireCannonWhenChordDisengaged"].checked = gameSetupPreferences.fireCannonWhenChordDisengaged;
     gameSetupForm["lowestNotes"].value = gameSetupPreferences.lowestMidiNumber;
     gameSetupForm["highestNotes"].value = gameSetupPreferences.highestMidiNumber;
+    gameSetupForm["ballCollisionEffect"].value = gameSetupPreferences.ballCollisionEffect;
     if (typeof gameSetupDialog.showModal === "function") {
         gameSetupDialog.showModal();
     } else {
@@ -61,6 +80,7 @@ gameSetupDialog.addEventListener('close', function onClose() {
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
     gameSetupPreferences.drawBall = gameSetupForm["drawBall"].checked;
+    gameSetupPreferences.ballCollisionEffect = gameSetupForm["ballCollisionEffect"].value;
     changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
     gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
     gameSetupPreferences.changeKeyOnLowestKey = gameSetupForm["changeKeyOnLowestKey"].checked;
@@ -151,23 +171,6 @@ loadPaddleColorMap();
 var currentAlphaValue = paddleColorByKeyMap.get(currentKey)[3];
 var wallLifeDrain;
 
-var gameSetupPreferences = {
-    key : 'C',
-    scaleType : 'major',
-    drawBall : true,
-    performanceStringFontSize: 14,
-    performanceStringFontType: 'monospace',
-    performanceStringFont : '10px monospace',
-    wallLifeSpan : 50,
-    cannonBallBounceOffWalls : true,
-    cannonFireOnNewChord : false,
-    shrinkPaddleWhenOutOfScale : false,
-    changeKeyOnLowestKey : false,
-    changeToHighestKeyAfterLowestPlayed : false,
-    lowestMidiNumber : 21, //A0
-    highestMidiNumber : 108, //C8
-    fireCannonWhenChordDisengaged : true
-};
 
 const canvas = document.getElementById('game');
 const context = canvas.getContext('2d');
@@ -521,7 +524,17 @@ function loop() {
             else if (collides(cannonBall, ball)) {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
-                resetBall(false);
+                switch (gameSetupPreferences.ballCollisionEffect) {
+                    case 'reset': 
+                        resetBall(false);
+                        break;
+                    case 'deflection':
+                        ball.dx *= -1;
+                    default:
+                        resetBall(false);
+                        break;
+                }
+                
             }
                 
             // move cannon balls
