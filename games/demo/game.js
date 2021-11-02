@@ -31,7 +31,7 @@ var gameSetupPreferences = {
     key : 'C',
     scaleType : 'major',
     drawBall : true,
-    ballCollisionEffect : 'reset',
+    ballCollisionEffect : 'deflection',
     performanceStringFontSize: 14,
     performanceStringFontType: 'monospace',
     performanceStringFont : '10px monospace',
@@ -696,6 +696,10 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
 
 // start the game
 requestAnimationFrame(loop);
+
+///////////////
+// GAME OVER //
+///////////////
 
 function gameOver() {
     gamePaused = true;
