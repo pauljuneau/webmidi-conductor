@@ -356,7 +356,8 @@ function loop() {
         leftPaddle.height = wallBallDimensions.height;
     }
 
-    if(midiNotesOutOfScaleOn.size == 0 && gameSetupPreferences.shrinkPaddleWhenOutOfScale) {
+    // midiNotesOutofScaleOn should only get populated when gameSetupPreferences.shrinkPaddleWhenOutOfScale is on. 
+    if(midiNotesOutOfScaleOn.size == 0) {
         rightPaddle.height = paddleHeight;
     }
 
