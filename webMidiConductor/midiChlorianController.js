@@ -177,7 +177,9 @@ class OnKeyEventMidiMessageMock {
         this.isEmulatingDamper = this.isEmulatingDamper();
     }
     mockVelocity() {
-        if(this.isRepeatNote) return 0;
+        if(this.isRepeatNote && this.ke.repeat){
+            return 0;
+        } 
         if(this.ke.type == "keydown") {
             return this.ke.shiftKey === true ? 51 : 1;
         }
