@@ -63,6 +63,8 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
    * [Basic Pong HTML Game](https://gist.github.com/straker/81b59eecf70da93af396f963596dfdc5)
 * https://youtu.be/iamRkSsnIS0
    * Web MIDI API demo video at Node+JS Interactive seminar Dec 2019
+* Piano sounds when playing via computer keyboard
+   * [Pack: 88 piano keys, long reverb by TEDAgame](https://freesound.org/people/TEDAgame/packs/25405/)   
 
 # Contact
 
