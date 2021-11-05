@@ -67,7 +67,11 @@
   </div>
   <dialog id="gameSetupDialog">
     <form id="gameSetupForm" name="gameSetupForm" method="dialog" class="form-table-alignment">
-      <input type="button" id="enableLiveAudioBtn" name="enableLiveAudioBtn" value="Click to enable live audio input!" onclick="enablePitchDetect()"><br>
+      <menu>
+        <button id="confirmBtn" value="default">Confirm</button>
+        <button id="enableLiveAudioBtn" name="enableLiveAudioBtn" onclick="enablePitchDetect()">Enable live audio input</button>
+        <button onclick="location.reload();">Welcome Screen</button>
+      </menu>
       <div class="form-input-row">
         <label for="key-select">Choose a key:</label>
         <select name="keys" id="key-select">
@@ -162,10 +166,6 @@
         <label for="changeToHighestKeyAfterLowestPlayed">Key changes to highest key after lowest is played</label>
         <input type="checkbox" id="changeToHighestKeyAfterLowestPlayed" name="changeToHighestKeyAfterLowestPlayed">
       </div>
-      <menu>
-        <button id="confirmBtn" value="default">Confirm</button>
-        <button onclick="location.reload();">Welcome Screen</button>
-      </menu>
     </form>
   </dialog>
   <script>
