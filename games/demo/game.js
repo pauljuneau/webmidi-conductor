@@ -676,6 +676,14 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     const oneMidiChlorianCtrlrEvent = JSON.parse(e.value);
     var midiNoteNumber = Number(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
 
+    if(oneMidiChlorianCtrlrEvent.midiInputPlaying.eventType == 'KEYBOARD') {
+        try {
+            document.getElementById(oneMidiChlorianCtrlrEvent.midiInputPlaying.noteName).play();
+        } catch (e) {
+            console.error(e.name + ': '+e.message);
+        }
+    }
+
     if (oneMidiChlorianCtrlrEvent.countIncreased ) {
         rightPaddle.dy = -paddleSpeed;
     } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
@@ -720,6 +728,19 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         var key = getNoteNameFromNumber(midiNumberPlaying, true);
         gameSetupPreferences.key = key;
         changeKeyAndScale(key,gameSetupPreferences.scaleType);
+    }
+});
+
+
+document.addEventListener(MidiInstrumentationEvents.NOTELASTPLAYED, function(e){
+    const oneNoteLastPlayed = JSON.parse(e.value);
+    var midiNoteNumber = Number(oneNoteLastPlayed.note);
+    if(oneNoteLastPlayed.eventType == 'KEYBOARD') {
+        try {
+            document.getElementById(oneNoteLastPlayed.noteName).pause();
+        } catch (e) {
+            console.error(e.name + ': '+e.message);
+        }
     }
 });
 /* END player paddle controls*/
