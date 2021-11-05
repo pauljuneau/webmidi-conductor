@@ -356,6 +356,11 @@ function loop() {
         leftPaddle.height = wallBallDimensions.height;
     }
 
+    // midiNotesOutofScaleOn should only get populated when gameSetupPreferences.shrinkPaddleWhenOutOfScale is on. 
+    if(midiNotesOutOfScaleOn.size == 0) {
+        rightPaddle.height = paddleHeight;
+    }
+
     if (rightPaddle.cannonReloadTime > 0) {
         rightPaddle.cannonReloadTime--;
         cannonReloadTimeElapsed = performance.now() - cannonReloadTimeStartTime;
@@ -643,8 +648,23 @@ function loop() {
 //                                   PLAYER PADDLES                                   //
 ////////////////////////////////////////////////////////////////////////////////////////
 var lowestMidiNotePlayed = midiChlorianCtrlr.highestMidiNoteNumber;
+var midiNotesOutOfScaleOn = new Set();
+var removeInactiveNotesFromMidiNotesOutOfScaleOnSet = setInterval(
+    function() {
+        if(midiNotesOutOfScaleOn.size > 0) {
+            for(oneMidiNoteOutOfScale of midiNotesOutOfScaleOn.keys()) {
+                if(noteObjectOnByMidiNoteNumber.has(oneMidiNoteOutOfScale) == false) {
+                    midiNotesOutOfScaleOn.delete(oneMidiNoteOutOfScale);
+                }
+            }
+        }
+    },
+    250
+);
+
 /** 
- * @description listens to midi-chlorian controller event 
+ * @description listens to midi-chlorian controller event which are events based on 
+ * midi notes currently playing.
  * - moves player's paddle up or down if the player went up or down the register. 
  * - shrinks player paddle in half if shrink-when-out-of-scale rule turned on
  * @listens MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT - published from
@@ -654,6 +674,8 @@ var lowestMidiNotePlayed = midiChlorianCtrlr.highestMidiNoteNumber;
  */
 document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, function(e) {
     const oneMidiChlorianCtrlrEvent = JSON.parse(e.value);
+    var midiNoteNumber = Number(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
+
     if (oneMidiChlorianCtrlrEvent.countIncreased ) {
         rightPaddle.dy = -paddleSpeed;
     } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
@@ -662,13 +684,21 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         rightPaddle.dy = 0;
     }
 
-    if(gameSetupPreferences.shrinkPaddleWhenOutOfScale && !musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent)) {
-        var tempHeight = rightPaddle.height/2;
-        rightPaddle.height = tempHeight;
+    if(gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
+        var isNoteInScale = musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent);
+        if(isNoteInScale == false) {
+            midiNotesOutOfScaleOn.add(midiNoteNumber);
+        }
+        // keep paddle small while there are still notes outside of the scale being played even if current note being played is in the scale.
+        if(midiNotesOutOfScaleOn.size > 0){
+            rightPaddle.height = paddleHeight/2;
+        } else {
+            rightPaddle.height == paddleHeight
+        }
     }
-    setTimeout(function(){
-        rightPaddle.dy = 0; 
-        rightPaddle.height = paddleHeight;
+    setTimeout(
+        function() {
+            rightPaddle.dy = 0;
         }, 
         //hardcoding beat duration for .25 second for now... assuming 4 4 time
         //TODO idea: use beat duration instead to cause affect on object to persist while note was held down
