@@ -526,7 +526,7 @@ function loop() {
                 rightPaddleScore.text += 1;
             }
             // remove cannon ball if it hits the ball then reset ball
-            else if (collides(cannonBall, ball)) {
+            else if (gameSetupPreferences.drawBall && collides(cannonBall, ball)) {
                 chordColorCannon.cannonBalls.splice(index, 1);
                 chordColorCannon.cannonBalls.length = 0;
                 switch (gameSetupPreferences.ballCollisionEffect) {
@@ -539,7 +539,6 @@ function loop() {
                         resetBall(false);
                         break;
                 }
-                
             }
                 
             // move cannon balls
@@ -570,7 +569,7 @@ function loop() {
     context.fillStyle = 'white';
 
     // move ball by its velocity
-    if(!gamePaused) {
+    if(!gamePaused && gameSetupPreferences.drawBall) {
         if(!midiChlorianCtrlr.isDamperOn) {
             ball.x += ball.dx;
             ball.y += ball.dy;
@@ -624,7 +623,7 @@ function loop() {
     }
 
     // draw ball
-    if(gameSetupPreferences.drawBall == true) {
+    if(gameSetupPreferences.drawBall) {
         context.fillRect(ball.x, ball.y, ball.width, ball.height);
     }
 
