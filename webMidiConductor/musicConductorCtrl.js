@@ -1,5 +1,5 @@
 /** 
-    Copyright © 2021 Paul Juneau All Rights Reserved.
+    Copyright © 2021 - 2022 Paul Juneau All Rights Reserved.
 **/
 
 //DEPENDS ON ..\webMidiConductor\midiChlorianController.js having been loaded first!!!
