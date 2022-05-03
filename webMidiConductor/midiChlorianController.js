@@ -189,6 +189,7 @@ class OnKeyEventMidiMessageMock {
         var isEmulatingDamper = false;
         if(this.keyCode == "Space") {
             this.command = 176;
+            this.note = 64;
             if(this.ke.type == "keydown" && this.isRepeatNote == false) {
                 this.velocity = 51;
                 isEmulatingDamper = true; 
@@ -394,6 +395,7 @@ var midiInputHistory = [];
  * @description receives Pitch, Keyboard, or Midi message data that shares a common model.
  *  - Updates related note in global map to be on/off.
  *  - Tracks note last played and note playing in enhanced session cache.
+ *  - Updates midiChlorianCtrl to indicate damper pedal is on or off.
  * @param {Object} midiInput - Pitch, Keyboard, or Midi message data
  * @fires MidiInstrumentationEvents NOTELASTPLAYED & NOTEBEINGPLAYED
  */
@@ -401,90 +403,109 @@ function main(midiInput) {
     let diagnostics = 'Command: ' + midiInput.command +' , NoteNumb: ' + midiInput.note + 
         ' , Velocity: ' + midiInput.velocity + ' , NoteLetter: ' + midiInput.noteName +
         ' , TimeStamp: '+ midiInput.timeStamp;
+    //Ignore Timing Clock (248) && Active Sensing (254). See https://fmslogo.sourceforge.io/manual/midi-table.html
     if(isDiagnosticsOn & midiInput.command != 248 && midiInput.command != 254) {
         console.log(midiInput);
         midiInputHistory.push(midiInput);
     }
     switch (midiInput.command) {
-        case 144: // noteOn
-            // LOAD SESSION CACHE FOR USE BY UI COMPONENT SUBSCRIBERS
-            var dataInputCache = new SessionCache();
-            
-            var midiInputJson = JSON.stringify(midiInput);
-            if(isDiagnosticsOn) {
-                console.log(diagnostics);
-            }
-            if(midiInput.velocity == 0) {
-                if(midiInput.eventType != 'KEYBOARD' && midiInput.eventType != "PITCH") {
-                    try {
-                        let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
-                        oneNoteObj.setIsOn(false);
-                    } catch(err) {
-                        let errStr = err.stack + ', MIDI Input: '+midiInputJson;
-                        console.log('cannot set note object isOn property to false. Details: ' + errStr);
-                    }
-                }
-                dataInputCache.set(MidiInstrumentationEvents.NOTELASTPLAYED, midiInputJson);
-            }
-            if(midiInput.velocity > 0) {
-                if(midiInput.eventType == "PITCH") {
-                    var noteLastPlayed = dataInputCache.get(MidiInstrumentationEvents.NOTELASTPLAYED);
-                    if(noteLastPlayed == "DNE" || noteLastPlayed === "undefined") {
-                        dataInputCache.set(MidiInstrumentationEvents.NOTELASTPLAYED, midiInputJson);
-                    }
-                }
-                if(midiInput.eventType != 'KEYBOARD') {
-                    try {
-                        let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
-                        oneNoteObj.setIsOn(true);
-                        if(midiInput.eventType == "PITCH") {
-                            setTimeout(function turnOffPitch(counter){ 
-                                //turn off pitch if it's playing continuously at same pitch for ~10 minutes to prevent memory leak 
-                                if(counter === undefined) {
-                                    counter = 0;
-                                }
-                                if(midiChlorianCtrlr.midiInputPlaying != undefined && oneNoteObj != undefined) {
-                                    if(counter != 600 && Number(midiChlorianCtrlr.midiInputPlaying.note) == oneNoteObj.midiNoteNumber) {
-                                        counter++;
-                                        setTimeout(turnOffPitch,1000, counter);
-                                    }
-                                    oneNoteObj.setIsOn(false);
-                                }
-                            }, 
-                            1000);
-                        }
-                    } catch(err) {
-                        let errStr = err.stack + ', MIDI Input: '+midiInputJson;
-                        console.log('cannot set note object isOn property to true. Details: ' + errStr);
-                    }
-                }
-                dataInputCache.set(MidiInstrumentationEvents.NOTEBEINGPLAYED, midiInputJson);
-            }
-            if(midiInput.eventType == 'KEYBOARD') {
-                if(midiInput.ke.type == "keyup") {
-                    try {
-                        let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
-                        oneNoteObj.setIsOn(false);
-                    } catch(err) {
-                        let errStr = err.stack + ', MIDI Input: '+midiInputJson;
-                        console.log('cannot set note object isOn property to false. Details: ' + errStr);
-                    }
-                }
-                if(midiInput.ke.type == "keydown") {
-                    try {
-                        let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
-                        oneNoteObj.setIsOn(true);
-                    } catch(err) {
-                        let errStr = err.stack + ', MIDI Input: '+midiInputJson;
-                        console.log('cannot set note object isOn property to true. Details: ' + errStr);
-                    }
-                }
+        case 144: // Note On
+            handleMidiNote(midiInput);
+            break;
+        case 145: // Note On
+            handleMidiNote(midiInput);
+            break;
+        case 176: // Control Change
+            //Damper Pedal (64)
+            if(midiInput.note == 64) {
+                if(midiInput.velocity > 0) 
+                midiChlorianCtrlr.isDamperOn = true;
+                else midiChlorianCtrlr.isDamperOn = false;
             }
             break;
-        case 176:
-            if(midiInput.velocity > 0) 
-                midiChlorianCtrlr.isDamperOn = true;
-            else midiChlorianCtrlr.isDamperOn = false;
+    }
+}
+
+/**
+ * @description receives midiInput that has Note On commands.
+ * @param {Object} midiInput 
+ * @fires MidiInstrumentationEvents NOTELASTPLAYED & NOTEBEINGPLAYED
+ */
+function handleMidiNote(midiInput) {
+    // LOAD SESSION CACHE FOR USE BY UI COMPONENT SUBSCRIBERS
+    var dataInputCache = new SessionCache();
+            
+    var midiInputJson = JSON.stringify(midiInput);
+    if(isDiagnosticsOn) {
+        console.log(diagnostics);
+    }
+    //Note disengaged
+    if(midiInput.velocity == 0) {
+        if(midiInput.eventType != 'KEYBOARD' && midiInput.eventType != "PITCH") {
+            try {
+                let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
+                oneNoteObj.setIsOn(false);
+            } catch(err) {
+                let errStr = err.stack + ', MIDI Input: '+midiInputJson;
+                console.log('cannot set note object isOn property to false. Details: ' + errStr);
+            }
+        }
+        dataInputCache.set(MidiInstrumentationEvents.NOTELASTPLAYED, midiInputJson);
+    }
+    //Note engaged
+    if(midiInput.velocity > 0) {
+        if(midiInput.eventType == "PITCH") {
+            var noteLastPlayed = dataInputCache.get(MidiInstrumentationEvents.NOTELASTPLAYED);
+            if(noteLastPlayed == "DNE" || noteLastPlayed === "undefined") {
+                dataInputCache.set(MidiInstrumentationEvents.NOTELASTPLAYED, midiInputJson);
+            }
+        }
+        if(midiInput.eventType != 'KEYBOARD') {
+            try {
+                let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
+                oneNoteObj.setIsOn(true);
+                if(midiInput.eventType == "PITCH") {
+                    setTimeout(function turnOffPitch(counter){ 
+                        //turn off pitch if it's playing continuously at same pitch for ~10 minutes to prevent memory leak 
+                        if(counter === undefined) {
+                            counter = 0;
+                        }
+                        if(midiChlorianCtrlr.midiInputPlaying != undefined && oneNoteObj != undefined) {
+                            if(counter != 600 && Number(midiChlorianCtrlr.midiInputPlaying.note) == oneNoteObj.midiNoteNumber) {
+                                counter++;
+                                setTimeout(turnOffPitch,1000, counter);
+                            }
+                            oneNoteObj.setIsOn(false);
+                        }
+                    }, 
+                    1000);
+                }
+            } catch(err) {
+                let errStr = err.stack + ', MIDI Input: '+midiInputJson;
+                console.log('cannot set note object isOn property to true. Details: ' + errStr);
+            }
+        }
+        dataInputCache.set(MidiInstrumentationEvents.NOTEBEINGPLAYED, midiInputJson);
+    }
+    if(midiInput.eventType == 'KEYBOARD') {
+        if(midiInput.ke.type == "keyup") {
+            try {
+                let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
+                oneNoteObj.setIsOn(false);
+            } catch(err) {
+                let errStr = err.stack + ', MIDI Input: '+midiInputJson;
+                console.log('cannot set note object isOn property to false. Details: ' + errStr);
+            }
+        }
+        if(midiInput.ke.type == "keydown") {
+            try {
+                let oneNoteObj = noteObjectByMidiNoteNumber.get(Number(midiInput.note));
+                oneNoteObj.setIsOn(true);
+            } catch(err) {
+                let errStr = err.stack + ', MIDI Input: '+midiInputJson;
+                console.log('cannot set note object isOn property to true. Details: ' + errStr);
+            }
+        }
     }
 }
 

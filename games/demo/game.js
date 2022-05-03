@@ -28,6 +28,8 @@ window.addEventListener('resize', resize, false);
 ///////////////////////
 var gameSetupDialog = document.getElementById('gameSetupDialog');
 var gameSetupPreferences = {
+    musicPerformanceInfoRendered : true,
+    twoPlayerMode : false,
     key : 'C',
     scaleType : 'major',
     drawBall : true,
@@ -56,6 +58,8 @@ function showGameSetupModal() {
     } else {
         gameSetupForm["performanceStringFontSize"].defaultValue = gameSetupPreferences.performanceStringFontSize;
     }
+    gameSetupForm["musicPerformanceInfoRendered"].checked = gameSetupPreferences.musicPerformanceInfoRendered;
+    gameSetupForm["twoPlayerMode"].checked = gameSetupPreferences.twoPlayerMode;
     gameSetupForm["wallLifeSpan"].value = gameSetupPreferences.wallLifeSpan;
     gameSetupForm["keys"].value = gameSetupPreferences.key;
     gameSetupForm["cannonBallBounceOffWalls"].checked = gameSetupPreferences.cannonBallBounceOffWalls;
@@ -77,6 +81,8 @@ function showGameSetupModal() {
  */
 gameSetupDialog.addEventListener('close', function onClose() {
     var gameSetupForm = document.forms["gameSetupForm"];
+    gameSetupPreferences.musicPerformanceInfoRendered = gameSetupForm["musicPerformanceInfoRendered"].checked;
+    gameSetupPreferences.twoPlayerMode = gameSetupForm["twoPlayerMode"].checked;
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
     gameSetupPreferences.drawBall = gameSetupForm["drawBall"].checked;
@@ -98,6 +104,22 @@ gameSetupDialog.addEventListener('close', function onClose() {
     setTimeout(() => {
         gamePaused = false;
     }, 3000);
+});
+
+var twoPlayerModeCheckbox = document.getElementById('twoPlayerModeCheckbox');
+twoPlayerModeCheckbox.addEventListener('change', function onChange() {
+    var gameSetupForm = document.forms["gameSetupForm"];
+    var isTwoPlayerMode = gameSetupForm["twoPlayerMode"].checked;
+    gameSetupForm["ballCollisionEffect"].disabled = isTwoPlayerMode;
+    gameSetupForm["wallLifeSpan"].disabled = isTwoPlayerMode;
+    gameSetupForm["cannonBallBounceOffWalls"].disabled = isTwoPlayerMode;
+    gameSetupForm["cannonFireOnNewChord"].disabled = isTwoPlayerMode;
+    gameSetupForm["fireCannonWhenChordDisengaged"].disabled = isTwoPlayerMode;
+    gameSetupForm["lowestNotes"].disabled = isTwoPlayerMode;
+    gameSetupForm["highestNotes"].disabled = isTwoPlayerMode;
+    gameSetupForm["changeKeyOnLowestKey"].disabled = isTwoPlayerMode;
+    gameSetupForm["changeToHighestKeyAfterLowestPlayed"].disabled = isTwoPlayerMode;
+    gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
 
 function enablePitchDetect() {
@@ -189,7 +211,13 @@ const leftPaddle = {
     height: paddleHeight,
 
     // paddle velocity
-    dy: 0
+    dy: 0,
+
+    //default paddle dimensions to allow switching between wall ball or 2p mode
+    x_i: grid * 2,
+    y_i: canvas.height / 2 - paddleHeight / 2,
+    width_i: grid,
+    height_i: paddleHeight
 };
 const rightPaddle = {
     // start in the middle of the game on the right side
@@ -254,8 +282,6 @@ function collides(obj1, obj2) {
     return collisionDetected;
 }
 
-//TODO idea: 1P vs 2P wallball vs middle-c split via game setup modal
-var isWallBall = true;
 const wallBallDimensions = {
     y : grid*3,
     height : canvas.height - grid*7,
@@ -345,15 +371,22 @@ var disengageChords = setInterval(function(){
 var oldChordLetterSetByChordNameEntry;
 var cannonReloadTimeStartTime, cannonReloadTimeElapsed;
 var oldRightPaddleColorKey;
+var twoPlayerMode;
 // game loop
 function loop() {    
     //requestAnimationFrame(loop);
     requestAnimationFrame(loop);
     context.clearRect(0,0,canvas.width,canvas.height);
 
-    if(isWallBall) {
-        leftPaddle.y = wallBallDimensions.y;
-        leftPaddle.height = wallBallDimensions.height;
+    if(gameSetupPreferences.twoPlayerMode != twoPlayerMode) {
+        twoPlayerMode = gameSetupPreferences.twoPlayerMode;
+        if(gameSetupPreferences.twoPlayerMode == false) {
+            leftPaddle.y = wallBallDimensions.y;
+            leftPaddle.height = wallBallDimensions.height;
+        } else {
+            leftPaddle.y = leftPaddle.y_i;
+            leftPaddle.height = leftPaddle.height_i;
+        }
     }
 
     // midiNotesOutofScaleOn should only get populated when gameSetupPreferences.shrinkPaddleWhenOutOfScale is on. 
@@ -397,18 +430,23 @@ function loop() {
     var green = paddleColorByKeyMap.get(leftPaddleColorKey)[1];
     var blue = paddleColorByKeyMap.get(leftPaddleColorKey)[2];
     var alpha = currentAlphaValue;
-    if(alpha > 0 ) { 
-        context.fillStyle = "rgba("+red+","+green+","+blue+","+alpha+")";
-        context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+    if(twoPlayerMode == false) {
+        if(alpha > 0 ) { 
+            context.fillStyle = "rgba("+red+","+green+","+blue+","+alpha+")";
+            context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+        } else {
+            leftPaddle.height = leftPaddle.y; 
+            leftPaddle.width = 0;
+            leftPaddle.x = 0;
+        }
     } else {
-        leftPaddle.height = leftPaddle.y; 
-        leftPaddle.width = 0;
-        leftPaddle.x = 0;
+        context.fillStyle = 'white';
+        context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
     }
     var rightPaddleColorKey;
     var chordName;
     //load chordColorCannon
-    if(musicConductor.chordsPlaying.length  > 0) {
+    if(twoPlayerMode == false && musicConductor.chordsPlaying.length  > 0) {
         chordName = musicConductor.chordsPlaying[0];
         rightPaddleColorKey = chordName.split(' ')[0];
         red = paddleColorByKeyMap.get(rightPaddleColorKey)[0];
@@ -596,11 +634,25 @@ function loop() {
     if ( (ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
         ball.resetting = true;
         if(ball.x > canvas.width) {
-            leftPaddleScore.text += 10;
+            if(twoPlayerMode) {
+                leftPaddleScore.text += 1;
+                if(parseInt(leftPaddleScore.text) == 7) {
+                    gameOver();
+                }
+            } else {
+                leftPaddleScore.text += 10;
+            }
         }
         if(ball.x < 0 ) {
-            rightPaddleScore.text += 10;
-            gameOver();
+            if(twoPlayerMode) {
+                rightPaddleScore.text += 1;
+                if(parseInt(rightPaddleScore.text) == 7) {
+                    gameOver();
+                }
+            } else {
+                rightPaddleScore.text += 10;
+                gameOver();
+            }
         }
         resetBall(false);
     }
@@ -612,7 +664,9 @@ function loop() {
         // move ball next to the paddle otherwise the collision will happen again
         // in the next frame
         ball.x = leftPaddle.x + leftPaddle.width;
-        currentAlphaValue -= wallLifeDrain;
+        if(twoPlayerMode == false) {
+            currentAlphaValue -= wallLifeDrain;
+        }
     }
     else if (collides(ball, rightPaddle)) {
         ball.dx *= -1;
@@ -639,8 +693,10 @@ function loop() {
 
     leftPaddleScore.update();
     rightPaddleScore.update();
-    rightPaddlePerfomance.text = musicConductor.performanceString;
-    rightPaddlePerfomance.multiLineTextUpdate();
+    if(gameSetupPreferences.musicPerformanceInfoRendered) {
+        rightPaddlePerfomance.text = musicConductor.performanceString;
+        rightPaddlePerfomance.multiLineTextUpdate();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -683,15 +739,30 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         }
     }
 
-    if (oneMidiChlorianCtrlrEvent.countIncreased ) {
-        rightPaddle.dy = -paddleSpeed;
-    } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
-        rightPaddle.dy = paddleSpeed;
-    } else {
-        rightPaddle.dy = 0;
+    try {
+        if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
+            if(oneMidiChlorianCtrlrEvent.countIncreased) {
+                rightPaddle.dy = -paddleSpeed;
+            } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
+                rightPaddle.dy = paddleSpeed;
+            } else {
+                rightPaddle.dy = 0;
+            }
+        } 
+        if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
+            if(oneMidiChlorianCtrlrEvent.countIncreased) {
+                leftPaddle.dy = -paddleSpeed;
+            } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
+                leftPaddle.dy = paddleSpeed;
+            } else {
+                leftPaddle.dy = 0;
+            }
+        }
+    } catch(e) {
+        console.error(e.name + ': '+e.message + "; stack: "+e.stack);
     }
 
-    if(gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
+    if(twoPlayerMode == false && gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
         var isNoteInScale = musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent);
         if(isNoteInScale == false) {
             midiNotesOutOfScaleOn.add(midiNoteNumber);
@@ -706,6 +777,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     setTimeout(
         function() {
             rightPaddle.dy = 0;
+            leftPaddle.dy = 0;
         }, 
         //hardcoding beat duration for .25 second for now... assuming 4 4 time
         //TODO idea: use beat duration instead to cause affect on object to persist while note was held down
@@ -713,20 +785,22 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     );
     
     var midiNumberPlaying = parseInt(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
-    if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
-        lowestMidiNotePlayed = midiNumberPlaying;
-        var key = getNoteNameFromNumber(midiNumberPlaying, true);
-        gameSetupPreferences.key = key;
-        changeKeyAndScale(key,gameSetupPreferences.scaleType);
-    }
-    if(gameSetupPreferences.changeToHighestKeyAfterLowestPlayed && 
-        midiNumberPlaying == gameSetupPreferences.highestMidiNumber && 
-        lowestMidiNotePlayed == gameSetupPreferences.lowestMidiNumber)
-    {
-        lowestMidiNotePlayed = midiNumberPlaying;
-        var key = getNoteNameFromNumber(midiNumberPlaying, true);
-        gameSetupPreferences.key = key;
-        changeKeyAndScale(key,gameSetupPreferences.scaleType);
+    if(twoPlayerMode == false) {
+        if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
+            lowestMidiNotePlayed = midiNumberPlaying;
+            var key = getNoteNameFromNumber(midiNumberPlaying, true);
+            gameSetupPreferences.key = key;
+            changeKeyAndScale(key,gameSetupPreferences.scaleType);
+        }
+        if(gameSetupPreferences.changeToHighestKeyAfterLowestPlayed && 
+            midiNumberPlaying == gameSetupPreferences.highestMidiNumber && 
+            lowestMidiNotePlayed == gameSetupPreferences.lowestMidiNumber)
+        {
+            lowestMidiNotePlayed = midiNumberPlaying;
+            var key = getNoteNameFromNumber(midiNumberPlaying, true);
+            gameSetupPreferences.key = key;
+            changeKeyAndScale(key,gameSetupPreferences.scaleType);
+        }
     }
 });
 
@@ -763,7 +837,9 @@ function gameOver() {
     if(confirmRedirect) {
         document.getElementById('redirectToBuyMeCoffee').click();
     } else {
-        resetBall(true);
+        rightPaddleScore.text = 0;
+        leftPaddleScore.text = 0;
+        resetBall(!twoPlayerMode);
         setTimeout(() => {
             showGameSetupModal();
         }, 1000);
