@@ -739,16 +739,6 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         }
     }
 
-    //as-is: works for keyboard input
-    // if (oneMidiChlorianCtrlrEvent.countIncreased ) {
-    //     rightPaddle.dy = -paddleSpeed;
-    // } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
-    //     rightPaddle.dy = paddleSpeed;
-    // } else {
-    //     rightPaddle.dy = 0;
-    // }
-    
-    //to-be: does not work for keyboard... paddle doesn't stop after releasing key
     try {
         if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
             if(oneMidiChlorianCtrlrEvent.countIncreased) {
