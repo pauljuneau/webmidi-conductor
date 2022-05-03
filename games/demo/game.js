@@ -112,6 +112,8 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["cannonBallBounceOffWalls"].disabled = isTwoPlayerMode;
     gameSetupForm["cannonFireOnNewChord"].disabled = isTwoPlayerMode;
     gameSetupForm["fireCannonWhenChordDisengaged"].disabled = isTwoPlayerMode;
+    gameSetupForm["changeKeyOnLowestKey"].disabled = isTwoPlayerMode;
+    gameSetupForm["changeToHighestKeyAfterLowestPlayed"].disabled = isTwoPlayerMode;
 });
 
 function enablePitchDetect() {
@@ -785,20 +787,22 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     );
     
     var midiNumberPlaying = parseInt(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
-    if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
-        lowestMidiNotePlayed = midiNumberPlaying;
-        var key = getNoteNameFromNumber(midiNumberPlaying, true);
-        gameSetupPreferences.key = key;
-        changeKeyAndScale(key,gameSetupPreferences.scaleType);
-    }
-    if(gameSetupPreferences.changeToHighestKeyAfterLowestPlayed && 
-        midiNumberPlaying == gameSetupPreferences.highestMidiNumber && 
-        lowestMidiNotePlayed == gameSetupPreferences.lowestMidiNumber)
-    {
-        lowestMidiNotePlayed = midiNumberPlaying;
-        var key = getNoteNameFromNumber(midiNumberPlaying, true);
-        gameSetupPreferences.key = key;
-        changeKeyAndScale(key,gameSetupPreferences.scaleType);
+    if(twoPlayerMode == false) {
+        if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
+            lowestMidiNotePlayed = midiNumberPlaying;
+            var key = getNoteNameFromNumber(midiNumberPlaying, true);
+            gameSetupPreferences.key = key;
+            changeKeyAndScale(key,gameSetupPreferences.scaleType);
+        }
+        if(gameSetupPreferences.changeToHighestKeyAfterLowestPlayed && 
+            midiNumberPlaying == gameSetupPreferences.highestMidiNumber && 
+            lowestMidiNotePlayed == gameSetupPreferences.lowestMidiNumber)
+        {
+            lowestMidiNotePlayed = midiNumberPlaying;
+            var key = getNoteNameFromNumber(midiNumberPlaying, true);
+            gameSetupPreferences.key = key;
+            changeKeyAndScale(key,gameSetupPreferences.scaleType);
+        }
     }
 });
 
