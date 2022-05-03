@@ -352,18 +352,22 @@ var disengageChords = setInterval(function(){
 var oldChordLetterSetByChordNameEntry;
 var cannonReloadTimeStartTime, cannonReloadTimeElapsed;
 var oldRightPaddleColorKey;
+var twoPlayerMode;
 // game loop
 function loop() {    
     //requestAnimationFrame(loop);
     requestAnimationFrame(loop);
     context.clearRect(0,0,canvas.width,canvas.height);
 
-    if(gameSetupPreferences.twoPlayerMode == false) {
-        leftPaddle.y = wallBallDimensions.y;
-        leftPaddle.height = wallBallDimensions.height;
-    } else {
-        leftPaddle.y = leftPaddle.y_i;
-        leftPaddle.height = leftPaddle.height_i;
+    if(gameSetupPreferences.twoPlayerMode != twoPlayerMode) {
+        twoPlayerMode = gameSetupPreferences.twoPlayerMode;
+        if(gameSetupPreferences.twoPlayerMode == false) {
+            leftPaddle.y = wallBallDimensions.y;
+            leftPaddle.height = wallBallDimensions.height;
+        } else {
+            leftPaddle.y = leftPaddle.y_i;
+            leftPaddle.height = leftPaddle.height_i;
+        }
     }
 
     // midiNotesOutofScaleOn should only get populated when gameSetupPreferences.shrinkPaddleWhenOutOfScale is on. 
@@ -693,12 +697,61 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         }
     }
 
-    if (oneMidiChlorianCtrlrEvent.countIncreased ) {
-        rightPaddle.dy = -paddleSpeed;
-    } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
-        rightPaddle.dy = paddleSpeed;
-    } else {
-        rightPaddle.dy = 0;
+    //as-is: works for keyboard input
+    // if (oneMidiChlorianCtrlrEvent.countIncreased ) {
+    //     rightPaddle.dy = -paddleSpeed;
+    // } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
+    //     rightPaddle.dy = paddleSpeed;
+    // } else {
+    //     rightPaddle.dy = 0;
+    // }
+    
+    //to-be: does not work for keyboard... paddle doesn't stop after releasing key
+    try {
+        if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
+            if(oneMidiChlorianCtrlrEvent.countIncreased) {
+                rightPaddle.dy = -paddleSpeed;
+            } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
+                rightPaddle.dy = paddleSpeed;
+            } else {
+                rightPaddle.dy = 0;
+            }
+        } 
+        if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
+            if(oneMidiChlorianCtrlrEvent.countIncreased) {
+                leftPaddle.dy = -paddleSpeed;
+            } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
+                leftPaddle.dy = paddleSpeed;
+            } else {
+                leftPaddle.dy = 0;
+            }
+        } 
+
+
+        // if (oneMidiChlorianCtrlrEvent.countIncreased ) {
+        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
+        //         rightPaddle.dy = -paddleSpeed;
+        //     }
+        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
+        //         leftPaddle.dy = -paddleSpeed;
+        //     }
+        // } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
+        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
+        //         rightPaddle.dy = paddleSpeed;
+        //     }
+        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
+        //         leftPaddle.dy = paddleSpeed;
+        //     }
+        // } else {
+        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
+        //         rightPaddle.dy = 0;
+        //     }
+        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
+        //         leftPaddle.dy = 0;
+        //     }
+        // }
+    } catch(e) {
+        console.error(e.name + ': '+e.message + "; stack: "+e.stack);
     }
 
     if(gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
@@ -716,6 +769,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     setTimeout(
         function() {
             rightPaddle.dy = 0;
+            leftPaddle.dy = 0;
         }, 
         //hardcoding beat duration for .25 second for now... assuming 4 4 time
         //TODO idea: use beat duration instead to cause affect on object to persist while note was held down
