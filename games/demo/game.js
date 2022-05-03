@@ -28,7 +28,8 @@ window.addEventListener('resize', resize, false);
 ///////////////////////
 var gameSetupDialog = document.getElementById('gameSetupDialog');
 var gameSetupPreferences = {
-    twoPlayerMode: false,
+    musicPerformanceInfoRendered : true,
+    twoPlayerMode : false,
     key : 'C',
     scaleType : 'major',
     drawBall : true,
@@ -57,7 +58,8 @@ function showGameSetupModal() {
     } else {
         gameSetupForm["performanceStringFontSize"].defaultValue = gameSetupPreferences.performanceStringFontSize;
     }
-    gameSetupForm["twoPlayerMode"].value = gameSetupPreferences.twoPlayerMode;
+    gameSetupForm["musicPerformanceInfoRendered"].checked = gameSetupPreferences.musicPerformanceInfoRendered;
+    gameSetupForm["twoPlayerMode"].checked = gameSetupPreferences.twoPlayerMode;
     gameSetupForm["wallLifeSpan"].value = gameSetupPreferences.wallLifeSpan;
     gameSetupForm["keys"].value = gameSetupPreferences.key;
     gameSetupForm["cannonBallBounceOffWalls"].checked = gameSetupPreferences.cannonBallBounceOffWalls;
@@ -79,6 +81,7 @@ function showGameSetupModal() {
  */
 gameSetupDialog.addEventListener('close', function onClose() {
     var gameSetupForm = document.forms["gameSetupForm"];
+    gameSetupPreferences.musicPerformanceInfoRendered = gameSetupForm["musicPerformanceInfoRendered"].checked;
     gameSetupPreferences.twoPlayerMode = gameSetupForm["twoPlayerMode"].checked;
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
@@ -690,8 +693,10 @@ function loop() {
 
     leftPaddleScore.update();
     rightPaddleScore.update();
-    rightPaddlePerfomance.text = musicConductor.performanceString;
-    rightPaddlePerfomance.multiLineTextUpdate();
+    if(gameSetupPreferences.musicPerformanceInfoRendered) {
+        rightPaddlePerfomance.text = musicConductor.performanceString;
+        rightPaddlePerfomance.multiLineTextUpdate();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
