@@ -411,18 +411,23 @@ function loop() {
     var green = paddleColorByKeyMap.get(leftPaddleColorKey)[1];
     var blue = paddleColorByKeyMap.get(leftPaddleColorKey)[2];
     var alpha = currentAlphaValue;
-    if(alpha > 0 ) { 
-        context.fillStyle = "rgba("+red+","+green+","+blue+","+alpha+")";
-        context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+    if(twoPlayerMode == false) {
+        if(alpha > 0 ) { 
+            context.fillStyle = "rgba("+red+","+green+","+blue+","+alpha+")";
+            context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
+        } else {
+            leftPaddle.height = leftPaddle.y; 
+            leftPaddle.width = 0;
+            leftPaddle.x = 0;
+        }
     } else {
-        leftPaddle.height = leftPaddle.y; 
-        leftPaddle.width = 0;
-        leftPaddle.x = 0;
+        context.fillStyle = 'white';
+        context.fillRect(leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height);
     }
     var rightPaddleColorKey;
     var chordName;
     //load chordColorCannon
-    if(musicConductor.chordsPlaying.length  > 0) {
+    if(twoPlayerMode == false && musicConductor.chordsPlaying.length  > 0) {
         chordName = musicConductor.chordsPlaying[0];
         rightPaddleColorKey = chordName.split(' ')[0];
         red = paddleColorByKeyMap.get(rightPaddleColorKey)[0];
@@ -626,7 +631,9 @@ function loop() {
         // move ball next to the paddle otherwise the collision will happen again
         // in the next frame
         ball.x = leftPaddle.x + leftPaddle.width;
-        currentAlphaValue -= wallLifeDrain;
+        if(twoPlayerMode == false) {
+            currentAlphaValue -= wallLifeDrain;
+        }
     }
     else if (collides(ball, rightPaddle)) {
         ball.dx *= -1;
@@ -725,31 +732,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
             } else {
                 leftPaddle.dy = 0;
             }
-        } 
-
-
-        // if (oneMidiChlorianCtrlrEvent.countIncreased ) {
-        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
-        //         rightPaddle.dy = -paddleSpeed;
-        //     }
-        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
-        //         leftPaddle.dy = -paddleSpeed;
-        //     }
-        // } else if ( oneMidiChlorianCtrlrEvent.countDecreased ) {
-        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
-        //         rightPaddle.dy = paddleSpeed;
-        //     }
-        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
-        //         leftPaddle.dy = paddleSpeed;
-        //     }
-        // } else {
-        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
-        //         rightPaddle.dy = 0;
-        //     }
-        //     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 145) {
-        //         leftPaddle.dy = 0;
-        //     }
-        // }
+        }
     } catch(e) {
         console.error(e.name + ': '+e.message + "; stack: "+e.stack);
     }
