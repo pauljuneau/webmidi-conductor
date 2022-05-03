@@ -827,7 +827,7 @@ function gameOver() {
     if(confirmRedirect) {
         document.getElementById('redirectToBuyMeCoffee').click();
     } else {
-        resetBall(true);
+        resetBall(!twoPlayerMode);
         setTimeout(() => {
             showGameSetupModal();
         }, 1000);
