@@ -626,11 +626,25 @@ function loop() {
     if ( (ball.x < 0 || ball.x > canvas.width) && !ball.resetting) {
         ball.resetting = true;
         if(ball.x > canvas.width) {
-            leftPaddleScore.text += 10;
+            if(twoPlayerMode) {
+                leftPaddleScore.text += 1;
+                if(parseInt(leftPaddleScore.text) == 7) {
+                    gameOver();
+                }
+            } else {
+                leftPaddleScore.text += 10;
+            }
         }
         if(ball.x < 0 ) {
-            rightPaddleScore.text += 10;
-            gameOver();
+            if(twoPlayerMode) {
+                rightPaddleScore.text += 1;
+                if(parseInt(rightPaddleScore.text) == 7) {
+                    gameOver();
+                }
+            } else {
+                rightPaddleScore.text += 10;
+                gameOver();
+            }
         }
         resetBall(false);
     }
@@ -821,6 +835,8 @@ function gameOver() {
     if(confirmRedirect) {
         document.getElementById('redirectToBuyMeCoffee').click();
     } else {
+        rightPaddleScore.text = 0;
+        leftPaddleScore.text = 0;
         resetBall(!twoPlayerMode);
         setTimeout(() => {
             showGameSetupModal();
