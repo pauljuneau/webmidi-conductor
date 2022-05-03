@@ -28,6 +28,7 @@ window.addEventListener('resize', resize, false);
 ///////////////////////
 var gameSetupDialog = document.getElementById('gameSetupDialog');
 var gameSetupPreferences = {
+    twoPlayerMode: false,
     key : 'C',
     scaleType : 'major',
     drawBall : true,
@@ -56,6 +57,7 @@ function showGameSetupModal() {
     } else {
         gameSetupForm["performanceStringFontSize"].defaultValue = gameSetupPreferences.performanceStringFontSize;
     }
+    gameSetupForm["twoPlayerMode"].value = gameSetupPreferences.twoPlayerMode;
     gameSetupForm["wallLifeSpan"].value = gameSetupPreferences.wallLifeSpan;
     gameSetupForm["keys"].value = gameSetupPreferences.key;
     gameSetupForm["cannonBallBounceOffWalls"].checked = gameSetupPreferences.cannonBallBounceOffWalls;
@@ -77,6 +79,7 @@ function showGameSetupModal() {
  */
 gameSetupDialog.addEventListener('close', function onClose() {
     var gameSetupForm = document.forms["gameSetupForm"];
+    gameSetupPreferences.twoPlayerMode = gameSetupForm["twoPlayerMode"].checked;
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
     gameSetupPreferences.drawBall = gameSetupForm["drawBall"].checked;
@@ -189,7 +192,13 @@ const leftPaddle = {
     height: paddleHeight,
 
     // paddle velocity
-    dy: 0
+    dy: 0,
+
+    //default paddle dimensions to allow switching between wall ball or 2p mode
+    x_i: grid * 2,
+    y_i: canvas.height / 2 - paddleHeight / 2,
+    width_i: grid,
+    height_i: paddleHeight
 };
 const rightPaddle = {
     // start in the middle of the game on the right side
@@ -254,8 +263,6 @@ function collides(obj1, obj2) {
     return collisionDetected;
 }
 
-//TODO idea: 1P vs 2P wallball vs middle-c split via game setup modal
-var isWallBall = true;
 const wallBallDimensions = {
     y : grid*3,
     height : canvas.height - grid*7,
@@ -351,9 +358,12 @@ function loop() {
     requestAnimationFrame(loop);
     context.clearRect(0,0,canvas.width,canvas.height);
 
-    if(isWallBall) {
+    if(gameSetupPreferences.twoPlayerMode == false) {
         leftPaddle.y = wallBallDimensions.y;
         leftPaddle.height = wallBallDimensions.height;
+    } else {
+        leftPaddle.y = leftPaddle.y_i;
+        leftPaddle.height = leftPaddle.height_i;
     }
 
     // midiNotesOutofScaleOn should only get populated when gameSetupPreferences.shrinkPaddleWhenOutOfScale is on. 
