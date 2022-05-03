@@ -103,6 +103,17 @@ gameSetupDialog.addEventListener('close', function onClose() {
     }, 3000);
 });
 
+var twoPlayerModeCheckbox = document.getElementById('twoPlayerModeCheckbox');
+twoPlayerModeCheckbox.addEventListener('change', function onChange() {
+    var gameSetupForm = document.forms["gameSetupForm"];
+    var isTwoPlayerMode = gameSetupForm["twoPlayerMode"].checked;
+    gameSetupForm["ballCollisionEffect"].disabled = isTwoPlayerMode;
+    gameSetupForm["wallLifeSpan"].disabled = isTwoPlayerMode;
+    gameSetupForm["cannonBallBounceOffWalls"].disabled = isTwoPlayerMode;
+    gameSetupForm["cannonFireOnNewChord"].disabled = isTwoPlayerMode;
+    gameSetupForm["fireCannonWhenChordDisengaged"].disabled = isTwoPlayerMode;
+});
+
 function enablePitchDetect() {
     try {
         //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
