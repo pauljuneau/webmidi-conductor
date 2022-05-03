@@ -112,8 +112,11 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["cannonBallBounceOffWalls"].disabled = isTwoPlayerMode;
     gameSetupForm["cannonFireOnNewChord"].disabled = isTwoPlayerMode;
     gameSetupForm["fireCannonWhenChordDisengaged"].disabled = isTwoPlayerMode;
+    gameSetupForm["lowestNotes"].disabled = isTwoPlayerMode;
+    gameSetupForm["highestNotes"].disabled = isTwoPlayerMode;
     gameSetupForm["changeKeyOnLowestKey"].disabled = isTwoPlayerMode;
     gameSetupForm["changeToHighestKeyAfterLowestPlayed"].disabled = isTwoPlayerMode;
+    gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
 
 function enablePitchDetect() {
@@ -764,7 +767,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         console.error(e.name + ': '+e.message + "; stack: "+e.stack);
     }
 
-    if(gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
+    if(twoPlayerMode == false && gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
         var isNoteInScale = musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent);
         if(isNoteInScale == false) {
             midiNotesOutOfScaleOn.add(midiNoteNumber);
