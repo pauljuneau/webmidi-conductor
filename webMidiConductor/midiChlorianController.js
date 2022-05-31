@@ -15,6 +15,19 @@ const MidiInstrumentationEvents = {
     PITCHEVENT : 'pitchEvent'
 }
 Object.freeze(MidiInstrumentationEvents);
+const CHORDS = {
+    MAJOR_TRIAD:'Major Triad',
+    MINOR_TRIAD: 'Minor Triad',
+    AUGMENTED_TRIAD: 'Augmented Triad',
+    DIMINISHED_TRIAD:'Diminished Triad',
+    MAJOR_7TH:'Major 7th',
+    MINOR_7TH:'Minor 7th',
+    DOMINANT_7TH:'Dominant 7th',
+    MINOR_7TH_FLAT_5:'Minor 7th flat 5',
+    DIMINISHED_7TH: 'Diminished 7th',
+    MINOR_MAJOR_7TH: 'Minor-major 7th'
+}
+Object.freeze(CHORDS);
 ////////////////////////////////////////////////////////////////////////////////////////
 //                           MIDI MESSAGE DATA DICTIONARIES                           //
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -35,16 +48,16 @@ for(midiNoteHz of MIDI_NOTE_NUMBER_MAPPING_INDEX) {
     );
     noteObjectByMidiNoteNumber.set(oneNoteObj.midiNoteNumber, oneNoteObj);
     //use timeout b/c loadChordLetterSets func leverages pushNextMidiNoteNumbersInScale in musicConductorCtrl which hasn't been loaded yet.
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber, 43, 'Major Triad');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,34, 'Minor Triad');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,44, 'Augmented Triad');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,33, 'Diminished Triad');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,434, 'Major 7th');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,343, 'Minor 7th');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,433, 'Dominant 7th');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,334, 'Minor 7th flat 5');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,333, 'Diminished 7th');
-    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,344, 'Minor-major 7th');
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber, 43, CHORDS.MAJOR_TRIAD);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,34, CHORDS.MINOR_TRIAD);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,44, CHORDS.AUGMENTED_TRIAD);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,33, CHORDS.DIMINISHED_TRIAD);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,434, CHORDS.MAJOR_7TH);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,343, CHORDS.MINOR_7TH);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,433, CHORDS.DOMINANT_7TH);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,334, CHORDS.MINOR_7TH_FLAT_5);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,333, CHORDS.DIMINISHED_7TH);
+    setTimeout(loadChordLetterSets, 2000, oneNoteObj.midiNoteNumber,344, CHORDS.MINOR_MAJOR_7TH);
 }
 
 ////////////////////////////////////////////////////////////////////////////
