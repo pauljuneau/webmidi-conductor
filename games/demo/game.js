@@ -2,6 +2,25 @@
     Copyright © 2021 - 2022 Paul Juneau All Rights Reserved.
 **/
 
+////////////////////////////////////////////////////////////////////////////////////////
+//                         WEBMIDI-CONDUCTOR LIVE AUDIO SETUP                         //
+////////////////////////////////////////////////////////////////////////////////////////
+//TODO move to function to new file and use javascript to create necessary items in DOM
+function enablePitchDetect() {
+    try {
+        //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
+        enableLiveAudioInput('Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.');
+    } catch(err) {
+        console.log(err);
+    }
+    return;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//                                   GAME SETTINGS                                    //
+////////////////////////////////////////////////////////////////////////////////////////
+//Resize game canvas to fit the screen
 function resize() {
     var canvas = document.getElementById('game');
     var canvasRatio = canvas.height / canvas.width;
@@ -23,9 +42,6 @@ function resize() {
 
 window.addEventListener('resize', resize, false);
 
-///////////////////////
-// GAME SETUP DIALOG //
-///////////////////////
 var gameSetupDialog = document.getElementById('gameSetupDialog');
 var gameSetupPreferences = {
     musicPerformanceInfoRendered : true,
@@ -122,19 +138,9 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
 
-function enablePitchDetect() {
-    try {
-        //if user confirms, then liveAudioInputEnabled is set to true in pitchdetect.js
-        enableLiveAudioInput('Live audio is unable to be used on your device. Please use midi device or computer keyboard instead.');
-    } catch(err) {
-        console.log(err);
-    }
-    return;
-}
-
-////////////////////
-// GAME CHALLENGE //
-////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+//                                   CANVAS SETTINGS                                  //
+////////////////////////////////////////////////////////////////////////////////////////
 /** 
  * BEGIN PONG
  */
@@ -367,7 +373,9 @@ var disengageChords = setInterval(function(){
     }    
 }, 100);
 
-
+////////////////////////////////////////////////////////////////////////////////////////
+//                                   GAME LOOP                                        //
+////////////////////////////////////////////////////////////////////////////////////////
 var oldChordLetterSetByChordNameEntry;
 var cannonReloadTimeStartTime, cannonReloadTimeElapsed;
 var oldRightPaddleColorKey;
@@ -730,7 +738,7 @@ var removeInactiveNotesFromMidiNotesOutOfScaleOnSet = setInterval(
 document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, function(e) {
     const oneMidiChlorianCtrlrEvent = JSON.parse(e.value);
     var midiNoteNumber = Number(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
-
+    //Play Piano Sounds when playing on computer keyboard
     if(oneMidiChlorianCtrlrEvent.midiInputPlaying.eventType == 'KEYBOARD') {
         try {
             document.getElementById(oneMidiChlorianCtrlrEvent.midiInputPlaying.noteName).play();
@@ -738,7 +746,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
             console.error(e.name + ': '+e.message);
         }
     }
-
+    //2P Mode
     try {
         if(oneMidiChlorianCtrlrEvent.midiInputPlaying.command == 144) {
             if(oneMidiChlorianCtrlrEvent.countIncreased) {
@@ -761,7 +769,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     } catch(e) {
         console.error(e.name + ': '+e.message + "; stack: "+e.stack);
     }
-
+    //shrink paddle mode
     if(twoPlayerMode == false && gameSetupPreferences.shrinkPaddleWhenOutOfScale ) {
         var isNoteInScale = musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent);
         if(isNoteInScale == false) {
@@ -783,7 +791,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
         //TODO idea: use beat duration instead to cause affect on object to persist while note was held down
         250
     );
-    
+    //Change scale to current key being played after lowest or highest key has been played
     var midiNumberPlaying = parseInt(oneMidiChlorianCtrlrEvent.midiInputPlaying.note);
     if(twoPlayerMode == false) {
         if(gameSetupPreferences.changeKeyOnLowestKey && midiNumberPlaying < lowestMidiNotePlayed) {
@@ -804,7 +812,7 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     }
 });
 
-
+//Stop piano sound being played when no longer playing using computer keyboard
 document.addEventListener(MidiInstrumentationEvents.NOTELASTPLAYED, function(e){
     const oneNoteLastPlayed = JSON.parse(e.value);
     var midiNoteNumber = Number(oneNoteLastPlayed.note);
@@ -821,9 +829,9 @@ document.addEventListener(MidiInstrumentationEvents.NOTELASTPLAYED, function(e){
 // start the game
 requestAnimationFrame(loop);
 
-///////////////
-// GAME OVER //
-///////////////
+////////////////////////////////////////////////////////////////////////////////////////
+//                                   GAME OVER                                        //
+////////////////////////////////////////////////////////////////////////////////////////
 
 function gameOver() {
     gamePaused = true;
