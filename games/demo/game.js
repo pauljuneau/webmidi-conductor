@@ -361,9 +361,7 @@ rightPaddleScore.text = 0;
 var rightPaddlePerfomance = new CanvasObject(paddlePerfomanceFont.width, paddlePerfomanceFont.height, "white", wallBallDimensions.leftWall_x+100, 70, "text", 15);
 rightPaddlePerfomance.text = '';
 
-//TODO idea: add clearInterval(musicPerformanceTimerVar) to start stop interval
-//start cron job to measure music performance every 100 milliseconds (1/10th second)
-var musicPerformanceTimerVar = setInterval(setMusicalPerformanceString ,100);
+switchOnOffMusicalPerformance(100);
 //start cron job to disengage chords in chordColorCannon every 100 milliseconds (1/10th second)
 var disengageChords = setInterval(function(){
     for(let chordName of chordColorCannon.chordsEngaged) {

@@ -232,4 +232,14 @@ function setMusicalPerformanceString() {
         if(lettersPlaying.size >0 )
         musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ');
     }
-} 
+}
+
+var musicPerformanceTimerVar;
+function switchOnOffMusicalPerformance(delay) {
+    if(!musicPerformanceTimerVar) {
+        console.log('in switchOnOffMusicalPerformance');
+        setInterval(setMusicalPerformanceString, delay);
+    } else {
+        clearInterval(musicPerformanceTimerVar);
+    }
+}
