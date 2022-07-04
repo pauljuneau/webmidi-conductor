@@ -237,7 +237,6 @@ function setMusicalPerformanceString() {
 var musicPerformanceTimerVar;
 function switchOnOffMusicalPerformance(delay) {
     if(!musicPerformanceTimerVar) {
-        console.log('in switchOnOffMusicalPerformance');
         setInterval(setMusicalPerformanceString, delay);
     } else {
         clearInterval(musicPerformanceTimerVar);
