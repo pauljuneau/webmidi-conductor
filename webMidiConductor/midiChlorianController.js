@@ -109,6 +109,16 @@ function loadChordLetterSets(midiNoteNumber, chordHalfStepAlgorithm, chordName) 
     chordLetterSetByChordName.set(letter+ ' '+chordName,chordLetterSet);
 }
 
+/**
+ * @description constructor function that instantiates a chord via a chordName produced by the loadChordLetterSets function.
+ * @param {String} chordName is a note letter + ' ' + one of the chord name's in the CHORDS "enum" frozen object  
+ */
+function ChordInstance(chordName) {
+    this.name = chordName;
+    this.letter = chordName.split(' ',1)[0];
+    this.type = chordName.split(' ').slice(1).join(' ');
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                 DATA INPUT EVENTS                                  //
 ////////////////////////////////////////////////////////////////////////////////////////
