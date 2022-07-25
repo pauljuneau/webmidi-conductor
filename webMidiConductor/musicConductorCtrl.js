@@ -31,19 +31,25 @@ scaleToHalfStepAlgorithm.set('locrian', 1221222);
 
 let majorKeyChordProgressionMap = new Map();
 majorKeyChordProgressionMap.set('1 Major Triad', (new Set()).add('2 Minor Triad').add('3 Minor Triad').add('4 Major Triad').add('5 Major Triad').add('6 Minor Triad').add('7 Diminished Triad'));
-majorKeyChordProgressionMap.set('1 Major 7th', (new Set()).add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Major 7th').add('6 Minor 7th').add('7 Minor 7th flat 5'));
+majorKeyChordProgressionMap.set('1 Major 7th', (new Set()).add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Dominant 7th').add('6 Minor 7th').add('7 Minor 7th flat 5'));
 majorKeyChordProgressionMap.set('2 Minor Triad', (new Set()).add('1 Major Triad').add('5 Major Triad').add('7 Diminished Triad'));
-majorKeyChordProgressionMap.set('2 Minor 7th', (new Set()).add('1 Major 7th').add('5 Major 7th').add('7 Minor 7th flat 5'));
+majorKeyChordProgressionMap.set('2 Minor 7th', (new Set()).add('1 Major 7th').add('5 Dominant 7th').add('7 Minor 7th flat 5'));
 majorKeyChordProgressionMap.set('3 Minor Triad', (new Set()).add('1 Major Triad').add('4 Major Triad').add('6 Minor Triad'));
 majorKeyChordProgressionMap.set('3 Minor 7th', (new Set()).add('1 Major 7th').add('4 Major 7th').add('6 Minor 7th'));
 majorKeyChordProgressionMap.set('4 Major Triad', (new Set()).add('1 Major Triad').add('2 Minor Triad').add('5 Major Triad').add('7 Diminished Triad'));
-majorKeyChordProgressionMap.set('4 Major 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('5 Major 7th').add('7 Minor 7th flat 5'));
+majorKeyChordProgressionMap.set('4 Major 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('5 Dominant 7th').add('7 Minor 7th flat 5'));
 majorKeyChordProgressionMap.set('5 Major Triad', (new Set()).add('1 Major Triad').add('6 Minor Triad'));
-majorKeyChordProgressionMap.set('5 Major 7th', (new Set()).add('1 Major 7th').add('6 Minor 7th'));
+majorKeyChordProgressionMap.set('5 Dominant 7th', (new Set()).add('1 Major 7th').add('6 Minor 7th'));
 majorKeyChordProgressionMap.set('6 Minor Triad', (new Set()).add('1 Major Triad').add('2 Minor Triad').add('3 Minor Triad').add('4 Major Triad').add('5 Major Triad'));
-majorKeyChordProgressionMap.set('6 Minor 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Major 7th'));
+majorKeyChordProgressionMap.set('6 Minor 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Dominant 7th'));
 majorKeyChordProgressionMap.set('7 Diminished Triad', (new Set()).add('1 Major Triad'));
 majorKeyChordProgressionMap.set('7 Minor 7th flat 5', (new Set()).add('1 Major 7th'));
+
+//GAP ALERT!!!: With the minor key, the 6th and 7th scale degrees are variable when going up or down the scale, so the 6th and 7th chords should be determined if the current bar being played has it's pitch arching up or down. This scrutiny is being left out for the time being, so a decending or ascending only minor chord may be declared a valid chord progression regardless of the current bar's melodic contour.  
+let minorKeyChordProgressionMap = new Map();
+minorKeyChordProgressionMap.set('1 Minor Triad', (new Set()).add('2 Diminished Triad').add('2 Minor Triad').add('3 Major Triad').add('3 Augmented Triad').add('4 Minor Triad').add('4 Major Triad').add('5 Major Triad').add('5 Minor Triad').add('6 Major Triad').add('6 Diminished Triad').add('7 Diminished Triad').add('7 Major Triad'));
+minorKeyChordProgressionMap.set('1 Minor 7th', (new Set()).add('2 Minor 7th flat 5').add('3 Major 7th').add('4 Minor 7th').add('5 Dominant 7th').add('6 Major 7th').add('7 Diminished 7th'));
+
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
