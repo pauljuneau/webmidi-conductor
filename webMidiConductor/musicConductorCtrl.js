@@ -28,6 +28,22 @@ scaleToHalfStepAlgorithm.set('lydian', 2221221);
 scaleToHalfStepAlgorithm.set('mixolydian', 2212212);
 scaleToHalfStepAlgorithm.set('aeolian', 2122122);
 scaleToHalfStepAlgorithm.set('locrian', 1221222);
+
+let majorKeyChordProgressionMap = new Map();
+majorKeyChordProgressionMap.set('1 Major Triad', (new Set()).add('2 Minor Triad').add('3 Minor Triad').add('4 Major Triad').add('5 Major Triad').add('6 Minor Triad').add('7 Diminished Triad'));
+majorKeyChordProgressionMap.set('1 Major 7th', (new Set()).add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Major 7th').add('6 Minor 7th').add('7 Minor 7th flat 5'));
+majorKeyChordProgressionMap.set('2 Minor Triad', (new Set()).add('1 Major Triad').add('5 Major Triad').add('7 Diminished Triad'));
+majorKeyChordProgressionMap.set('2 Minor 7th', (new Set()).add('1 Major 7th').add('5 Major 7th').add('7 Minor 7th flat 5'));
+majorKeyChordProgressionMap.set('3 Minor Triad', (new Set()).add('1 Major Triad').add('4 Major Triad').add('6 Minor Triad'));
+majorKeyChordProgressionMap.set('3 Minor 7th', (new Set()).add('1 Major 7th').add('4 Major 7th').add('6 Minor 7th'));
+majorKeyChordProgressionMap.set('4 Major Triad', (new Set()).add('1 Major Triad').add('2 Minor Triad').add('5 Major Triad').add('7 Diminished Triad'));
+majorKeyChordProgressionMap.set('4 Major 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('5 Major 7th').add('7 Minor 7th flat 5'));
+majorKeyChordProgressionMap.set('5 Major Triad', (new Set()).add('1 Major Triad').add('6 Minor Triad'));
+majorKeyChordProgressionMap.set('5 Major 7th', (new Set()).add('1 Major 7th').add('6 Minor 7th'));
+majorKeyChordProgressionMap.set('6 Minor Triad', (new Set()).add('1 Major Triad').add('2 Minor Triad').add('3 Minor Triad').add('4 Major Triad').add('5 Major Triad'));
+majorKeyChordProgressionMap.set('6 Minor 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Major 7th'));
+majorKeyChordProgressionMap.set('7 Diminished Triad', (new Set()).add('1 Major Triad'));
+majorKeyChordProgressionMap.set('7 Minor 7th flat 5', (new Set()).add('1 Major 7th'));
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
@@ -198,8 +214,19 @@ function changeKeyAndScale(key, scale) {
 
 function isChordProgression() {
     if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
-        console.log("musicConductor.lastChordPlayed.name: " + musicConductor.lastChordPlayed.name);
-        console.log("musicConductor.currentChordPlaying.name: " + musicConductor.currentChordPlaying.name);
+        var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
+        var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
+        var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
+        var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
+        switch (musicConductor.chordProgressionType) {
+            case 'Major':
+                return (majorKeyChordProgressionMap.has(lastScaleDegreeChordPlayedASC) && majorKeyChordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (majorKeyChordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && majorKeyChordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC));
+            case 'Minor':
+                console.log('under construction');
+                return false;
+            default:
+                return false;
+        }
     }
 }
 
@@ -208,7 +235,8 @@ var musicConductor = {
     scaleRule : new RestrictToScaleRule(currentKey + '-' + scaleType),
     chordsPlaying : [],
     lastChordPlayed : undefined,
-    currentChordPlaying : undefined
+    currentChordPlaying : undefined,
+    chordProgressionType : 'Major'
 };
 /**
  * @returns string of musical performance: 
@@ -253,9 +281,11 @@ function setMusicalPerformanceString() {
         }
         musicConductor.chordsPlaying = chordsPlaying;
         if(lettersPlaying.size >0 ) {
-            musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ');
+            musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ') +'\n';
             if(musicConductor.chordsPlaying.length > 0) {
-                isChordProgression();
+                if(isChordProgression()) {
+                    musicConductor.performanceString += 'Good Chord Progression!';
+                }
             }
         }
     }
