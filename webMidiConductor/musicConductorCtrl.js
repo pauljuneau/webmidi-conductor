@@ -78,6 +78,14 @@ function RestrictToScaleRule(scaleShorthandName) {
         //E.g. Note F in A melodic minor would be correct if having just played G, but if F was replayed then it would evaluate against the ascending scale notes which should be F#.
         return this.restrictedLetters.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
     };
+    /**
+     * @description determines if the current note letter is in the scale regardless if progressing up or down the scal.
+     * @param {String} letter is one of the possible note letter names found in the ACCEPTABLE_NOTE_NAMES_ARRAY in midiChlorianController.js 
+     * @returns {Boolean} true or false
+     */
+    this.isInScaleAscOrDesc = function(letter) {
+        return (this.restrictedLettersDownscale.has(letter) || this.restrictedLetters.has(letter));
+    };
 }
 
 /**
@@ -188,16 +196,28 @@ function changeKeyAndScale(key, scale) {
     musicConductor.scaleRule = rule;
 }
 
+function isChordProgression() {
+    if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
+        console.log("musicConductor.lastChordPlayed.name: " + musicConductor.lastChordPlayed.name);
+        console.log("musicConductor.currentChordPlaying.name: " + musicConductor.currentChordPlaying.name);
+    }
+}
+
 var musicConductor = {
     performanceString : '',
     scaleRule : new RestrictToScaleRule(currentKey + '-' + scaleType),
-    chordsPlaying : []
+    chordsPlaying : [],
+    lastChordPlayed : undefined,
+    currentChordPlaying : undefined
 };
 /**
  * @returns string of musical performance: 
  * i.e. note letter, instrumental note position, scaleDegree, chords playing  
  */
 function setMusicalPerformanceString() {
+    if(musicConductor.chordsPlaying.length > 0) {
+        musicConductor.lastChordPlayed = new ChordInstance(musicConductor.chordsPlaying[musicConductor.chordsPlaying.length - 1]);
+    }
     musicConductor.chordsPlaying = [];
     //lazy load scale degree letters ascending and descending
     musicConductor.scaleRule.scaleDegreeByLetterASC = musicConductor.scaleRule.scaleDegreeByLetterASC.size != 0 ? musicConductor.scaleRule.scaleDegreeByLetterASC 
@@ -225,12 +245,19 @@ function setMusicalPerformanceString() {
                         isMatch = false;
                     }
                 }
-                if(isMatch) chordsPlaying.push(chordName);
+                if(isMatch) {
+                    chordsPlaying.push(chordName);
+                    musicConductor.currentChordPlaying = new ChordInstance(chordName);
+                }
             }
         }
         musicConductor.chordsPlaying = chordsPlaying;
-        if(lettersPlaying.size >0 )
-        musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ');
+        if(lettersPlaying.size >0 ) {
+            musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ');
+            if(musicConductor.chordsPlaying.length > 0) {
+                isChordProgression();
+            }
+        }
     }
 }
 
