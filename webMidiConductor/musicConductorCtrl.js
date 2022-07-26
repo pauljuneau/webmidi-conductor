@@ -29,46 +29,84 @@ scaleToHalfStepAlgorithm.set('mixolydian', 2212212);
 scaleToHalfStepAlgorithm.set('aeolian', 2122122);
 scaleToHalfStepAlgorithm.set('locrian', 1221222);
 
-//TODO remove hard coding of key value pairs
+let chordTypeDegrees = new Map();
+for (let key in CHORDS) {
+    let chordType = CHORDS[key];
+    chordTypeDegrees.set(chordType,[]);
+    for (let i = 0; i < 8; i++) {
+        chordTypeDegrees.get(chordType).push(i + ' '+chordType);        
+    }
+}
 let majorKeyChordProgressionMap = new Map();
-majorKeyChordProgressionMap.set('1 Major Triad', (new Set()).add('2 Minor Triad').add('3 Minor Triad').add('4 Major Triad').add('5 Major Triad').add('6 Minor Triad').add('7 Diminished Triad'));
-majorKeyChordProgressionMap.set('1 Major 7th', (new Set()).add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Dominant 7th').add('6 Minor 7th').add('7 Minor 7th flat 5'));
-majorKeyChordProgressionMap.set('2 Minor Triad', (new Set()).add('1 Major Triad').add('5 Major Triad').add('7 Diminished Triad'));
-majorKeyChordProgressionMap.set('2 Minor 7th', (new Set()).add('1 Major 7th').add('5 Dominant 7th').add('7 Minor 7th flat 5'));
-majorKeyChordProgressionMap.set('3 Minor Triad', (new Set()).add('1 Major Triad').add('4 Major Triad').add('6 Minor Triad'));
-majorKeyChordProgressionMap.set('3 Minor 7th', (new Set()).add('1 Major 7th').add('4 Major 7th').add('6 Minor 7th'));
-majorKeyChordProgressionMap.set('4 Major Triad', (new Set()).add('1 Major Triad').add('2 Minor Triad').add('5 Major Triad').add('7 Diminished Triad'));
-majorKeyChordProgressionMap.set('4 Major 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('5 Dominant 7th').add('7 Minor 7th flat 5'));
-majorKeyChordProgressionMap.set('5 Major Triad', (new Set()).add('1 Major Triad').add('6 Minor Triad'));
-majorKeyChordProgressionMap.set('5 Dominant 7th', (new Set()).add('1 Major 7th').add('6 Minor 7th'));
-majorKeyChordProgressionMap.set('6 Minor Triad', (new Set()).add('1 Major Triad').add('2 Minor Triad').add('3 Minor Triad').add('4 Major Triad').add('5 Major Triad'));
-majorKeyChordProgressionMap.set('6 Minor 7th', (new Set()).add('1 Major 7th').add('2 Minor 7th').add('3 Minor 7th').add('4 Major 7th').add('5 Dominant 7th'));
-majorKeyChordProgressionMap.set('7 Diminished Triad', (new Set()).add('1 Major Triad'));
-majorKeyChordProgressionMap.set('7 Minor 7th flat 5', (new Set()).add('1 Major 7th'));
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]));
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]));
 
 //GAP ALERT!!!: With the minor key, the 6th and 7th scale degrees are variable when going up or down the scale, so the 6th and 7th chords should be determined if the current bar being played has it's pitch arching up or down. This scrutiny is being left out for the time being, so a decending or ascending only minor chord may be declared a valid chord progression regardless of the current bar's melodic contour.
 //TODO determine 7th chord progressions for "rare" minor key chord progressions  
 let minorKeyChordProgressionMap = new Map();
-minorKeyChordProgressionMap.set('1 Minor Triad', (new Set()).add('2 Diminished Triad').add('2 Minor Triad').add('3 Major Triad').add('3 Augmented Triad').add('4 Minor Triad').add('4 Major Triad').add('5 Major Triad').add('5 Minor Triad').add('6 Major Triad').add('6 Diminished Triad').add('7 Diminished Triad').add('7 Major Triad'));
-minorKeyChordProgressionMap.set('1 Minor 7th', (new Set()).add('2 Minor 7th flat 5').add('3 Major 7th').add('4 Minor 7th').add('5 Dominant 7th').add('6 Major 7th').add('7 Diminished 7th'));
-minorKeyChordProgressionMap.set('2 Diminished Triad', (new Set()).add('1 Minor Triad').add('5 Major Triad').add('7 Diminished Triad'));
-minorKeyChordProgressionMap.set('2 Minor Triad', (new Set()).add('1 Minor Triad').add('5 Minor Triad').add('7 Major Triad'));
-minorKeyChordProgressionMap.set('2 Minor 7th flat 5', (new Set()).add('1 Minor 7th').add('5 Dominant 7th').add('7 Diminished 7th'));
-minorKeyChordProgressionMap.set('3 Major Triad', (new Set()).add('1 Minor Triad').add('4 Minor Triad').add('6 Major Triad').add('7 Diminished Triad'));
-minorKeyChordProgressionMap.set('3 Augmented Triad', (new Set()).add('1 Minor Triad').add('4 Major Triad').add('6 Diminished Triad').add('7 Major Triad'));
-minorKeyChordProgressionMap.set('3 Major 7th', (new Set()).add('1 Minor 7th').add('4 Minor 7th').add('6 Major 7th').add('7 Diminished 7th'));
-minorKeyChordProgressionMap.set('4 Minor Triad', (new Set()).add('1 Minor Triad').add('5 Major Triad').add('7 Diminished Triad'));
-minorKeyChordProgressionMap.set('4 Major Triad', (new Set()).add('1 Minor Triad').add('5 Minor Triad').add('7 Major Triad'));
-minorKeyChordProgressionMap.set('4 Minor 7th', (new Set()).add('1 Minor 7th').add('5 Dominant 7th').add('7 Diminished 7th'));
-minorKeyChordProgressionMap.set('5 Major Triad', (new Set()).add('1 Minor Triad').add('6 Major Triad'));
-minorKeyChordProgressionMap.set('5 Minor Triad', (new Set()).add('1 Minor Triad').add('6 Diminished Triad'));
-minorKeyChordProgressionMap.set('5 Dominant 7th', (new Set()).add('1 Minor 7th').add('6 Major 7th'));
-minorKeyChordProgressionMap.set('6 Major Triad', (new Set()).add('1 Minor Triad').add('3 Major Triad').add('4 Minor Triad').add('5 Major Triad').add('7 Diminished Triad'));
-minorKeyChordProgressionMap.set('6 Diminished Triad', (new Set()).add('1 Minor Triad').add('3 Augmented Triad').add('4 Major Triad').add('5 Minor Triad').add('7 Major Triad'));
-minorKeyChordProgressionMap.set('6 Major 7th', (new Set()).add('1 Minor 7th').add('3 Major 7th').add('4 Minor 7th').add('5 Dominant 7th').add('7 Diminished 7th'));
-minorKeyChordProgressionMap.set('7 Diminished Triad', (new Set()).add('1 Minor Triad'));
-minorKeyChordProgressionMap.set('7 Major Triad', (new Set()).add('1 Minor Triad'));
-minorKeyChordProgressionMap.set('7 Diminished 7th', (new Set()).add('1 Minor 7th'));
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]));
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
@@ -237,6 +275,10 @@ function changeKeyAndScale(key, scale) {
     musicConductor.scaleRule = rule;
 }
 
+/**
+ * @description determines if a good chord progression has occurred based on the current chord progression type. A good chord progression is defined as a chord with its governing note letter being in the given key, having a valid chord type (major, minor, diminished, augmented, etc) based on the scale degree of the chord's governing note letter, and if the previous chord played was classified as a good progression per the context chord progression type.
+ * @returns true or false
+ */
 function isChordProgression() {
     if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
         var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
@@ -252,6 +294,7 @@ function isChordProgression() {
                 return false;
         }
     }
+    return false;
 }
 
 var musicConductor = {
