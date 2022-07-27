@@ -107,6 +107,8 @@ minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]
 minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]));
 
 minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]));
+
+let customChordProgressionMap = new Map();
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
@@ -281,18 +283,25 @@ function changeKeyAndScale(key, scale) {
  */
 function isChordProgression() {
     if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
+        var chordProgressionMap = new Map();
         var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
         var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
         var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
         var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
         switch (musicConductor.chordProgressionType) {
             case 'Major':
-                return (majorKeyChordProgressionMap.has(lastScaleDegreeChordPlayedASC) && majorKeyChordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (majorKeyChordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && majorKeyChordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC));
+                chordProgressionMap = majorKeyChordProgressionMap;
+                break;
             case 'Minor':
-                return (minorKeyChordProgressionMap.has(lastScaleDegreeChordPlayedASC) && minorKeyChordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (minorKeyChordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && minorKeyChordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC));
+                chordProgressionMap = minorKeyChordProgressionMap;
+                break;
+            case 'Custom':
+                chordProgressionMap = customChordProgressionMap;
+                break;
             default:
                 return false;
         }
+        return (chordProgressionMap.size > 0 && (chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC)));
     }
     return false;
 }
