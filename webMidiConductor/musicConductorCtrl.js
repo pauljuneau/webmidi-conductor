@@ -313,7 +313,7 @@ var musicConductor = {
     lastChordPlayed : undefined,
     currentChordPlaying : undefined,
     chordProgressionType : 'Major',
-    chordProgressionsSequentiallyPlayedCount : 0,
+    chordProgressionsPlayedCount : 0,
     maxMillisNoChordProgCountReset : 5000,
     lastTimeWhenChordProgPlayedInMillis : 0
 };
@@ -363,22 +363,22 @@ function setMusicalPerformanceString() {
             musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ') +'\n';
             if(musicConductor.chordsPlaying.length > 0) {
                 if(isChordProgression()) {
-                    ++musicConductor.chordProgressionsSequentiallyPlayedCount;
+                    ++musicConductor.chordProgressionsPlayedCount;
                     musicConductor.lastTimeWhenChordProgPlayedInMillis = Date.now();
                 }
             }
         }
         if(musicConductor.lastTimeWhenChordProgPlayedInMillis != undefined && (Date.now() - musicConductor.lastTimeWhenChordProgPlayedInMillis >= musicConductor.maxMillisNoChordProgCountReset)) {
-            musicConductor.chordProgressionsSequentiallyPlayedCount = 0;
+            musicConductor.chordProgressionsPlayedCount = 0;
         }
-        musicConductor.performanceString += 'Chord Progressions played sequentially: '+musicConductor.chordProgressionsSequentiallyPlayedCount+'\n';
+        musicConductor.performanceString += 'Chord Progressions played: '+musicConductor.chordProgressionsPlayedCount+'\n';
     }
 }
 
 var musicPerformanceTimerVar;
 function switchOnOffMusicalPerformance(delay) {
     if(!musicPerformanceTimerVar) {
-        setInterval(setMusicalPerformanceString, delay);
+        musicPerformanceTimerVar = setInterval(setMusicalPerformanceString, delay);
     } else {
         clearInterval(musicPerformanceTimerVar);
     }
