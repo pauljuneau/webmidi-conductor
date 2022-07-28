@@ -312,7 +312,10 @@ var musicConductor = {
     chordsPlaying : [],
     lastChordPlayed : undefined,
     currentChordPlaying : undefined,
-    chordProgressionType : 'Major'
+    chordProgressionType : 'Major',
+    chordProgressionsSequentiallyPlayedCount : 0,
+    maxMillisNoChordProgCountReset : 5000,
+    lastTimeWhenChordProgPlayedInMillis : 0
 };
 /**
  * @returns string of musical performance: 
@@ -360,10 +363,15 @@ function setMusicalPerformanceString() {
             musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ') +'\n';
             if(musicConductor.chordsPlaying.length > 0) {
                 if(isChordProgression()) {
-                    console.log('Good Chord Progression!!');
+                    ++musicConductor.chordProgressionsSequentiallyPlayedCount;
+                    musicConductor.lastTimeWhenChordProgPlayedInMillis = Date.now();
                 }
             }
         }
+        if(musicConductor.lastTimeWhenChordProgPlayedInMillis != undefined && (Date.now() - musicConductor.lastTimeWhenChordProgPlayedInMillis >= musicConductor.maxMillisNoChordProgCountReset)) {
+            musicConductor.chordProgressionsSequentiallyPlayedCount = 0;
+        }
+        musicConductor.performanceString += 'Chord Progressions played sequentially: '+musicConductor.chordProgressionsSequentiallyPlayedCount+'\n';
     }
 }
 
