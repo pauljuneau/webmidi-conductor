@@ -309,6 +309,9 @@ function isChordProgression() {
 var musicConductor = {
     performanceString : '',
     scaleRule : new RestrictToScaleRule(currentKey + '-' + scaleType),
+    noteRecentlyPlayedInScale : false,
+    maxMillisWithoutNoteInScale : 5000,
+    lastTimeWhenNoteInScalePlayedInMillis : 0,
     chordsPlaying : [],
     lastChordPlayed : undefined,
     currentChordPlaying : undefined,
@@ -339,6 +342,18 @@ function setMusicalPerformanceString() {
         noteObject_i.scaleDegreeASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(noteObject_i.letter);
         noteObject_i.scaleDegreeDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(noteObject_i.letter);
         musicConductor.performanceString += '"'+noteObject_i.noteName+'", "'+noteObject_i.scaleDegreeASC+'", "'+noteObject_i.scaleDegreeDESC+'"\n';
+        if(!musicConductor.noteRecentlyPlayedInScale) {
+            musicConductor.noteRecentlyPlayedInScale = musicConductor.scaleRule.isInScaleAscOrDesc(noteObject_i.letter);
+            if(musicConductor.noteRecentlyPlayedInScale) {
+                musicConductor.lastTimeWhenNoteInScalePlayedInMillis = Date.now();
+            }
+        } 
+    }
+    if(musicConductor.lastTimeWhenNoteInScalePlayedInMillis != undefined && (Date.now() - musicConductor.lastTimeWhenNoteInScalePlayedInMillis >= musicConductor.maxMillisWithoutNoteInScale)) {
+        musicConductor.noteRecentlyPlayedInScale = false;
+    }
+    if(musicConductor.noteRecentlyPlayedInScale) {
+        musicConductor.performanceString += 'Note was recently played in scale\n';
     }
     var liveAudioInputEnabled = liveAudioInputEnabled || false;
     if(!liveAudioInputEnabled) {
