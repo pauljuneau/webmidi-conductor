@@ -101,9 +101,10 @@ gameSetupDialog.addEventListener('close', function onClose() {
     gameSetupPreferences.twoPlayerMode = gameSetupForm["twoPlayerMode"].checked;
     gameSetupPreferences.key = gameSetupForm["keys"].value;
     gameSetupPreferences.scaleType = gameSetupForm["scales"].value;
+    musicConductor.chordProgressionType = gameSetupForm["chordProgressionTypes"].value;
     gameSetupPreferences.drawBall = gameSetupForm["drawBall"].checked;
     gameSetupPreferences.ballCollisionEffect = gameSetupForm["ballCollisionEffect"].value;
-    changeKeyAndScale(gameSetupPreferences.key,gameSetupPreferences.scaleType);
+    changeKeyAndScale(gameSetupPreferences.key, gameSetupPreferences.scaleType);
     gameSetupPreferences.shrinkPaddleWhenOutOfScale = gameSetupForm["shrinkPaddleWhenOutOfScale"].checked;
     gameSetupPreferences.changeKeyOnLowestKey = gameSetupForm["changeKeyOnLowestKey"].checked;
     gameSetupPreferences.changeToHighestKeyAfterLowestPlayed = gameSetupForm["changeToHighestKeyAfterLowestPlayed"].checked;
