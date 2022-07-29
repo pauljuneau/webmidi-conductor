@@ -28,6 +28,87 @@ scaleToHalfStepAlgorithm.set('lydian', 2221221);
 scaleToHalfStepAlgorithm.set('mixolydian', 2212212);
 scaleToHalfStepAlgorithm.set('aeolian', 2122122);
 scaleToHalfStepAlgorithm.set('locrian', 1221222);
+
+let chordTypeDegrees = new Map();
+for (let key in CHORDS) {
+    let chordType = CHORDS[key];
+    chordTypeDegrees.set(chordType,[]);
+    for (let i = 0; i < 8; i++) {
+        chordTypeDegrees.get(chordType).push(i + ' '+chordType);        
+    }
+}
+let majorKeyChordProgressionMap = new Map();
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]));
+
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1]));
+majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]));
+
+//GAP ALERT!!!: With the minor key, the 6th and 7th scale degrees are variable when going up or down the scale, so the 6th and 7th chords should be determined if the current bar being played has it's pitch arching up or down. This scrutiny is being left out for the time being, so a decending or ascending only minor chord may be declared a valid chord progression regardless of the current bar's melodic contour.
+//TODO determine 7th chord progressions for "rare" minor key chord progressions  
+let minorKeyChordProgressionMap = new Map();
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]));
+
+minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[1]));
+
+let customChordProgressionMap = new Map();
 /**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
@@ -77,6 +158,14 @@ function RestrictToScaleRule(scaleShorthandName) {
         //Fail scenario may occur when same note of melodic minor scale is played after having starting going down the scale. 
         //E.g. Note F in A melodic minor would be correct if having just played G, but if F was replayed then it would evaluate against the ascending scale notes which should be F#.
         return this.restrictedLetters.has(getNoteNameFromNumber(midiNoteNumberToCheck).trim());
+    };
+    /**
+     * @description determines if the current note letter is in the scale regardless if progressing up or down the scal.
+     * @param {String} letter is one of the possible note letter names found in the ACCEPTABLE_NOTE_NAMES_ARRAY in midiChlorianController.js 
+     * @returns {Boolean} true or false
+     */
+    this.isInScaleAscOrDesc = function(letter) {
+        return (this.restrictedLettersDownscale.has(letter) || this.restrictedLetters.has(letter));
     };
 }
 
@@ -188,16 +277,57 @@ function changeKeyAndScale(key, scale) {
     musicConductor.scaleRule = rule;
 }
 
+/**
+ * @description determines if a good chord progression has occurred based on the current chord progression type. A good chord progression is defined as a chord with its governing note letter being in the given key, having a valid chord type (major, minor, diminished, augmented, etc) based on the scale degree of the chord's governing note letter, and if the previous chord played was classified as a good progression per the context chord progression type.
+ * @returns true or false
+ */
+function isChordProgression() {
+    if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
+        var chordProgressionMap = new Map();
+        var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
+        var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
+        var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
+        var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
+        switch (musicConductor.chordProgressionType) {
+            case 'Major':
+                chordProgressionMap = majorKeyChordProgressionMap;
+                break;
+            case 'Minor':
+                chordProgressionMap = minorKeyChordProgressionMap;
+                break;
+            case 'Custom':
+                chordProgressionMap = customChordProgressionMap;
+                break;
+            default:
+                return false;
+        }
+        return (chordProgressionMap.size > 0 && (chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC)));
+    }
+    return false;
+}
+
 var musicConductor = {
     performanceString : '',
     scaleRule : new RestrictToScaleRule(currentKey + '-' + scaleType),
-    chordsPlaying : []
+    noteRecentlyPlayedInScale : false,
+    maxMillisWithoutNoteInScale : 5000,
+    lastTimeWhenNoteInScalePlayedInMillis : 0,
+    chordsPlaying : [],
+    lastChordPlayed : undefined,
+    currentChordPlaying : undefined,
+    chordProgressionType : 'Major',
+    chordProgressionsPlayedCount : 0,
+    maxMillisNoChordProgCountReset : 5000,
+    lastTimeWhenChordProgPlayedInMillis : 0
 };
 /**
  * @returns string of musical performance: 
  * i.e. note letter, instrumental note position, scaleDegree, chords playing  
  */
 function setMusicalPerformanceString() {
+    if(musicConductor.chordsPlaying.length > 0) {
+        musicConductor.lastChordPlayed = new ChordInstance(musicConductor.chordsPlaying[musicConductor.chordsPlaying.length - 1]);
+    }
     musicConductor.chordsPlaying = [];
     //lazy load scale degree letters ascending and descending
     musicConductor.scaleRule.scaleDegreeByLetterASC = musicConductor.scaleRule.scaleDegreeByLetterASC.size != 0 ? musicConductor.scaleRule.scaleDegreeByLetterASC 
@@ -212,6 +342,18 @@ function setMusicalPerformanceString() {
         noteObject_i.scaleDegreeASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(noteObject_i.letter);
         noteObject_i.scaleDegreeDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(noteObject_i.letter);
         musicConductor.performanceString += '"'+noteObject_i.noteName+'", "'+noteObject_i.scaleDegreeASC+'", "'+noteObject_i.scaleDegreeDESC+'"\n';
+        if(!musicConductor.noteRecentlyPlayedInScale) {
+            musicConductor.noteRecentlyPlayedInScale = musicConductor.scaleRule.isInScaleAscOrDesc(noteObject_i.letter);
+            if(musicConductor.noteRecentlyPlayedInScale) {
+                musicConductor.lastTimeWhenNoteInScalePlayedInMillis = Date.now();
+            }
+        } 
+    }
+    if(musicConductor.lastTimeWhenNoteInScalePlayedInMillis != undefined && (Date.now() - musicConductor.lastTimeWhenNoteInScalePlayedInMillis >= musicConductor.maxMillisWithoutNoteInScale)) {
+        musicConductor.noteRecentlyPlayedInScale = false;
+    }
+    if(musicConductor.noteRecentlyPlayedInScale) {
+        musicConductor.performanceString += 'Note was recently played in scale\n';
     }
     var liveAudioInputEnabled = liveAudioInputEnabled || false;
     if(!liveAudioInputEnabled) {
@@ -225,11 +367,34 @@ function setMusicalPerformanceString() {
                         isMatch = false;
                     }
                 }
-                if(isMatch) chordsPlaying.push(chordName);
+                if(isMatch) {
+                    chordsPlaying.push(chordName);
+                    musicConductor.currentChordPlaying = new ChordInstance(chordName);
+                }
             }
         }
         musicConductor.chordsPlaying = chordsPlaying;
-        if(lettersPlaying.size >0 )
-        musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ');
+        if(lettersPlaying.size >0 ) {
+            musicConductor.performanceString += 'Chords Playing: '+ chordsPlaying.join(', ') +'\n';
+            if(musicConductor.chordsPlaying.length > 0) {
+                if(isChordProgression()) {
+                    ++musicConductor.chordProgressionsPlayedCount;
+                    musicConductor.lastTimeWhenChordProgPlayedInMillis = Date.now();
+                }
+            }
+        }
+        if(musicConductor.lastTimeWhenChordProgPlayedInMillis != undefined && (Date.now() - musicConductor.lastTimeWhenChordProgPlayedInMillis >= musicConductor.maxMillisNoChordProgCountReset)) {
+            musicConductor.chordProgressionsPlayedCount = 0;
+        }
+        musicConductor.performanceString += 'Chord Progressions played: '+musicConductor.chordProgressionsPlayedCount+'\n';
     }
-} 
+}
+
+var musicPerformanceTimerVar;
+function switchOnOffMusicalPerformance(delay) {
+    if(!musicPerformanceTimerVar) {
+        musicPerformanceTimerVar = setInterval(setMusicalPerformanceString, delay);
+    } else {
+        clearInterval(musicPerformanceTimerVar);
+    }
+}
