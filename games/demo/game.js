@@ -152,7 +152,6 @@ document.addEventListener(MidiInstrumentationEvents.MISC_EVENT, function handleM
 
 function showTheoryModal() {
     var theoryModal = document.getElementById('theoryModal');
-    theoryModal.innerHTML = 'Hello World again';
     showModal(theoryModal);
 }
 ////////////////////////////////////////////////////////////////////////////////////////
