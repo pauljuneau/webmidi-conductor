@@ -12,7 +12,8 @@ const MidiInstrumentationEvents = {
     NOTEBEINGPLAYED:'noteBeingPlayed',
     NOTELASTPLAYED: 'noteLastPlayed',
     MIDICHLORIANCTRLEVENT : 'midiChlorianCtrlrEvent',
-    PITCHEVENT : 'pitchEvent'
+    PITCHEVENT : 'pitchEvent',
+    MISC_EVENT : 'miscellaneous'
 }
 Object.freeze(MidiInstrumentationEvents);
 const CHORDS = {

@@ -67,24 +67,12 @@
       <button onclick="document.getElementById('welcomeMessage').style.display='none'; document.getElementById('thanksAndLinksScreen').style.display='inline';">Show Thanks and Additional Links</button>
     </footer>
   </div>
-  <script>
-    function showTheoryModal() {
-      console.log('hi');  
-      var theoryModal = document.getElementById('theoryModal');
-      theoryModal.innerHTML = 'Hello World';
-        if (typeof theoryModal.showModal === "function") {
-          theoryModal.showModal();
-        } else {
-            alert("The <dialog> API is not supported by this browser");
-        }
-    }
-  </script>
   <dialog id="gameSetupDialog">
     <form id="gameSetupForm" name="gameSetupForm" method="dialog" class="form-table-alignment">
       <menu>
         <button id="confirmBtn" value="default">Confirm</button>
         <button id="enableLiveAudioBtn" name="enableLiveAudioBtn" onclick="enablePitchDetect()">Enable live audio input</button>
-        <button id="showTheoryModalBtn" onclick="showTheoryModal()">Theory</button>
+        <button id="showTheoryModalBtn" onclick="(new SessionCache()).set(MidiInstrumentationEvents.MISC_EVENT, 'showTheoryModalBtnClick')">Theory</button>
         <button onclick="location.reload();">Welcome Screen</button>
       </menu>
       <div class="form-input-row">

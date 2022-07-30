@@ -142,6 +142,19 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["changeToHighestKeyAfterLowestPlayed"].disabled = isTwoPlayerMode;
     gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
+
+document.addEventListener(MidiInstrumentationEvents.MISC_EVENT, function handleMiscEvents(event) {
+    if(event.value == 'showTheoryModalBtnClick') {
+        showTheoryModal();
+    }
+  }
+);
+
+function showTheoryModal() {
+    var theoryModal = document.getElementById('theoryModal');
+    theoryModal.innerHTML = 'Hello World again';
+    showModal(theoryModal);
+}
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   CANVAS SETTINGS                                  //
 ////////////////////////////////////////////////////////////////////////////////////////
