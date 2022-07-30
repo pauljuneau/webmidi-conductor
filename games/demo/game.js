@@ -142,14 +142,6 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["changeToHighestKeyAfterLowestPlayed"].disabled = isTwoPlayerMode;
     gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
-
-var theoryModal = document.getElementById('theoryModal');
-function showTheoryModal() {
-    theoryModal.innerHTML = 'Hello World';
-    showModal(theoryModal);
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   CANVAS SETTINGS                                  //
 ////////////////////////////////////////////////////////////////////////////////////////
