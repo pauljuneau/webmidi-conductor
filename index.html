@@ -72,6 +72,7 @@
       <menu>
         <button id="confirmBtn" value="default">Confirm</button>
         <button id="enableLiveAudioBtn" name="enableLiveAudioBtn" onclick="enablePitchDetect()">Enable live audio input</button>
+        <button id="showTheoryModal" onclick="showTheoryModal()">Theory</button>
         <button onclick="location.reload();">Welcome Screen</button>
       </menu>
       <div class="form-input-row">
@@ -186,6 +187,7 @@
       </div>
     </form>
   </dialog>
+  <dialog id="theoryModal"></dialog>
   <script>
     var gamePaused = true;
   </script>

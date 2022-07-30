@@ -42,6 +42,14 @@ function resize() {
 
 window.addEventListener('resize', resize, false);
 
+function showModal(dialog) {
+    if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+    } else {
+        alert("The <dialog> API is not supported by this browser");
+    }
+}
+
 var gameSetupDialog = document.getElementById('gameSetupDialog');
 var gameSetupPreferences = {
     musicPerformanceInfoRendered : true,
@@ -83,11 +91,7 @@ function showGameSetupModal() {
     gameSetupForm["lowestNotes"].value = gameSetupPreferences.lowestMidiNumber;
     gameSetupForm["highestNotes"].value = gameSetupPreferences.highestMidiNumber;
     gameSetupForm["ballCollisionEffect"].value = gameSetupPreferences.ballCollisionEffect;
-    if (typeof gameSetupDialog.showModal === "function") {
-        gameSetupDialog.showModal();
-    } else {
-        alert("The <dialog> API is not supported by this browser");
-    }
+    showModal(gameSetupDialog);
     return;
 }
 
@@ -138,6 +142,13 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["changeToHighestKeyAfterLowestPlayed"].disabled = isTwoPlayerMode;
     gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
+
+var theoryModal = document.getElementById('theoryModal');
+function showTheoryModal() {
+    theoryModal.innerHTML = 'Hello World';
+    showModal(theoryModal);
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   CANVAS SETTINGS                                  //
