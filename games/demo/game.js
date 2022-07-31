@@ -152,6 +152,23 @@ document.addEventListener(MidiInstrumentationEvents.MISC_EVENT, function handleM
 
 function showTheoryModal() {
     var theoryModal = document.getElementById('theoryModal');
+
+    var scaleStepSequenceTable = document.getElementById('scaleStepSequenceTable');
+    scaleStepSequenceTable.innerHTML = '';
+    var scaleSequenceTr = document.createElement("tr");
+    var scaleSequenceTd = document.createElement("td");
+    var scaleSequenceTdC1 = document.createTextNode(gameSetupPreferences.scaleType);
+    scaleSequenceTd.appendChild(scaleSequenceTdC1);
+    scaleSequenceTr.appendChild(scaleSequenceTd);
+    var scaleSequenceTd2 = document.createElement("td");
+    var scaleSequenceTdC2 = document.createTextNode(scaleToHalfStepAlgorithm.get(gameSetupPreferences.scaleType));
+    scaleSequenceTd2.appendChild(scaleSequenceTdC2);
+    scaleSequenceTr.appendChild(scaleSequenceTd2)
+    scaleStepSequenceTable.append(scaleSequenceTr);
+
+    //TODO Fill in chords step combinations table
+
+    //TODO Fill in chord progressions table 
     showModal(theoryModal);
 }
 ////////////////////////////////////////////////////////////////////////////////////////

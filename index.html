@@ -72,6 +72,7 @@
       <menu>
         <button id="confirmBtn" value="default">Confirm</button>
         <button id="enableLiveAudioBtn" name="enableLiveAudioBtn" onclick="enablePitchDetect()">Enable live audio input</button>
+        <!--Need to dispatch event because showTheoryModal function in game.js has not yet been interpreted by the browser-->
         <button id="showTheoryModalBtn" onclick="(new SessionCache()).set(MidiInstrumentationEvents.MISC_EVENT, 'showTheoryModalBtnClick')">Theory</button>
         <button onclick="location.reload();">Welcome Screen</button>
       </menu>
@@ -188,7 +189,20 @@
     </form>
   </dialog>
   <dialog id="theoryModal">
-    <button id="closeTheoryModal" onclick="document.getElementById('theoryModal').close()">close</button>
+    <button id="closeTheoryModalBtn" onclick="document.getElementById('theoryModal').close()">close</button>
+    <br>
+    <br>
+    <table id="scaleStepSequenceTable">
+      Scale Sequence
+    </table>
+    <br>
+    <table id="chordsStepCombinationsTable">
+      Chord Step Combinations
+    </table>
+    <br>
+    <table id="chordProgressionTable">
+      Chord Progressions
+    </table>
   </dialog>
   <script>
     var gamePaused = true;
