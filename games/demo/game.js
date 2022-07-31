@@ -167,6 +167,20 @@ function showTheoryModal() {
     scaleStepSequenceTable.append(scaleSequenceTr);
 
     //TODO Fill in chords step combinations table
+    var chordsStepCombinationsTable = document.getElementById('chordsStepCombinationsTable');
+    chordsStepCombinationsTable.innerHTML = '';
+    for(const [key, value] of stepCombinationByChordName) {
+        var chordStepCombinationTr = document.createElement("tr");
+        var chordStepCombinationTd = document.createElement("td");
+        var chordStepCombinationTdC1 = document.createTextNode(key);
+        chordStepCombinationTd.appendChild(chordStepCombinationTdC1);
+        chordStepCombinationTr.appendChild(chordStepCombinationTd);
+        var chordStepCombinationTd2 = document.createElement("td");
+        var chordStepCombinationTdC2 = document.createTextNode(value);
+        chordStepCombinationTd2.appendChild(chordStepCombinationTdC2);
+        chordStepCombinationTr.appendChild(chordStepCombinationTd2);
+        chordsStepCombinationsTable.append(chordStepCombinationTr);
+    }
 
     //TODO Fill in chord progressions table 
     showModal(theoryModal);
