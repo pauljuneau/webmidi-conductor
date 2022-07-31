@@ -157,7 +157,6 @@ function showTheoryModal() {
     scaleStepSequenceTable.innerHTML = '';
     scaleStepSequenceTable.append(generateTableRow(gameSetupPreferences.scaleType,scaleToHalfStepAlgorithm.get(gameSetupPreferences.scaleType)));
 
-    //TODO Fill in chords step combinations table
     var chordsStepCombinationsTable = document.getElementById('chordsStepCombinationsTable');
     chordsStepCombinationsTable.innerHTML = '';
     for(const [chordName, stepCombination] of stepCombinationByChordName) {
