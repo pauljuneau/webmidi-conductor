@@ -155,35 +155,28 @@ function showTheoryModal() {
 
     var scaleStepSequenceTable = document.getElementById('scaleStepSequenceTable');
     scaleStepSequenceTable.innerHTML = '';
-    var scaleSequenceTr = document.createElement("tr");
-    var scaleSequenceTd = document.createElement("td");
-    var scaleSequenceTdC1 = document.createTextNode(gameSetupPreferences.scaleType);
-    scaleSequenceTd.appendChild(scaleSequenceTdC1);
-    scaleSequenceTr.appendChild(scaleSequenceTd);
-    var scaleSequenceTd2 = document.createElement("td");
-    var scaleSequenceTdC2 = document.createTextNode(scaleToHalfStepAlgorithm.get(gameSetupPreferences.scaleType));
-    scaleSequenceTd2.appendChild(scaleSequenceTdC2);
-    scaleSequenceTr.appendChild(scaleSequenceTd2)
-    scaleStepSequenceTable.append(scaleSequenceTr);
+    scaleStepSequenceTable.append(generateTableRow(gameSetupPreferences.scaleType,scaleToHalfStepAlgorithm.get(gameSetupPreferences.scaleType)));
 
     //TODO Fill in chords step combinations table
     var chordsStepCombinationsTable = document.getElementById('chordsStepCombinationsTable');
     chordsStepCombinationsTable.innerHTML = '';
-    for(const [key, value] of stepCombinationByChordName) {
-        var chordStepCombinationTr = document.createElement("tr");
-        var chordStepCombinationTd = document.createElement("td");
-        var chordStepCombinationTdC1 = document.createTextNode(key);
-        chordStepCombinationTd.appendChild(chordStepCombinationTdC1);
-        chordStepCombinationTr.appendChild(chordStepCombinationTd);
-        var chordStepCombinationTd2 = document.createElement("td");
-        var chordStepCombinationTdC2 = document.createTextNode(value);
-        chordStepCombinationTd2.appendChild(chordStepCombinationTdC2);
-        chordStepCombinationTr.appendChild(chordStepCombinationTd2);
-        chordsStepCombinationsTable.append(chordStepCombinationTr);
+    for(const [chordName, stepCombination] of stepCombinationByChordName) {
+        chordsStepCombinationsTable.append(generateTableRow(chordName,stepCombination));
     }
 
     //TODO Fill in chord progressions table 
     showModal(theoryModal);
+}
+
+function generateTableRow(...elements) {
+    var tr = document.createElement("tr");
+    for(const element of elements) {
+        var td = document.createElement("td");
+        var tdContent = document.createTextNode(element);
+        td.appendChild(tdContent);
+        tr.appendChild(td);
+    }
+    return tr;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   CANVAS SETTINGS                                  //
