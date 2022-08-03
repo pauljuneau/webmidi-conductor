@@ -42,6 +42,14 @@ function resize() {
 
 window.addEventListener('resize', resize, false);
 
+function showModal(dialog) {
+    if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+    } else {
+        alert("The <dialog> API is not supported by this browser");
+    }
+}
+
 var gameSetupDialog = document.getElementById('gameSetupDialog');
 var gameSetupPreferences = {
     musicPerformanceInfoRendered : true,
@@ -83,11 +91,7 @@ function showGameSetupModal() {
     gameSetupForm["lowestNotes"].value = gameSetupPreferences.lowestMidiNumber;
     gameSetupForm["highestNotes"].value = gameSetupPreferences.highestMidiNumber;
     gameSetupForm["ballCollisionEffect"].value = gameSetupPreferences.ballCollisionEffect;
-    if (typeof gameSetupDialog.showModal === "function") {
-        gameSetupDialog.showModal();
-    } else {
-        alert("The <dialog> API is not supported by this browser");
-    }
+    showModal(gameSetupDialog);
     return;
 }
 
@@ -139,6 +143,45 @@ twoPlayerModeCheckbox.addEventListener('change', function onChange() {
     gameSetupForm["shrinkPaddleWhenOutOfScale"].disabled = isTwoPlayerMode;
 });
 
+document.addEventListener(MidiInstrumentationEvents.MISC_EVENT, function handleMiscEvents(event) {
+    if(event.value == 'showTheoryModalBtnClick') {
+        showTheoryModal();
+    }
+  }
+);
+
+function showTheoryModal() {
+    var theoryModal = document.getElementById('theoryModal');
+
+    var scaleStepSequenceTable = document.getElementById('scaleStepSequenceTable');
+    scaleStepSequenceTable.innerHTML = '';
+    scaleStepSequenceTable.append(generateTableRow(gameSetupPreferences.scaleType,scaleToHalfStepAlgorithm.get(gameSetupPreferences.scaleType)));
+
+    var chordsStepCombinationsTable = document.getElementById('chordsStepCombinationsTable');
+    chordsStepCombinationsTable.innerHTML = '';
+    for(const [chordName, stepCombination] of stepCombinationByChordName) {
+        chordsStepCombinationsTable.append(generateTableRow(chordName,stepCombination));
+    }
+
+    var chordProgressionTable = document.getElementById('chordProgressionTable');
+    chordProgressionTable.innerHTML = '';
+    var chordProgressionMap = chordProgressionMapByType.get(musicConductor.chordProgressionType) ?? new Map();
+    for(const scaleDegreeChord of chordProgressionMap.keys() ) {
+        chordProgressionTable.append(generateTableRow(scaleDegreeChord, Array.from(chordProgressionMap.get(scaleDegreeChord)).join(', ')));
+    }
+    showModal(theoryModal);
+}
+
+function generateTableRow(...elements) {
+    var tr = document.createElement("tr");
+    for(const element of elements) {
+        var td = document.createElement("td");
+        var tdContent = document.createTextNode(element);
+        td.appendChild(tdContent);
+        tr.appendChild(td);
+    }
+    return tr;
+}
 ////////////////////////////////////////////////////////////////////////////////////////
 //                                   CANVAS SETTINGS                                  //
 ////////////////////////////////////////////////////////////////////////////////////////

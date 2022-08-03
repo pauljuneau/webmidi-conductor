@@ -30,6 +30,10 @@ label {
     padding-right: 10px;
 }
 
+table, th, td {
+  border: 1px solid black;
+}
+
 #welcomeScreen {
   background-color: lightblue; 
   width:100%;
