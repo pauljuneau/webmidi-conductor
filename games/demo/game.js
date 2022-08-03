@@ -169,8 +169,6 @@ function showTheoryModal() {
     for(const scaleDegreeChord of chordProgressionMap.keys() ) {
         chordProgressionTable.append(generateTableRow(scaleDegreeChord, Array.from(chordProgressionMap.get(scaleDegreeChord)).join(', ')));
     }
-
-    //TODO Fill in chord progressions table 
     showModal(theoryModal);
 }
 
