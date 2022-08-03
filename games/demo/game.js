@@ -163,6 +163,13 @@ function showTheoryModal() {
         chordsStepCombinationsTable.append(generateTableRow(chordName,stepCombination));
     }
 
+    var chordProgressionTable = document.getElementById('chordProgressionTable');
+    chordProgressionTable.innerHTML = '';
+    var chordProgressionMap = chordProgressionMapByType.get(musicConductor.chordProgressionType) ?? new Map();
+    for(const scaleDegreeChord of chordProgressionMap.keys() ) {
+        chordProgressionTable.append(generateTableRow(scaleDegreeChord, Array.from(chordProgressionMap.get(scaleDegreeChord)).join(', ')));
+    }
+
     //TODO Fill in chord progressions table 
     showModal(theoryModal);
 }

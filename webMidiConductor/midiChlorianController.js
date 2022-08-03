@@ -29,6 +29,12 @@ const CHORDS = {
     MINOR_MAJOR_7TH: 'Minor-major 7th'
 }
 Object.freeze(CHORDS);
+const CHORD_PROGRESSION_TYPES = {
+    MAJOR : 'Major',
+    MINOR : 'Minor',
+    CUSTOM: 'Custom'
+}
+Object.freeze(CHORD_PROGRESSION_TYPES);
 ////////////////////////////////////////////////////////////////////////////////////////
 //                           MIDI MESSAGE DATA DICTIONARIES                           //
 ////////////////////////////////////////////////////////////////////////////////////////
