@@ -1,5 +1,5 @@
 # ![wmc-logo](webMidiConductor/favicon.ico) webmidi-conductor
-JavaScript library for interpreting midi messages and audits live performance. Determines if notes being played are in the desired scale along with indicating each note's scale degree. It also indicates what chords are being played.
+JavaScript library for interpreting midi messages and audits live performance. Determines if notes being played are in the desired scale along with indicating each note's scale degree. It also indicates what chords are being played and if the a good chord progression has occurred. 
 
 It comes with a free demo wallball pong-esque game. [Click Here to Play!](https://www.pauljuneauengineer.com/webmidi-conductor/)
 
@@ -20,10 +20,11 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
 * Real-time scale detection based on desired scale.
    * Prints note name played, scale degree ascending/descending, and chord being played (chord detection not enabled for live audio).
    * Compatible Scales:
-      *  major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, dorian
+      *  major, natural minor, melodic minor, harmonic minor, minor pentatonic, major pentatonic, major blues, minor blues, major bepop, minor bepop, dorian mode, phrygian mode, lydian mode, mixolydian mode, aeolian mode, and locrian mode.
    * Compatible Chords:
       * Triads: Major, Minor, Augmented, Diminished
       * 7ths: Major, Minor, Dominant, Minor 7th flat 5, Diminished, Minor-major 
+* Real-time chord progression detection based on common Major or Minor progressions. Custom progressions can be introduced programatically. 
 * Can use computer keyboard as simple piano:
    
    Computer Keyboard Key | Note Name | Midi Number
