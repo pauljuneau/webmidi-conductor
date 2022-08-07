@@ -293,6 +293,8 @@ function changeKeyAndScale(key, scale) {
  * @returns true or false
  */
 function isChordProgression() {
+    
+    
     if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
         var chordProgressionMap = new Map();
         var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
@@ -313,7 +315,9 @@ var musicConductor = {
     lastTimeWhenNoteInScalePlayedInMillis : 0,
     chordsPlaying : [],
     lastChordPlayed : undefined,
+    lastChordsPlayed : new Set(),
     currentChordPlaying : undefined,
+    currentChordsPlaying : new Set(),
     chordProgressionType : 'Major',
     chordProgressionsPlayedCount : 0,
     maxMillisNoChordProgCountReset : 5000,
@@ -325,7 +329,11 @@ var musicConductor = {
  */
 function setMusicalPerformanceString() {
     if(musicConductor.chordsPlaying.length > 0) {
-        musicConductor.lastChordPlayed = new ChordInstance(musicConductor.chordsPlaying[musicConductor.chordsPlaying.length - 1]);
+        //musicConductor.lastChordPlayed = new ChordInstance(musicConductor.chordsPlaying[musicConductor.chordsPlaying.length - 1]);
+        musicConductor.lastChordsPlayed.clear();
+        musicConductor.chordsPlaying.forEach(chordName => musicConductor.lastChordsPlayed.add(new ChordInstance(chordName)));
+        // console.log('lastChordsPlayed: ');
+        // musicConductor.lastChordsPlayed.forEach(chordName => console.log(chordName));
     }
     musicConductor.chordsPlaying = [];
     //lazy load scale degree letters ascending and descending
@@ -357,6 +365,7 @@ function setMusicalPerformanceString() {
     var liveAudioInputEnabled = liveAudioInputEnabled || false;
     if(!liveAudioInputEnabled) {
         var chordsPlaying = [];
+        musicConductor.currentChordsPlaying.clear();
         for(chordName of chordLetterSetByChordName.keys()) {
             var oneChordLetterSet = chordLetterSetByChordName.get(chordName);
             if(oneChordLetterSet.size <= lettersPlaying.size) {
@@ -368,7 +377,8 @@ function setMusicalPerformanceString() {
                 }
                 if(isMatch) {
                     chordsPlaying.push(chordName);
-                    musicConductor.currentChordPlaying = new ChordInstance(chordName);
+                    //musicConductor.currentChordPlaying = new ChordInstance(chordName);
+                    musicConductor.currentChordsPlaying.add(new ChordInstance(chordName));
                 }
             }
         }
@@ -389,6 +399,7 @@ function setMusicalPerformanceString() {
     }
 }
 
+//Ideally set the delay to 100 ms to ensure precision, but leaving delay up to callter
 var musicPerformanceTimerVar;
 function switchOnOffMusicalPerformance(delay) {
     if(!musicPerformanceTimerVar) {
