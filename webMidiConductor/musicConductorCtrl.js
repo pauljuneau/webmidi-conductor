@@ -306,7 +306,6 @@ function isChordProgression() {
             var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(chord.letter) + ' ' + chord.type;
             var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
             if(chordProgressionMap.has(lastScaleDegreeChordPlayedASC) || chordProgressionMap.has(lastScaleDegreeChordPlayedDESC)) {
-                // lastChordPlayed = chord;
                 lastChordsPlayed.add(chord);
             }
         }
@@ -318,7 +317,6 @@ function isChordProgression() {
             var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(chord.letter) + ' ' + chord.type;
             var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
             if(chordProgressionMap.has(currentScaleDegreeChordPlayedASC) || chordProgressionMap.has(currentScaleDegreeChordPlayedDESC)) {
-                // currentChordPlaying = chord;
                 currentChordsPlaying.add(chord);
             }
         }
@@ -351,7 +349,6 @@ var musicConductor = {
     lastTimeWhenNoteInScalePlayedInMillis : 0,
     chordsPlaying : [],
     lastChordsPlayed : new Set(),
-    currentChordPlaying : undefined,
     currentChordsPlaying : new Set(),
     chordProgressionType : 'Major',
     chordProgressionsPlayedCount : 0,
