@@ -299,38 +299,48 @@ function isChordProgression() {
     if(chordProgressionMap == undefined || chordProgressionMap.size <= 0) {
         return false;
     }
-    var lastChordPlayed;
+
+    var lastChordsPlayed = new Set();
     for (const chord of musicConductor.lastChordsPlayed) {
         if(musicConductor.scaleRule.isInScaleAscOrDesc(chord.letter)) {
             var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(chord.letter) + ' ' + chord.type;
             var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
             if(chordProgressionMap.has(lastScaleDegreeChordPlayedASC) || chordProgressionMap.has(lastScaleDegreeChordPlayedDESC)) {
-                lastChordPlayed = chord;
+                // lastChordPlayed = chord;
+                lastChordsPlayed.add(chord);
             }
         }
     }
-    var currentChordPlaying;
+    
+    var currentChordsPlaying = new Set();
     for (const chord of musicConductor.currentChordsPlaying) {
         if(musicConductor.scaleRule.isInScaleAscOrDesc(chord.letter)) {
             var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(chord.letter) + ' ' + chord.type;
             var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
             if(chordProgressionMap.has(currentScaleDegreeChordPlayedASC) || chordProgressionMap.has(currentScaleDegreeChordPlayedDESC)) {
-                currentChordPlaying = chord;
+                // currentChordPlaying = chord;
+                currentChordsPlaying.add(chord);
             }
         }
     }
-
-    //TODO handle situation when there are multiple chords inversionally related that are qualify as a potential chord progression... try all permutations and return on first success.
-    
-    if(lastChordPlayed != undefined && currentChordPlaying != undefined && lastChordPlayed.name != currentChordPlaying.name) {
-        // var chordProgressionMap = new Map();
-        var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
-        var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
-        var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
-        var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
-        return (chordProgressionMap != undefined && chordProgressionMap.size > 0 && ((chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC))));
+    //handle situation when there are multiple chords inversionally related that have a scale degree chord type in the chord progression map... try all permutations and break out of loops on first success.
+    var isChordProgression = false;
+    if(lastChordsPlayed.size > 0 && currentChordsPlaying.size > 0) {
+        for(const lastChordPlayed of lastChordsPlayed) {
+            for(const currentChordPlaying of currentChordsPlaying) {
+                if(lastChordPlayed != undefined && currentChordPlaying != undefined && lastChordPlayed.name != currentChordPlaying.name) {
+                    var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
+                    var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
+                    var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
+                    var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
+                    isChordProgression = (chordProgressionMap != undefined && chordProgressionMap.size > 0 && ((chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC))));
+                }
+                if(isChordProgression) break;
+            }
+            if(isChordProgression) break;
+        }
     }
-    return false;
+    return isChordProgression;
 }
 
 var musicConductor = {
