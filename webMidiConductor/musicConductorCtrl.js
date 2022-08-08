@@ -293,16 +293,52 @@ function changeKeyAndScale(key, scale) {
  * @returns true or false
  */
 function isChordProgression() {
-    if(musicConductor.lastChordPlayed != undefined && musicConductor.currentChordPlaying != undefined && musicConductor.lastChordPlayed.name != musicConductor.currentChordPlaying.name && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.currentChordPlaying.letter) && musicConductor.scaleRule.isInScaleAscOrDesc(musicConductor.lastChordPlayed.letter)) {
-        var chordProgressionMap = new Map();
-        var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
-        var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
-        var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.lastChordPlayed.letter) + ' ' + musicConductor.lastChordPlayed.type;
-        var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(musicConductor.currentChordPlaying.letter) + ' ' + musicConductor.currentChordPlaying.type;
-        chordProgressionMap = chordProgressionMapByType.get(musicConductor.chordProgressionType);
-        return (chordProgressionMap != undefined && chordProgressionMap.size > 0 && ((chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC))));
+    //Assuming setMusicalPerformanceString is running every 100ms, so chords in lastChordsPlayed and currentchordsPlaying are almost guaranteed to be inversionally equivalent with the same chord types. Such as when an inverted variation of one chord can be equivalent to the root variation of another chord (C Aug Triad notes = G# Aug notes = E Aug Triad notes).
+    //Therefor we only want to evaluate the chord with a root note that is the context scale and also has the appropriate chord type associated with its related scale degree.
+    var chordProgressionMap = chordProgressionMapByType.get(musicConductor.chordProgressionType);
+    if(chordProgressionMap == undefined || chordProgressionMap.size <= 0) {
+        return false;
     }
-    return false;
+
+    var lastChordsPlayed = new Set();
+    for (const chord of musicConductor.lastChordsPlayed) {
+        if(musicConductor.scaleRule.isInScaleAscOrDesc(chord.letter)) {
+            var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(chord.letter) + ' ' + chord.type;
+            var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
+            if(chordProgressionMap.has(lastScaleDegreeChordPlayedASC) || chordProgressionMap.has(lastScaleDegreeChordPlayedDESC)) {
+                lastChordsPlayed.add(chord);
+            }
+        }
+    }
+    
+    var currentChordsPlaying = new Set();
+    for (const chord of musicConductor.currentChordsPlaying) {
+        if(musicConductor.scaleRule.isInScaleAscOrDesc(chord.letter)) {
+            var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(chord.letter) + ' ' + chord.type;
+            var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
+            if(chordProgressionMap.has(currentScaleDegreeChordPlayedASC) || chordProgressionMap.has(currentScaleDegreeChordPlayedDESC)) {
+                currentChordsPlaying.add(chord);
+            }
+        }
+    }
+    //handle situation when there are multiple chords inversionally related that have a scale degree chord type in the chord progression map... try all permutations and break out of loops on first success.
+    var isChordProgression = false;
+    if(lastChordsPlayed.size > 0 && currentChordsPlaying.size > 0) {
+        for(const lastChordPlayed of lastChordsPlayed) {
+            for(const currentChordPlaying of currentChordsPlaying) {
+                if(lastChordPlayed != undefined && currentChordPlaying != undefined && lastChordPlayed.name != currentChordPlaying.name) {
+                    var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
+                    var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
+                    var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
+                    var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
+                    isChordProgression = (chordProgressionMap != undefined && chordProgressionMap.size > 0 && ((chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC))));
+                }
+                if(isChordProgression) break;
+            }
+            if(isChordProgression) break;
+        }
+    }
+    return isChordProgression;
 }
 
 var musicConductor = {
@@ -312,8 +348,8 @@ var musicConductor = {
     maxMillisWithoutNoteInScale : 5000,
     lastTimeWhenNoteInScalePlayedInMillis : 0,
     chordsPlaying : [],
-    lastChordPlayed : undefined,
-    currentChordPlaying : undefined,
+    lastChordsPlayed : new Set(),
+    currentChordsPlaying : new Set(),
     chordProgressionType : 'Major',
     chordProgressionsPlayedCount : 0,
     maxMillisNoChordProgCountReset : 5000,
@@ -325,7 +361,8 @@ var musicConductor = {
  */
 function setMusicalPerformanceString() {
     if(musicConductor.chordsPlaying.length > 0) {
-        musicConductor.lastChordPlayed = new ChordInstance(musicConductor.chordsPlaying[musicConductor.chordsPlaying.length - 1]);
+        musicConductor.lastChordsPlayed.clear();
+        musicConductor.chordsPlaying.forEach(chordName => musicConductor.lastChordsPlayed.add(new ChordInstance(chordName)));
     }
     musicConductor.chordsPlaying = [];
     //lazy load scale degree letters ascending and descending
@@ -357,8 +394,10 @@ function setMusicalPerformanceString() {
     var liveAudioInputEnabled = liveAudioInputEnabled || false;
     if(!liveAudioInputEnabled) {
         var chordsPlaying = [];
+        musicConductor.currentChordsPlaying.clear();
         for(chordName of chordLetterSetByChordName.keys()) {
             var oneChordLetterSet = chordLetterSetByChordName.get(chordName);
+            //letters playing.size can be greater than oneChordLetterSet.size to allow for chord doubling, i.e. multiples of the same note.
             if(oneChordLetterSet.size <= lettersPlaying.size) {
                 var isMatch = true;
                 for (letter of lettersPlaying) {
@@ -368,7 +407,7 @@ function setMusicalPerformanceString() {
                 }
                 if(isMatch) {
                     chordsPlaying.push(chordName);
-                    musicConductor.currentChordPlaying = new ChordInstance(chordName);
+                    musicConductor.currentChordsPlaying.add(new ChordInstance(chordName));
                 }
             }
         }
@@ -389,6 +428,7 @@ function setMusicalPerformanceString() {
     }
 }
 
+//Ideally set the delay to 100 ms to ensure precision, but leaving delay up to caller.
 var musicPerformanceTimerVar;
 function switchOnOffMusicalPerformance(delay) {
     if(!musicPerformanceTimerVar) {
