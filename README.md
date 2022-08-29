@@ -52,7 +52,7 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
    ] | F#/Gb | 78  
    Spacebar | Sustain Pedal | N/A 
 
-   * In the game demo, piano sounds are emulated from the keyboard input via games/demo/sounds and played by initiating the `play()` function on the hidden html `audio` tags. See [this code example](#listening-for-midi-instrumentation-events) on how to play piano sounds when playing on the computer keyboard.
+   * In the game demo, piano sounds are emulated from the keyboard input via games/demo/sounds and played by initiating the `play()` function on the hidden html `audio` tags. See [this code example](#listening-for-midiinstrumentationevents) on how to play piano sounds when playing on the computer keyboard.
 
 ## GitHub jsDelivr CDN
 webmidi-conductor, WMC, is available via jsDeliv GitHub. To get WMC at a specific release then these 2 tags can be added in the following order. See https://www.jsdelivr.com/?docs=gh for more ways to attain javascript code from github.
