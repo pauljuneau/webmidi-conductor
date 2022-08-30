@@ -67,6 +67,69 @@ The webmidi music conductor can continously run in the background to identify no
 switchOnOffMusicalPerformance(100);
 ```
 
+
+## Important global objects
+MidiInstrumentationEvents: events that can be dispatched by webmidi-conductor
+* NOTEBEINGPLAYED
+* NOTELASTPLAYED 
+* MIDICHLORIANCTRLEVENT - critical event that wraps the standard web midi object into an instance of a midiChlorianCtrlr
+* PITCHEVENT - dispatched when pitch detect is enabled after properly integrating with the [PitchDetectMirror](https://github.com/pauljuneau/PitchDetectMirror).
+* MISC_EVENT : 'miscellaneous'
+
+
+MidiMessageWrapper: There are multiple midi message classes that either mock or wrap midi message input such as **OnMidiMessageWrapper**, **OnKeyEventMidiMessageMock**, **OnPitchEventMidiMessageDTO**.
+* NOTE the OnPitchEventMidiMessageDTO will only get instantiated if the pitchDetect related repo has been properly integrated with. 
+
+
+midiChlorianCtrlr: template object for MIDICHLORIANCTRLEVENT which can indicate if the player went up or down the register, if the damper pedal is on, and what was the current or last midi input. Below is a summary of the object. It is not exhaustive and has documentation for the critical attributes.
+```
+midiChlorianCtrlr : {
+   countIncreased : Boolean, //player went up in the register
+   countDecreased : Boolean, //player went down in the register,
+   midiInputPlayedLast : <MidiMessageWrapper>,
+   midiInputPlaying : <MidiMessageWrapper>,
+   isDamperOn : Boolean //indicates if the damper pedal is on
+}
+```
+
+
+musicConductor: Below is a summary of the music conductor. It is not exhaustive and has documentation for the critical attributes. 
+```
+musicConductor : {
+   performanceString : String, //multi-line string containing note name, scale degree, chords playing, if note in scale was recently played, or if chord progressions were recently played
+   scaleRule: <RestrictToScaleRule>, //instance of RestrictToScaleRule that can evaluate if the current notes played are in the context scale
+   noteRecentlyPlayedInScale: Boolean, //true or false if a note was recently played in the context scale
+   maxMillisWithoutNoteInScale: Integer, //max time that can pass before noteRecentlyPlayedInScale resets to false if no note was played during that time.
+   chordsPlaying : [String], //array of chords currently playing
+   lastChordsPlayed: Set<ChordInstance>, //captures last chords played
+   currentChordsPlaying: Set<ChordInstance>, //captures current chords playing
+   chordProgressionType: String, //Recognizes the following values: Major, Minor, Custom as defined in CHORD_PROGRESSION_TYPES constants
+   chordProgressionsPlayedCount: Integer, //count of how many chord progressions have been played consecutively
+   maxMillisNoChordProgCountReset: Integer // max time that can pass before chordProgressionsPlayedCount resets to zero if no chord progressions were played during that time.
+}
+```
+
+
+## Important global functions available
+Change to the desired key and scale using the following function. For example, 'C','major'
+```
+changeKeyAndScale(key, scale)
+```
+
+Create a session cach instance that can store, retrieve, and publish events based on updates to the local session storage.
+```
+let tempCache = new SessionCache();
+``` 
+Update the cache with an item. Events will be dispatched if the key is one of the following MidiInstrumentationEvents 
+```
+tempCache.set(MidiInstrumentationEvents.MISC_EVENT, 'this is a miscellaneous event');
+```
+Retrieve an item from the cache.
+```
+let noteLastPlayed = tempCache.get(MidiInstrumentationEvents.NOTELASTPLAYED);
+```
+
+
 ## Listening for MidiInstrumentationEvents
 MidiInstrumentationEvents are dispatched which can be listened for and subsequently actioned upon such as playing piano sounds when playing on your computer keyboard or moving your character in a game.
 
@@ -91,6 +154,12 @@ document.addEventListener(MidiInstrumentationEvents.MIDICHLORIANCTRLEVENT, funct
     } else {
       //do something when the player did not go up or down in the register
     }
+
+   //See if note played related to event is in the context scale:
+   var isNoteInScale = musicConductor.scaleRule.evaluateRule(oneMidiChlorianCtrlrEvent);
+   if(isNoteInScale == false) {
+      //give feedback to player
+   }
 }
 
 ```
