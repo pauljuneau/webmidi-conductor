@@ -323,15 +323,19 @@ function isChordProgression() {
     }
     //handle situation when there are multiple chords inversionally related that have a scale degree chord type in the chord progression map... try all permutations and break out of loops on first success.
     var isChordProgression = false;
+    musicConductor.replayedSameChordInProgressionMap = false;
     if(lastChordsPlayed.size > 0 && currentChordsPlaying.size > 0) {
         for(const lastChordPlayed of lastChordsPlayed) {
             for(const currentChordPlaying of currentChordsPlaying) {
-                if(lastChordPlayed != undefined && currentChordPlaying != undefined && lastChordPlayed.name != currentChordPlaying.name) {
-                    var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
-                    var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
-                    var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
-                    var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
-                    isChordProgression = (chordProgressionMap != undefined && chordProgressionMap.size > 0 && ((chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC))));
+                if(lastChordPlayed != undefined && currentChordPlaying != undefined) {
+                    musicConductor.replayedSameChordInProgressionMap = (lastChordPlayed.name == currentChordPlaying.name); 
+                    if(musicConductor.replayedSameChordInProgressionMap == false) {
+                        var lastScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
+                        var currentScaleDegreeChordPlayedASC = musicConductor.scaleRule.scaleDegreeByLetterASC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
+                        var lastScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(lastChordPlayed.letter) + ' ' + lastChordPlayed.type;
+                        var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(currentChordPlaying.letter) + ' ' + currentChordPlaying.type;
+                        isChordProgression = (chordProgressionMap != undefined && chordProgressionMap.size > 0 && ((chordProgressionMap.has(lastScaleDegreeChordPlayedASC) && chordProgressionMap.get(lastScaleDegreeChordPlayedASC).has(currentScaleDegreeChordPlayedASC)) || (chordProgressionMap.has(lastScaleDegreeChordPlayedDESC) && chordProgressionMap.get(lastScaleDegreeChordPlayedDESC).has(currentScaleDegreeChordPlayedDESC))));
+                    }
                 }
                 if(isChordProgression) break;
             }
@@ -353,7 +357,9 @@ var musicConductor = {
     chordProgressionType : 'Major',
     chordProgressionsPlayedCount : 0,
     maxMillisNoChordProgCountReset : 5000,
-    lastTimeWhenChordProgPlayedInMillis : 0
+    lastTimeWhenChordProgPlayedInMillis : 0,
+    replayedSameChordInProgressionMap : false,
+    repeatChordsDontImpactProgressionsPlayedCount : true
 };
 /**
  * @returns string of musical performance: 
@@ -417,6 +423,9 @@ function setMusicalPerformanceString() {
             if(musicConductor.chordsPlaying.length > 0) {
                 if(isChordProgression()) {
                     ++musicConductor.chordProgressionsPlayedCount;
+                    musicConductor.lastTimeWhenChordProgPlayedInMillis = Date.now();
+                }
+                if(musicConductor.replayedSameChordInProgressionMap && musicConductor.repeatChordsDontImpactProgressionsPlayedCount) {
                     musicConductor.lastTimeWhenChordProgPlayedInMillis = Date.now();
                 }
             }

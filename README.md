@@ -105,7 +105,8 @@ musicConductor : {
    currentChordsPlaying: Set<ChordInstance>, //captures current chords playing
    chordProgressionType: String, //Recognizes the following values: Major, Minor, Custom as defined in CHORD_PROGRESSION_TYPES constants
    chordProgressionsPlayedCount: Integer, //count of how many chord progressions have been played consecutively
-   maxMillisNoChordProgCountReset: Integer // max time that can pass before chordProgressionsPlayedCount resets to zero if no chord progressions were played during that time.
+   maxMillisNoChordProgCountReset: Integer, // max time that can pass before chordProgressionsPlayedCount resets to zero if no chord progressions were played during that time.
+   repeatChordsDontImpactProgressionsPlayedCount: Boolean // if a repeat chord in the context chord progression map is played then chordProgressionsPlayedCount is not impacted 
 }
 ```
 
