@@ -290,6 +290,7 @@ function changeKeyAndScale(key, scale) {
 
 /**
  * @description determines if a good chord progression has occurred based on the current chord progression type. A good chord progression is defined as a chord with its governing note letter being in the given key, having a valid chord type (major, minor, diminished, augmented, etc) based on the scale degree of the chord's governing note letter, and if the previous chord played was classified as a good progression per the context chord progression type.
+ * @fires MidiInstrumentationEvents.CHORDINSCALEPLAYED - stringified object containing string attributes of 'scaleDegree chordType' played with respect to the scale degrees in ASC and DESC order.
  * @returns true or false
  */
 function isChordProgression() {
@@ -318,6 +319,11 @@ function isChordProgression() {
             var currentScaleDegreeChordPlayedDESC = musicConductor.scaleRule.scaleDegreeByLetterDESC.get(chord.letter) + ' ' + chord.type;
             if(chordProgressionMap.has(currentScaleDegreeChordPlayedASC) || chordProgressionMap.has(currentScaleDegreeChordPlayedDESC)) {
                 currentChordsPlaying.add(chord);
+                var chordInScalePlayedEvent = {
+                    scaleDegreeChordPlayedASC  : currentScaleDegreeChordPlayedASC,
+                    scaleDegreeChordPlayedDESC :  currentScaleDegreeChordPlayedDESC
+                };
+                (new SessionCache()).set(MidiInstrumentationEvents.CHORDINSCALEPLAYED,JSON.stringify(chordInScalePlayedEvent));
             }
         }
     }
