@@ -9,6 +9,7 @@ It comes with a free demo wallball pong-esque game. [Click Here to Play!](https:
 
 ### Other applications of webmidi-conductor
 * https://github.com/pauljuneau/wmc-game-phaser-poc
+* https://github.com/pauljuneau/wmc-game-frequency-flier
 # Development Features
 ## wallball game demo features
 * Cross platform compatible (Android, PC, Mac).
@@ -74,7 +75,8 @@ MidiInstrumentationEvents: events that can be dispatched by webmidi-conductor
 * NOTELASTPLAYED 
 * MIDICHLORIANCTRLEVENT - critical event that wraps the standard web midi object into an instance of a midiChlorianCtrlr
 * PITCHEVENT - dispatched when pitch detect is enabled after properly integrating with the [PitchDetectMirror](https://github.com/pauljuneau/PitchDetectMirror).
-* MISC_EVENT : 'miscellaneous'
+* CHORDINSCALEPLAYED - dispatched when a chord is played in the given scale according to the context chord progression type (Major, Minor, or Custom)
+* MISC_EVENT - useful when wanting to fire and listen to miscellaneous events that may not be covered here.
 
 
 MidiMessageWrapper: There are multiple midi message classes that either mock or wrap midi message input such as **OnMidiMessageWrapper**, **OnKeyEventMidiMessageMock**, **OnPitchEventMidiMessageDTO**.
