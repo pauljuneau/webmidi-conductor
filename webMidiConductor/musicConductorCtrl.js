@@ -116,6 +116,39 @@ minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], 
 
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.MINOR,minorKeyChordProgressionMap);
 
+//harmonic minor chord progression
+let harmonicMinorChordProgressionMap = new Map();
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[2]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH_SHARP_5)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[2], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH_SHARP_5)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[6], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH_SHARP_5)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1]));
+
+harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]));
+
+
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.HARMONIC_MINOR, harmonicMinorChordProgressionMap);
+
 //Client is free to set values as they please to this map
 let customChordProgressionMap = new Map();
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.CUSTOM,customChordProgressionMap);

@@ -24,15 +24,17 @@ const CHORDS = {
     DIMINISHED_TRIAD:'Diminished Triad',
     MAJOR_7TH:'Major 7th',
     MINOR_7TH:'Minor 7th',
-    DOMINANT_7TH:'Dominant 7th',
+    DOMINANT_7TH:'Dominant 7th', //aka major minor 7th
     MINOR_7TH_FLAT_5:'Minor 7th flat 5',
     DIMINISHED_7TH: 'Diminished 7th',
-    MINOR_MAJOR_7TH: 'Minor-major 7th'
+    MINOR_MAJOR_7TH: 'Minor-major 7th',
+    MAJOR_7TH_SHARP_5 : 'Major 7th sharp 5' //aka augmented major 7th
 }
 Object.freeze(CHORDS);
 const CHORD_PROGRESSION_TYPES = {
     MAJOR : 'Major',
     MINOR : 'Minor',
+    HARMONIC_MINOR : 'Harmonic Minor',
     CUSTOM: 'Custom'
 }
 Object.freeze(CHORD_PROGRESSION_TYPES);
@@ -48,6 +50,7 @@ stepCombinationByChordName.set(CHORDS.MINOR_TRIAD,34);
 stepCombinationByChordName.set(CHORDS.AUGMENTED_TRIAD,44);
 stepCombinationByChordName.set(CHORDS.DIMINISHED_TRIAD,33);
 stepCombinationByChordName.set(CHORDS.MAJOR_7TH,434);
+stepCombinationByChordName.set(CHORDS.MAJOR_7TH_SHARP_5,443);
 stepCombinationByChordName.set(CHORDS.MINOR_7TH,343);
 stepCombinationByChordName.set(CHORDS.DOMINANT_7TH,433);
 stepCombinationByChordName.set(CHORDS.MINOR_7TH_FLAT_5,334);
