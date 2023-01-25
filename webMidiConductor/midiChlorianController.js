@@ -28,7 +28,7 @@ const CHORDS = {
     MINOR_7TH_FLAT_5:'Minor 7th flat 5',
     DIMINISHED_7TH: 'Diminished 7th',
     MINOR_MAJOR_7TH: 'Minor-major 7th',
-    MAJOR_7TH_SHARP_5 : 'Major 7 sharp 5' //aka augmented major 7th
+    MAJOR_7TH_SHARP_5 : 'Major 7th sharp 5' //aka augmented major 7th
 }
 Object.freeze(CHORDS);
 const CHORD_PROGRESSION_TYPES = {
