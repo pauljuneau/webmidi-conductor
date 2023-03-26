@@ -35,6 +35,7 @@ const CHORD_PROGRESSION_TYPES = {
     MAJOR : 'Major',
     MINOR : 'Minor',
     HARMONIC_MINOR : 'Harmonic Minor',
+    DOMINANT_7TH_BLUES : 'Dominant 7th Blues',
     CUSTOM: 'Custom'
 }
 Object.freeze(CHORD_PROGRESSION_TYPES);

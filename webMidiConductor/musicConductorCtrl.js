@@ -40,6 +40,7 @@ for (let key in CHORDS) {
 //Collection of CHORD_PROGRESSION_TYPES (defined in midiChlorianController): Major, Minor, Custom, etc.
 let chordProgressionMapByType = new Map();
 
+
 //MAJOR Chord Progression Map
 let majorKeyChordProgressionMap = new Map();
 majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
@@ -70,6 +71,7 @@ majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]
 majorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_7TH_FLAT_5)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MAJOR_7TH)[1]));
 
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.MAJOR,majorKeyChordProgressionMap);
+
 
 //GAP ALERT!!!: With the minor key, the 6th and 7th scale degrees are variable when going up or down the scale, so the 6th and 7th chords should be determined if the current bar being played has it's pitch arching up or down. This scrutiny is being left out for the time being, so a decending or ascending only minor chord may be declared a valid chord progression regardless of the current bar's melodic contour.
 //TODO determine 7th chord progressions for "rare" minor key chord progressions  
@@ -116,6 +118,7 @@ minorKeyChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], 
 
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.MINOR,minorKeyChordProgressionMap);
 
+
 //harmonic minor chord progression
 let harmonicMinorChordProgressionMap = new Map();
 harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[2]).add(chordTypeDegrees.get(CHORDS.AUGMENTED_TRIAD)[3]).add(chordTypeDegrees.get(CHORDS.MINOR_TRIAD)[4]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[5]).add(chordTypeDegrees.get(CHORDS.MAJOR_TRIAD)[6]).add(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIAD)[7]));
@@ -146,8 +149,21 @@ harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_TRIA
 
 harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)[7], (new Set()).add(chordTypeDegrees.get(CHORDS.MINOR_MAJOR_7TH)[1]));
 
-
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.HARMONIC_MINOR, harmonicMinorChordProgressionMap);
+
+
+//Dominant 7th Blues Chord Progression
+let dominant7thBluesProgressionMap = new Map();
+dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]));
+
+dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]));
+
+dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]));
+
+dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4]));
+
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.DOMINANT_7TH_BLUES, dominant7thBluesProgressionMap);
+
 
 //Client is free to set values as they please to this map
 let customChordProgressionMap = new Map();
