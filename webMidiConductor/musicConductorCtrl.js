@@ -152,17 +152,57 @@ harmonicMinorChordProgressionMap.set(chordTypeDegrees.get(CHORDS.DIMINISHED_7TH)
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.HARMONIC_MINOR, harmonicMinorChordProgressionMap);
 
 
+/*
+* BLUES CHORD PROGRESSIONS 
+* STANDARD I, IV, V CHORD PROGRESSION VARIANTS
+* Standard blues progression: I, I, I, I; IV, IV, I, I; V, IV, I, V/I
+* Introduced III as an alternative to IV because the 3rd scale degree in the blues minor scale correlates to the 4th scale degree in the key's major scale. 
+* In the blues minor scale, the 1st and 5th degrees match the notes in the corresponding key's major scale.
+* The blues chords are commonly played using dominant 7th chords from the key's major scale. 
+* I7 -> IV7, V7
+* III7 -> I7
+* IV7 -> I7
+* V7 -> I7, IV7
+* The blues scale played is typically the blues minor scale which has the algorithm: 321132. In the C blues minor, the keys are C Eb F F# G Bb C.
+* The major scale algorithm is 2212221. In C Major scale, the keys are C D E F G A B C
+* Therefor a F7 in C blues minor is related to the 3rd degree; not the 4th. G7 is related to the 5th.
+* PROOF: Is III7 in minor blues a reliable substitute for IV7 in the major scale?
+* 3rd degree in minor blues is 3+2=5 steps away from root
+* 4th degree in major scale is 2+2+1 = 5 steps away from root
+* PROOF: Is V7 the same in the minor blues an major scale?
+* 5th degree in minor blues scale is 3+2+1+1=7 steps away from root
+* 5th degree in major scale is 2+2+1+2=7 steps away from root
+*/
 //Dominant 7th Blues Chord Progression
 let dominant7thBluesProgressionMap = new Map();
-dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]));
+dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[3]));
 
 dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[3], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]));
 
 dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]));
 
-dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4]));
+dominant7thBluesProgressionMap.set(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[5], (new Set()).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[1]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[4]).add(chordTypeDegrees.get(CHORDS.DOMINANT_7TH)[3]));
 
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.DOMINANT_7TH_BLUES, dominant7thBluesProgressionMap);
+
+
+//Standard Blues Interval Progression 1 (M6th interval for a given degree is played before going on to next chord degree in standard progression). 
+let standardBluesIntervalProgression1 = new Map();
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[1], (new Set().add(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[1])));
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[1],(new Set().add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[1]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[3]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[4]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[5])));
+
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[3], (new Set().add(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[3])));
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[3], (new Set().add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[3]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[1]))); 
+
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[4], (new Set().add(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[4])));
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[4], (new Set().add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[4]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[1])));
+
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[5], (new Set().add(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[5])));
+standardBluesIntervalProgression1.set(chordTypeDegrees.get(CHORDS.MAJOR_6TH_INTERVAL)[5], (new Set().add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[5]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[1]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[3]).add(chordTypeDegrees.get(CHORDS.PERFECT_5TH)[4])));
+
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.STANDARD_BLUES_INTERVAL_PROGRESSION_1, standardBluesIntervalProgression1);
+
+//END BLUES PROGRESSIONS
 
 
 //Client is free to set values as they please to this map
