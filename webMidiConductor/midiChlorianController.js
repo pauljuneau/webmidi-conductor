@@ -37,7 +37,7 @@ const CHORDS = {
     MINOR_TRIAD: 'Minor Triad',
     AUGMENTED_TRIAD: 'Augmented Triad',
     DIMINISHED_TRIAD:'Diminished Triad',
-    //INVERSIONS
+    //TRIAD INVERSIONS
     IV_MAJOR_TRIAD_1ST_INVERSION:'alt root - IV Major Triad 1st Inversion',
     //6ths
     MAJOR_6TH:'Major 6th',
