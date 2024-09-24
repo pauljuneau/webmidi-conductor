@@ -39,6 +39,7 @@ const CHORDS = {
     DIMINISHED_TRIAD:'Diminished Triad',
     //6ths
     MAJOR_6TH:'Major 6th',
+    MINOR_6TH:'Minor 6th',
     //7ths
     MAJOR_7TH:'Major 7th',
     MINOR_7TH:'Minor 7th',
@@ -83,6 +84,7 @@ stepCombinationByChordName.set(CHORDS.MINOR_TRIAD,34);
 stepCombinationByChordName.set(CHORDS.AUGMENTED_TRIAD,44);
 stepCombinationByChordName.set(CHORDS.DIMINISHED_TRIAD,33);
 stepCombinationByChordName.set(CHORDS.MAJOR_6TH,432);
+stepCombinationByChordName.set(CHORDS.MINOR_6TH,342);
 stepCombinationByChordName.set(CHORDS.MAJOR_7TH,434);
 stepCombinationByChordName.set(CHORDS.MAJOR_7TH_SHARP_5,443);
 stepCombinationByChordName.set(CHORDS.MINOR_7TH,343);
