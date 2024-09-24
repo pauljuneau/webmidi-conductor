@@ -37,6 +37,8 @@ const CHORDS = {
     MINOR_TRIAD: 'Minor Triad',
     AUGMENTED_TRIAD: 'Augmented Triad',
     DIMINISHED_TRIAD:'Diminished Triad',
+    //INVERSIONS
+    IV_MAJOR_TRIAD_1ST_INVERSION:'alt root - IV Major Triad 1st Inversion',
     //6ths
     MAJOR_6TH:'Major 6th',
     MINOR_6TH:'Minor 6th',
@@ -80,6 +82,7 @@ stepCombinationByChordName.set(CHORDS.MAJOR_6TH_INTERVAL,9);
 //stepCombinationByChordName.set(CHORDS.MINOR_7TH_INTERVAL,10);
 //stepCombinationByChordName.set(CHORDS.MAJOR_7TH_INTERVAL,1);
 stepCombinationByChordName.set(CHORDS.MAJOR_TRIAD,43);
+stepCombinationByChordName.set(CHORDS.IV_MAJOR_TRIAD_1ST_INVERSION,54);
 stepCombinationByChordName.set(CHORDS.MINOR_TRIAD,34);
 stepCombinationByChordName.set(CHORDS.AUGMENTED_TRIAD,44);
 stepCombinationByChordName.set(CHORDS.DIMINISHED_TRIAD,33);
