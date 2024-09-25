@@ -210,6 +210,19 @@ let customChordProgressionMap = new Map();
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.CUSTOM,customChordProgressionMap);
 
 /**
+ * 
+ * @param {String} chordProgressionType should be string property value in CHORD_PROGRESSION_TYPES
+ * @param {String} chordProgressionMapJson stringified version of Map<String, List<String>> where keys are a representation of the scale degree number concatenated with the chord name, aka chord type degree (e.g. 1 Dominant 7th), and the value of the key is a list of chord type degree strings that the key chord degree type could transition to.
+ * @returns {Map<String>, Set<String>>} which can effectively become an entry in the chordProgressionMapByType map
+ * @example 
+ * //returns dominant7thBluesProgressionMap
+ * chordProgressionMapJsonDeserialier('{"1 Dominant 7th":["4 Dominant 7th","5 Dominant 7th","3 Dominant 7th"],"3 Dominant 7th":["1 Dominant 7th"],"4 Dominant 7th":["1 Dominant 7th"],"5 Dominant 7th":["1 Dominant 7th","4 Dominant 7th","3 Dominant 7th"]}')
+ */
+function chordProgressionMapJsonDeserialier(chordProgressionMapJson) {
+    //TODO 
+}
+
+/**
  * @description Constructs RestrictToScaleRule object using scaleShorthandName. 
  * @param {String} scaleShorthandName C-major, F#-melodic minor, etc.
  * @implements {evaluateRule()} All rules should have this method to allow dynamic rule calling via JS "duck typing". ie if it quacks, it's a duck 
