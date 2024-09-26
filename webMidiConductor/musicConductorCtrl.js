@@ -210,7 +210,7 @@ let customChordProgressionMap = new Map();
 chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.CUSTOM,customChordProgressionMap);
 
 /**
- * 
+ * @description deserializes json into a chordProgressionMap to allow easier loading of chordProgressionMapByType
  * @param {String} chordProgressionType should be string property value in CHORD_PROGRESSION_TYPES
  * @param {String} chordProgressionMapJson stringified version of Map<String, List<String>> where keys are a representation of the scale degree number concatenated with the chord name, aka chord type degree (e.g. 1 Dominant 7th), and the value of the key is a list of chord type degree strings that the key chord degree type could transition to.
  * @returns {Map<String>, Set<String>>} which can effectively become an entry in the chordProgressionMapByType map
