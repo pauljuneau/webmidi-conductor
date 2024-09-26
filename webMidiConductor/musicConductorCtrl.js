@@ -219,7 +219,16 @@ chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.CUSTOM,customChordProgress
  * chordProgressionMapJsonDeserialier('{"1 Dominant 7th":["4 Dominant 7th","5 Dominant 7th","3 Dominant 7th"],"3 Dominant 7th":["1 Dominant 7th"],"4 Dominant 7th":["1 Dominant 7th"],"5 Dominant 7th":["1 Dominant 7th","4 Dominant 7th","3 Dominant 7th"]}')
  */
 function chordProgressionMapJsonDeserialier(chordProgressionMapJson) {
-    //TODO 
+    let deserializedChordProgMapObj = JSON.parse(chordProgressionMapJson);
+    let returnChordProgressionMap = new Map();
+    for(const chordTypeDegree in deserializedChordProgMapObj) {
+        let chordTypeDegreeTransitions = new Set();
+        for(const chordTypeDegreeTransition of deserializedChordProgMapObj[chordTypeDegree]) {
+            chordTypeDegreeTransitions.add(chordTypeDegreeTransition);
+        }
+        returnChordProgressionMap.set(chordTypeDegree, chordTypeDegreeTransitions);
+    }
+    return returnChordProgressionMap;
 }
 
 /**
