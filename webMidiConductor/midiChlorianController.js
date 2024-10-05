@@ -46,7 +46,7 @@ const CHORDS = {
     MAJOR_7TH:'Major 7th',
     MINOR_7TH:'Minor 7th',
     DOMINANT_7TH:'Dominant 7th', //aka major minor 7th
-    MINOR_7TH_FLAT_5:'Minor 7th flat 5',
+    MINOR_7TH_FLAT_5:'Minor 7th flat 5', //same as half-diminished 7th chord
     DIMINISHED_7TH: 'Diminished 7th',
     MINOR_MAJOR_7TH: 'Minor-major 7th',
     MAJOR_7TH_SHARP_5 : 'Major 7th sharp 5' //aka augmented major 7th
@@ -58,6 +58,14 @@ const CHORD_PROGRESSION_TYPES = {
     HARMONIC_MINOR : 'Harmonic Minor',
     DOMINANT_7TH_BLUES : 'Dominant 7th Blues',
     STANDARD_BLUES_INTERVAL_PROGRESSION_1 : 'Standard Blues Interval Progression 1',
+    POP_TRIAD_PROGRESSION : 'Pop Triad Progression',
+    POP_ALT_TRIAD_PROGRESSION : 'Pop Altered Triad Progression',
+    JAZZ_7TH_PROGRESSION : 'Jazz 7th Progression',
+    DOO_WOP_TRIAD_PROGRESSION : 'Doo-Wop Triad Progression',
+    ANDALUSIAN_CADENCE_MINOR_TRIAD_PROGRESSION: 'Andalusian Cadence Minor Triad Progression',
+    GOSPEL_ROOT_MOVEMENT_HOTLINE_V1: 'Gospel Root Movement Hotline v1',
+    PACHELBEL_TRIAD_PROGRESSION: 'Pachelbel Triad Progression',
+    ROYAL_ROADS_TRIAD_PROGRESSION: 'Royal Roads Triad Progression',
     CUSTOM: 'Custom'
 }
 Object.freeze(CHORD_PROGRESSION_TYPES);

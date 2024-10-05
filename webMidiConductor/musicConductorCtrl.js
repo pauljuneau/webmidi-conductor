@@ -204,6 +204,29 @@ chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.STANDARD_BLUES_INTERVAL_PR
 
 //END BLUES PROGRESSIONS
 
+//Pop Triad Progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.POP_TRIAD_PROGRESSION, chordProgressionMapJsonDeserialier('{"1 Major Triad":["5 Major Triad"],"5 Major Triad":["6 Minor Triad"],"6 Minor Triad":["4 Major Triad"],"4 Major Triad":["1 Major Triad"]}'));
+
+//Pop Altered Triad Progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.POP_ALT_TRIAD_PROGRESSION, chordProgressionMapJsonDeserialier('{"6 Minor Triad":["4 Major Triad"],"4 Major Triad":["1 Major Triad"],"1 Major Triad":["5 Major Triad"],"5 Major Triad":["6 Minor Triad"]}'));
+
+//Jazz 7th Progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.JAZZ_7TH_PROGRESSION, chordProgressionMapJsonDeserialier('{"2 Minor 7th":["5 Major 7th"],"5 Major 7th":["1 Major 7th"],"1 Major 7th":["2 Minor 7th"]}'));
+
+//Doo-wop triad progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.DOO_WOP_TRIAD_PROGRESSION, chordProgressionMapJsonDeserialier('{"1 Major Triad":["6 Minor Triad"],"6 Minor Triad":["4 Major Triad"],"4 Major Triad":["5 Major Triad"],"5 Major Triad":["1 Major Triad"]}'));
+
+//Andalusian Cadence Minor Triad Progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.ANDALUSIAN_CADENCE_MINOR_TRIAD_PROGRESSION, chordProgressionMapJsonDeserialier('{"1 Minor Triad":["7 Major Triad"],"7 Major Triad":["6 Major Triad"],"6 Major Triad":["5 Major Triad"],"5 Major Triad":["1 Minor Triad"]}'));
+
+//Gospel Root Movement Hotline v1
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.GOSPEL_ROOT_MOVEMENT_HOTLINE_V1, chordProgressionMapJsonDeserialier('{"1 Major 7th":["4 Major 7th"],"4 Major 7th":["7 Minor 7th flat 5"],"7 Minor 7th flat 5":["3 Minor 7th"],"3 Minor 7th":["6 Minor 7th"],"6 Minor 7th":["2 Minor 7th"],"2 Minor 7th":["5 Dominant 7th"],"5 Dominant 7th":["1 Major 7th"]}'));
+
+//Pachelbel Triad Progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.PACHELBEL_TRIAD_PROGRESSION, chordProgressionMapJsonDeserialier('{"1 Major Triad":["5 Major Triad","4 Major Triad"],"5 Major Triad":["6 Minor Triad","1 Major Triad"],"6 Minor Triad":["3 Minor Triad"],"3 Minor Triad":["4 Major Triad"],"4 Major Triad":["1 Major Triad","5 Major Triad"]}'));
+
+//Royal Roads Triad Progression
+chordProgressionMapByType.set(CHORD_PROGRESSION_TYPES.ROYAL_ROADS_TRIAD_PROGRESSION, chordProgressionMapJsonDeserialier('{"4 Major Triad":["5 Major Triad"],"5 Major Triad":["3 Minor Triad"],"3 Minor Triad":["6 Minor Triad"],"6 Minor Triad":["4 Major Triad"]}'));
 
 //Client is free to set values as they please to this map
 let customChordProgressionMap = new Map();
